@@ -1,0 +1,25 @@
+{
+  "name": "greenfield",
+  "description": "Truth-Dare-Die",
+  "main": "index.js",
+  "authors": [
+    "Elijah Vasquez elivasquez646@gmail.com",
+    "Taylor Shephard taylorshephard1@gmail.com",
+    "Andy Nguyen andyn190@gmail.com"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/10-percent/immersion-2018-04-greenfield",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^4.1.1",
+    "underscore": "^1.9.0",
+    "babel": "^5.8.38"
+  }
+}
