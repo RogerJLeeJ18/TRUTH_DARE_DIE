@@ -12,9 +12,9 @@ class App extends React.Component {
     return (
       <div className="container">
         <div className="row">
-        <div className="col-xs-10 col-xs-offset-1">
-          <span>Hello world!!</span>
-        </div>
+          <div className="col-xs-10 col-xs-offset-1">
+            <span>Hello world!!</span>
+          </div>
         </div>
       </div>
     );
