@@ -4,6 +4,7 @@ const DIST_DIR = path.resolve(`${__dirname}`, 'dist');
 const SRC_DIR = path.resolve(`${__dirname}`, 'client');
 
 const config = {
+  devtool: 'cheap-eval-source-map',
   mode: 'development',
   entry: `${SRC_DIR}/app/index.js`,
   output: {
