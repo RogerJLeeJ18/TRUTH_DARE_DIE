@@ -6,7 +6,7 @@ app.use(express.static(`${__dirname}/../client`));
 app.use(express.static(`${__dirname}/../database`));
 
 app.get('', (req, res) => {
-
+  
 });
 
 app.post('', (req, res) => {
