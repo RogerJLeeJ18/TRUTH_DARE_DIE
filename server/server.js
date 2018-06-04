@@ -28,7 +28,7 @@ app.post('/users', (req, res) => {
   const data = req.body;
   console.log(data);
   dataSave.save(data);
-  res.send('done');
+  res.send('ok');
 });
 
 
