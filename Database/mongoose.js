@@ -44,7 +44,7 @@ const save = (user, callback) => {
 
       newUser.save((error) => {
         if (error) {
-          console.error(error);
+          callback(error);
         } else {
           console.log('user saved');
           callback('Welcome!');
