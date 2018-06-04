@@ -3,11 +3,10 @@ const mongoose = require('mongoose');
 mongoose.connect('mongodb://admin:admin1@ds243728.mlab.com:43728/truthdaredie');
 
 const db = mongoose.connection;
-
-db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {
-  console.log('connected');
+  console.log('connected to db');
 });
+db.on('error', console.error.bind(console, 'connection error:'));
 
 const Schema = mongoose.Schema;
 
@@ -26,10 +25,13 @@ const User = mongoose.model('User', UserSchema);
 // function for sign in
 // check if user already exists by email
 // if user doesn't exist, save to the database
-const save = (user) => {
+const save = (user, callback) => {
   User.findOne({ email: user.email }, (err, data) => {
-    if (!err && data) {
+    if (err) {
+      callback(err);
+    } else if (!err && data) {
       console.log('User Exists Already');
+      callback('User Exists Already');
     } else {
       const newUser = new User({
         username: user.username,
@@ -44,7 +46,8 @@ const save = (user) => {
         if (error) {
           console.error(error);
         } else {
-          console.log('saved user');
+          console.log('user saved');
+          callback('Welcome!');
         }
       });
     }

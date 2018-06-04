@@ -1,5 +1,4 @@
 const express = require('express');
-const request = require('request');
 const bodyParser = require('body-parser');
 const dataSave = require('../Database/mongoose');
 const http = require('http');
@@ -27,8 +26,9 @@ app.get('/users', (req, res) => {
 app.post('/users', (req, res) => {
   const data = req.body;
   console.log(data);
-  dataSave.save(data);
-  res.send('done');
+  dataSave.save(data, (response) => {
+    res.send(response);
+  });
 });
 
 
@@ -37,5 +37,5 @@ io.on('connection', (socket) => {
 });
 
 server.listen(3000, () => {
-  console.log('listening on *:3000');
+  console.log('listening on port 3000');
 });
