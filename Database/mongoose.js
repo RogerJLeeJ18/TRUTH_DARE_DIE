@@ -13,7 +13,7 @@ const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
   username: String,
-  id_token: String,
+  password: String,
   avatar: String,
   email: String,
   save_tokens: Number,

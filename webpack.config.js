@@ -6,7 +6,7 @@ const SRC_DIR = path.resolve(`${__dirname}`, 'client');
 const config = {
   devtool: 'cheap-eval-source-map',
   mode: 'development',
-  entry: `${SRC_DIR}/app/index.jsx`,
+  entry: [`${SRC_DIR}/app/index.jsx`, 'whatwg-fetch'],
   output: {
     path: `${DIST_DIR}/app`,
     filename: 'bundle.js',
