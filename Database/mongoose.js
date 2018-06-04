@@ -22,33 +22,33 @@ const UserSchema = new Schema({
 
 const User = mongoose.model('User', UserSchema);
 
+
+// function for sign in
+// check if user already exists by email
+// if user doesn't exist, save to the database
 const save = (user) => {
-  const newUser = new User({
-    username: user.name,
-    id_token: user.id,
-    avatar: user.image_url,
-    email: user.email,
-    save_tokens: 0,
-    death_tokens: 0,
-  });
-
-  newUser.save((err) => {
-    if (err) {
-      console.error(err);
-    } else {
-      console.log('saved');
-    }
-  });
-};
-
-const findUser = (user) => {
   User.findOne({ email: user.email }, (err, data) => {
-    if (err) {
-      console.error(err);
+    if (!err && data) {
+      console.log('User Exists Already');
+    } else {
+      const newUser = new User({
+        username: user.username,
+        id_token: user.id,
+        avatar: user.image_url,
+        email: user.email,
+        save_tokens: 0,
+        death_tokens: 0,
+      });
+
+      newUser.save((error) => {
+        if (error) {
+          console.error(error);
+        } else {
+          console.log('saved user');
+        }
+      });
     }
-    return true;
   });
 };
 
-module.exports.findUser = findUser;
 module.exports.save = save;
