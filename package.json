@@ -4,9 +4,10 @@
   "description": "Truth-Dare-Die",
   "main": "index.js",
   "scripts": {
-    "start": "npm run build",
+    "start": "nodemon ./server/server.js",
     "build": "webpack -D && cp client/index.html dist/index.html && webpack-dev-server --content-base client/ --inline --hot",
-    "build:prod": "webpack =p && cp src/index.html dist/index.html"
+    "build:prod": "webpack =p && cp src/index.html dist/index.html",
+    "webpack": "./node_modules/.bin/webpack -w"
   },
   "repository": {
     "type": "git",
