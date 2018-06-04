@@ -4,6 +4,7 @@ const dataSave = require('../Database/mongoose');
 const http = require('http');
 const path = require('path');
 const socketIO = require('socket.io');
+const bcrypt = require('bcrypt');
 
 const app = express();
 const server = http.Server(app);
@@ -26,8 +27,13 @@ app.get('/users', (req, res) => {
 app.post('/users', (req, res) => {
   const data = req.body;
   console.log(data);
-  dataSave.save(data, (response) => {
-    res.send(response);
+  bcrypt.hash(data.password, 10, (err, hash) => {
+    if (err) {
+      console.log(err);
+    }
+    dataSave.save(data, hash, (response) => {
+      res.send(response);
+    });
   });
 });
 
