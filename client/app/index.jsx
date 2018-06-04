@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import axios from 'axios';
+import _ from 'underscore';
 
 class App extends React.Component {
   constructor(props) {
@@ -14,7 +15,6 @@ class App extends React.Component {
   }
   handleSubmit(event) {
     this.setState({ [event.target.name]: event.target.value, loggedIn: true }, () => {
-      console.log(this.state);
       axios.post('/users', {
         username: this.state.username,
         password: this.state.password,
@@ -23,6 +23,7 @@ class App extends React.Component {
       }).catch((err) => {
         console.log(err, 'this is the err');
       });
+      console.log(this.state);
     });
     event.preventDefault();
   }
@@ -32,10 +33,10 @@ class App extends React.Component {
         <div className="row">
           <div className="col-xs-10 col-xs-offset-1">
             <form>
-              <label>Username: </label>
+              <label>Username:</label>
               <input type="text" name="username" onChange={this.handleSubmit} />
               <br />
-              <label>Password: </label>
+              <label>Password:</label>
               <input type="password" name="password" onChange={this.handleSubmit} />
               <button type="submit" >Submit</button>
             </form>
