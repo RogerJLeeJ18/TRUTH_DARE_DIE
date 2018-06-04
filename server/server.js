@@ -11,7 +11,7 @@ const server = http.Server(app);
 const io = socketIO(server);
 
 app.use(express.static(path.join(__dirname, '/../database')));
-app.use(express.static(path.join(__dirname, '/../client')));
+app.use(express.static(path.join(__dirname, '/../dist')));
 
 app.get('/', (req, res) => {
   res.sendStatus(201);
