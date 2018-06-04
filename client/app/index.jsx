@@ -5,13 +5,15 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      login: '',
+      username: '',
       password: '',
     };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
   handleSubmit(event) {
-    this.setState({ [event.target.name]: event.target.value });
+    this.setState({ [event.target.name]: event.target.value }, () => {
+      console.log(this.state);
+    });
     event.preventDefault();
   }
   render() {
@@ -20,10 +22,10 @@ class App extends React.Component {
         <div className="row">
           <div className="col-xs-10 col-xs-offset-1">
             <form onSubmit={this.handleSubmit}>Username:
-              <input type="text" name="login" onChange={this.handleSubmit} />
+              <input type="text" name="username" onChange={this.handleSubmit} />
               <br />Password:
               <input type="password" name="password" onChange={this.handleSubmit} />
-              <input type="submit" value="Login" name="Login" />
+              <button type="submit" >Submit</button>
             </form>
           </div>
         </div>
