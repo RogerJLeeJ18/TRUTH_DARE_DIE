@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+
 
 mongoose.connect('mongodb://admin:admin1@ds243728.mlab.com:43728/truthdaredie');
 
