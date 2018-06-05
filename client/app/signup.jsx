@@ -1,18 +1,35 @@
 import React from 'react';
 import { render } from 'react-dom';
+import axios from 'axios';
 
-class SignUp extends React.Component {
+class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       username: '',
+      email: '',
       password: '',
     };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
   handleSubmit(event) {
-    this.setState({ [event.target.name]: event.target.value }, () => {
-      console.log(this.state);
+    console.log(this.username.value, this.password.value);
+    this.setState({
+      username: this.username.value,
+      email: this.email.value,
+      password: this.password.value,
+    }, () => {
+      axios.post('/users', {
+        params: {
+          username: this.state.username,
+          email: this.state.email,
+          password: this.state.password,
+        },
+      }).then((result) => {
+        console.log(result.data);
+      }).catch((error) => {
+        console.log(error);
+      });
     });
     event.preventDefault();
   }
@@ -21,11 +38,19 @@ class SignUp extends React.Component {
       <div className="container">
         <div className="row">
           <div className="col-xs-10 col-xs-offset-1">
-            <form onSubmit={this.handleSubmit}>Username:
-              <input type="text" name="username" onChange={this.handleSubmit} />
-              <br />Password:
-              <input type="password" name="password" onChange={this.handleSubmit} />
-              <button type="submit" >Sign Up</button>
+            <form onSubmit={this.handleSubmit}>
+              <label htmlFor="username">Username:
+                <input type="text" name="username" ref={(input) => { this.username = input; }} />
+              </label>
+              <br />
+              <label htmlFor="email">Email:
+                <input type="email" name="email" ref={(input) => { this.email = input; }} />
+              </label>
+              <br />
+              <label htmlFor="password">Password:
+                <input type="password" name="password" ref={(input) => { this.password = input; }} />
+              </label>
+              <button type="submit" >Submit</button>
             </form>
           </div>
         </div>
@@ -34,4 +59,4 @@ class SignUp extends React.Component {
   }
 }
 
-render(<SignUp />, document.getElementById('SignUp'));
+render(<App />, document.getElementById('app'));

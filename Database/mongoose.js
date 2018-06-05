@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 mongoose.connect('mongodb://admin:admin1@ds243728.mlab.com:43728/truthdaredie');
 
@@ -26,16 +27,19 @@ const User = mongoose.model('User', UserSchema);
 // check if user already exists by email
 // if user doesn't exist, save to the database
 const save = (user, hashed, callback) => {
+  User.findOne({ username: user.username }, (err, data) => {
+const save = (user, hash, callback) => {
   User.findOne({ email: user.email }, (err, data) => {
     if (err) {
       callback(err);
     } else if (!err && data) {
+      console.log(data, 'this is the data');
       console.log('User Exists Already');
       callback('User Exists Already');
     } else {
       const newUser = new User({
         username: user.username,
-        password: hashed,
+        password: hash,
         avatar: user.image_url,
         email: user.email,
         save_tokens: 0,
@@ -53,13 +57,24 @@ const save = (user, hashed, callback) => {
     }
   });
 };
-const getUser = (request, hashed, callback) => {
-  User.findOne({ username: request.username, password: hashed }, (err, user) => {
+const getUser = (request, callback) => {
+  User.findOne({ username: request.username }, (err, user) => {
     if (err) {
-      callback(err, null);
+      callback(err);
+    } else if (user === null) {
+      callback('Username or Password is incorrect');
+    } else {
+      bcrypt.compare(request.password, user.password, (error, match) => {
+        if (error) {
+          callback('No Match');
+        } else if (!match) {
+          callback('UserName or Password is incorrect');
+        } else {
+          callback('Match');
+        }
+      });
     }
-    callback(null, user);
   });
 };
 module.exports.save = save;
-exports.getUser = getUser;
+module.exports.getUser = getUser;
