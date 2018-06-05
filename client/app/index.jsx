@@ -1,5 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
+import axios from 'axios';
 
 class App extends React.Component {
   constructor(props) {
@@ -11,8 +12,21 @@ class App extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
   handleSubmit(event) {
-    this.setState({ [event.target.name]: event.target.value }, () => {
-      console.log(this.state);
+    console.log(this.username.value, this.password.value);
+    this.setState({
+      username: this.username.value,
+      password: this.password.value,
+    }, () => {
+      axios.get('/users', {
+        params: {
+          username: this.state.username,
+          password: this.state.password,
+        },
+      }).then((result) => {
+        console.log(result.data);
+      }).catch((error) => {
+        console.log(error);
+      });
     });
     event.preventDefault();
   }
@@ -21,10 +35,14 @@ class App extends React.Component {
       <div className="container">
         <div className="row">
           <div className="col-xs-10 col-xs-offset-1">
-            <form onSubmit={this.handleSubmit}>Username:
-              <input type="text" name="username" onChange={this.handleSubmit} />
-              <br />Password:
-              <input type="password" name="password" onChange={this.handleSubmit} />
+            <form onSubmit={this.handleSubmit}>
+              <label htmlFor="username">Username:
+                <input type="text" name="username" ref={(input) => { this.username = input; }} />
+              </label>
+              <br />
+              <label htmlFor="password">Password:
+                <input type="password" name="password" ref={(input) => { this.password = input; }} />
+              </label>
               <button type="submit" >Submit</button>
             </form>
           </div>
