@@ -20,7 +20,20 @@ app.get('/', (req, res) => {
 app.use(bodyParser.json());
 
 app.get('/users', (req, res) => {
-  
+  const request = req.query;
+  console.log(request);
+  bcrypt.hash(request.password, 10, (err, hash) => {
+    if (err) {
+      res.status(404).send('Error with hashing');
+    } else {
+      dataSave.getUser(request, hash, (err1, response) => {
+        if (err1) {
+          res.status(404).send('Username or Password is incorrect!');
+        }
+        res.status(200).send('Success');
+      });
+    }
+  });
 });
 
 // post request to database for sign up

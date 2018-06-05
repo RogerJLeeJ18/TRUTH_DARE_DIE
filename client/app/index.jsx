@@ -1,7 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
 import axios from 'axios';
-import _ from 'underscore';
 
 class App extends React.Component {
   constructor(props) {
@@ -34,12 +33,14 @@ class App extends React.Component {
         <div className="row">
           <div className="col-xs-10 col-xs-offset-1">
             <form>
-              <label>Username:</label>
-              <input type="text" name="username" onChange={this.handleSubmit} />
+              <label htmlFor="username">Username:
+                <input type="text" name="username" placeholder="Username" onChange={this.handleSubmit} />
+              </label>
               <br />
-              <label>Password:</label>
-              <input type="password" name="password" onChange={this.handleSubmit} />
-              <button type="submit" >Submit</button>
+              <label htmlFor="password">Password:
+                <input type="password" name="password" placeholder="Password" onChange={this.handleSubmit} />
+              </label>
+              <button type="submit">Submit</button>
             </form>
           </div>
         </div>
