@@ -54,5 +54,13 @@ const save = (user, hashed, callback) => {
     }
   });
 };
-
+const getUser = (request, hashed, callback) => {
+  User.findOne({ username: request.username, password: hashed }, (err, user) => {
+    if (err) {
+      callback(err, null);
+    }
+    callback(null, user);
+  });
+};
 module.exports.save = save;
+exports.getUser = getUser;
