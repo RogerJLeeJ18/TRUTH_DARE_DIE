@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-
 mongoose.connect('mongodb://admin:admin1@ds243728.mlab.com:43728/truthdaredie');
 
 const db = mongoose.connection;
@@ -26,7 +25,7 @@ const User = mongoose.model('User', UserSchema);
 // function for sign in
 // check if user already exists by email
 // if user doesn't exist, save to the database
-const save = (user, hashed, callback) => {
+const save = (user, hash, callback) => {
   User.findOne({ email: user.email }, (err, data) => {
     if (err) {
       callback(err);
@@ -36,7 +35,7 @@ const save = (user, hashed, callback) => {
     } else {
       const newUser = new User({
         username: user.username,
-        password: hashed,
+        password: hash,
         avatar: user.image_url,
         email: user.email,
         save_tokens: 0,
