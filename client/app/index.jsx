@@ -9,15 +9,16 @@ class App extends React.Component {
     this.state = {
       username: '',
       password: '',
-      loggedIn: false,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
   handleSubmit(event) {
-    this.setState({ [event.target.name]: event.target.value, loggedIn: true }, () => {
-      axios.post('/users', {
-        username: this.state.username,
-        password: this.state.password,
+    this.setState({ [event.target.name]: event.target.value }, () => {
+      axios.get('/users', {
+        params: {
+          username: this.state.username,
+          password: this.state.password,
+        },
       }).then((result) => {
         console.log(result, 'this is the result');
       }).catch((err) => {

@@ -25,7 +25,7 @@ const User = mongoose.model('User', UserSchema);
 // function for sign in
 // check if user already exists by email
 // if user doesn't exist, save to the database
-const save = (user, callback) => {
+const save = (user, hash, callback) => {
   User.findOne({ email: user.email }, (err, data) => {
     if (err) {
       callback(err);
@@ -35,7 +35,7 @@ const save = (user, callback) => {
     } else {
       const newUser = new User({
         username: user.username,
-        id_token: user.id,
+        password: hash,
         avatar: user.image_url,
         email: user.email,
         save_tokens: 0,
