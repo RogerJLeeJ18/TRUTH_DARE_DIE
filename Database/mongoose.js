@@ -37,8 +37,6 @@ const save = (user, hashed, callback) => {
       const newUser = new User({
         username: user.username,
         password: hashed,
-        avatar: user.image_url,
-        email: user.email,
         save_tokens: 0,
         death_tokens: 0,
       });
@@ -55,7 +53,7 @@ const save = (user, hashed, callback) => {
   });
 };
 const getUser = (request, hashed, callback) => {
-  User.findOne({ username: request.username, password: hashed }, (err, user) => {
+  User.find({ username: request.username, password: hashed }, (err, user) => {
     if (err) {
       callback(err, null);
     }

@@ -26,11 +26,15 @@ app.get('/users', (req, res) => {
     if (err) {
       res.status(404).send('Error with hashing');
     } else {
-      dataSave.getUser(request, hash, (err1, response) => {
-        if (err1) {
+      dataSave.getUser(request, hash, (error, response) => {
+        if (error) {
           res.status(404).send('Username or Password is incorrect!');
+        } else if (response.length === 0) {
+          res.status(404).send('Username of Password is incorrect!');
+        } else {
+          console.log(response);
+          res.status(200).send('Success');
         }
-        res.status(200).send('Success');
       });
     }
   });
