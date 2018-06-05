@@ -21,21 +21,12 @@ app.use(bodyParser.json());
 
 app.get('/users', (req, res) => {
   const request = req.query;
-  console.log(request);
-  bcrypt.hash(request.password, 10, (err, hash) => {
-    if (err) {
-      res.status(404).send('Error with hashing');
+  console.log(request, 'this is the request');
+  dataSave.getUser(request, (response) => {
+    if (response !== 'Match') {
+      res.status(404).send(response);
     } else {
-      dataSave.getUser(request, hash, (error, response) => {
-        if (error) {
-          res.status(404).send('Username or Password is incorrect!');
-        } else if (response.length === 0) {
-          res.status(404).send('Username of Password is incorrect!');
-        } else {
-          console.log(response);
-          res.status(200).send('Success');
-        }
-      });
+      res.status(200).send(response);
     }
   });
 });
