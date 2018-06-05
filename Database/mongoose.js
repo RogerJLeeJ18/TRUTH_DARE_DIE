@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://admin:admin1@ds243728.mlab.com:43728/truthdaredie');
+// mongoose.connect('mongodb://admin:admin1@ds243728.mlab.com:43728/truthdaredie');
+mongoose.connect('mongodb://localhost:27017/truthordare');
 
 const db = mongoose.connection;
 db.once('open', () => {
