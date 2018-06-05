@@ -1,3 +1,7 @@
+import React from 'react';
+import { render } from 'react-dom';
+import axios from 'axios';
+
 class ChatRoom extends React.Component {
   constructor(props) {
     super(props);
@@ -5,16 +9,16 @@ class ChatRoom extends React.Component {
   }
 
   handleSubmit(event) {
-    alert('A name was submitted: ' + this.input.value);
+    console.log(`A name was submitted: ${this.input.value}`);
     event.preventDefault();
   }
 
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
-        <label>
-          Name:
-          <input type="text" ref={(input) => this.input = input} />
+        <label htmlFor="chatRoom">
+          ChatRoom:
+          <input type="text" ref={(input) => { this.input = input; }} />
         </label>
         <input type="submit" value="Submit" />
       </form>
@@ -22,4 +26,4 @@ class ChatRoom extends React.Component {
   }
 }
 
-ReactDOM.render(<ChatRoom />,document.getElementById('app'));
+render(<ChatRoom />, document.getElementById('chatroom'));

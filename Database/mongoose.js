@@ -28,33 +28,35 @@ const User = mongoose.model('User', UserSchema);
 // if user doesn't exist, save to the database
 const save = (user, hashed, callback) => {
   User.findOne({ username: user.username }, (err, data) => {
-const save = (user, hash, callback) => {
-  User.findOne({ email: user.email }, (err, data) => {
-    if (err) {
-      callback(err);
-    } else if (!err && data) {
-      console.log(data, 'this is the data');
-      console.log('User Exists Already');
-      callback('User Exists Already');
-    } else {
-      const newUser = new User({
-        username: user.username,
-        password: hash,
-        avatar: user.image_url,
-        email: user.email,
-        save_tokens: 0,
-        death_tokens: 0,
-      });
-
-      newUser.save((error) => {
-        if (error) {
-          console.error(error);
+    const save = (user, hash, callback) => {
+      User.findOne({ email: user.email }, (err, data) => {
+        if (err) {
+          callback(err);
+        } else if (!err && data) {
+          console.log(data, 'this is the data');
+          console.log('User Exists Already');
+          callback('User Exists Already');
         } else {
-          console.log('user saved');
-          callback('Welcome!');
+          const newUser = new User({
+            username: user.username,
+            password: hash,
+            avatar: user.image_url,
+            email: user.email,
+            save_tokens: 0,
+            death_tokens: 0,
+          });
+
+          newUser.save((error) => {
+            if (error) {
+              console.error(error);
+            } else {
+              console.log('user saved');
+              callback('Welcome!');
+            }
+          });
         }
       });
-    }
+    };
   });
 };
 const getUser = (request, callback) => {
