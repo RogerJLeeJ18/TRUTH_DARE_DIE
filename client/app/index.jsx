@@ -12,18 +12,21 @@ class App extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
   handleSubmit(event) {
-    this.setState({ [event.target.name]: event.target.value }, () => {
+    console.log(this.username.value, this.password.value);
+    this.setState({
+      username: this.username.value,
+      password: this.password.value,
+    }, () => {
       axios.get('/users', {
         params: {
           username: this.state.username,
           password: this.state.password,
         },
       }).then((result) => {
-        console.log(result, 'this is the result');
-      }).catch((err) => {
-        console.log(err, 'this is the err');
+        console.log(result.data);
+      }).catch((error) => {
+        console.log(error);
       });
-      console.log(this.state);
     });
     event.preventDefault();
   }
@@ -32,15 +35,15 @@ class App extends React.Component {
       <div className="container">
         <div className="row">
           <div className="col-xs-10 col-xs-offset-1">
-            <form>
+            <form onSubmit={this.handleSubmit}>
               <label htmlFor="username">Username:
-                <input type="text" name="username" placeholder="Username" onChange={this.handleSubmit} />
+                <input type="text" name="username" ref={(input) => { this.username = input; }} />
               </label>
               <br />
               <label htmlFor="password">Password:
-                <input type="password" name="password" placeholder="Password" onChange={this.handleSubmit} />
+                <input type="password" name="password" ref={(input) => { this.password = input; }} />
               </label>
-              <button type="submit">Submit</button>
+              <button type="submit" >Submit</button>
             </form>
           </div>
         </div>
