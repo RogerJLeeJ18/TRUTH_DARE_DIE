@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
-// mongoose.connect('mongodb://admin:admin1@ds243728.mlab.com:43728/truthdaredie');
-mongoose.connect('mongodb://localhost:27017/truthordare');
+mongoose.connect('mongodb://admin:admin1@ds243728.mlab.com:43728/truthdaredie');
 
 const db = mongoose.connection;
 db.once('open', () => {
@@ -13,7 +12,7 @@ const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
   username: String,
-  id_token: String,
+  password: String,
   avatar: String,
   email: String,
   save_tokens: Number,
@@ -26,7 +25,7 @@ const User = mongoose.model('User', UserSchema);
 // function for sign in
 // check if user already exists by email
 // if user doesn't exist, save to the database
-const save = (user, callback) => {
+const save = (user, hashed, callback) => {
   User.findOne({ email: user.email }, (err, data) => {
     if (err) {
       callback(err);
@@ -36,7 +35,7 @@ const save = (user, callback) => {
     } else {
       const newUser = new User({
         username: user.username,
-        id_token: user.id,
+        password: hashed,
         avatar: user.image_url,
         email: user.email,
         save_tokens: 0,
@@ -54,5 +53,13 @@ const save = (user, callback) => {
     }
   });
 };
-
+const getUser = (request, hashed, callback) => {
+  User.findOne({ username: request.username, password: hashed }, (err, user) => {
+    if (err) {
+      callback(err, null);
+    }
+    callback(null, user);
+  });
+};
 module.exports.save = save;
+exports.getUser = getUser;
