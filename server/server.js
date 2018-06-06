@@ -46,7 +46,8 @@ app.post('/users', (req, res) => {
 });
 
 app.post('/start', (req, res) => {
-  dataSave.createRoom(dataSave.generator(), (response) => {
+  const request = req.body;
+  dataSave.createRoom(request, (response) => {
     if (!response) {
       console.log(response);
       res.status(404).send('Invalid');

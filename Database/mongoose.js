@@ -33,7 +33,7 @@ const Room = mongoose.model('Room', RoomSchema);
 // function for sign in
 // check if user already exists by email
 // if user doesn't exist, save to the database
-const save = (user, hashed, callback) => {
+const save = (user, hash, callback) => {
   User.findOne({ username: user.username }, (err, data) => {
     if (err) {
       callback(err);
@@ -43,18 +43,18 @@ const save = (user, hashed, callback) => {
     } else {
       const newUser = new User({
         username: user.username,
-        password: hashed,
+        password: hash,
         avatar: user.image_url,
         email: user.email,
         save_tokens: 0,
         death_tokens: 0,
       });
-      newUser.save((error) => {
+      newUser.save((error, userInfo) => {
         if (error) {
           console.error(error);
         } else {
           console.log('user saved');
-          callback('Welcome!');
+          callback(userInfo);
         }
       });
     }
@@ -86,7 +86,7 @@ const getUser = (request, callback) => {
 
 const createRoom = (roomName, callback) => {
   const newRoom = new Room({
-    room: roomName,
+    room: roomName.name,
     status: 'waiting',
   });
   newRoom.save((err) => {
@@ -99,12 +99,7 @@ const createRoom = (roomName, callback) => {
   });
 };
 
-const generator = () => {
-  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-};
-
 module.exports.save = save;
 module.exports.getUser = getUser;
 module.exports.createRoom = createRoom;
-module.exports.generator = generator;
 
