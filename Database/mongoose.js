@@ -22,6 +22,13 @@ const UserSchema = new Schema({
 
 const User = mongoose.model('User', UserSchema);
 
+const RoomSchema = new Schema({
+  room: String,
+  status: String,
+});
+
+const Room = mongoose.model('Room', RoomSchema);
+
 
 // function for sign in
 // check if user already exists by email
@@ -31,7 +38,6 @@ const save = (user, hash, callback) => {
     if (err) {
       callback(err);
     } else if (!err && data) {
-      console.log(data, 'this is the data');
       console.log('User Exists Already');
       callback('User Exists Already');
     } else {
@@ -43,12 +49,20 @@ const save = (user, hash, callback) => {
         save_tokens: 0,
         death_tokens: 0,
       });
+<<<<<<< HEAD
+      newUser.save((error) => {
+=======
       newUser.save((error, userInfo) => {
+>>>>>>> 46fb416dbdff83b04b8b8362d526433eead220ff
         if (error) {
           console.error(error);
         } else {
           console.log('user saved');
+<<<<<<< HEAD
+          callback('Welcome!');
+=======
           callback(userInfo);
+>>>>>>> 46fb416dbdff83b04b8b8362d526433eead220ff
         }
       });
     }
@@ -67,12 +81,38 @@ const getUser = (request, callback) => {
         } else if (!match) {
           callback('UserName or Password is incorrect');
         } else {
-          callback('Match');
+          callback({
+            username: user.username,
+            save_tokens: user.save_tokens,
+            death_tokens: user.death_tokens,
+          });
         }
       });
     }
   });
 };
 
+const createRoom = (roomName, callback) => {
+  const newRoom = new Room({
+    room: roomName,
+    status: 'waiting',
+  });
+  newRoom.save((err) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log('Room Created');
+      callback('Room Created');
+    }
+  });
+};
+
+const generator = () => {
+  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+};
+
 module.exports.save = save;
 module.exports.getUser = getUser;
+module.exports.createRoom = createRoom;
+module.exports.generator = generator;
+
