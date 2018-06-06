@@ -8,7 +8,7 @@ const bcrypt = require('bcrypt');
 
 const app = express();
 const server = http.Server(app);
-const io = socketIO(server);
+const io = socketIO.listen(server);
 
 app.use(express.static(path.join(__dirname, '/../database')));
 app.use(express.static(path.join(__dirname, '/../dist')));
@@ -23,7 +23,7 @@ app.get('/users', (req, res) => {
   const request = req.query;
   console.log(request, 'this is the request');
   dataSave.getUser(request, (response) => {
-    if (response !== 'Match') {
+    if (typeof response !== 'object') {
       res.status(404).send(response);
     } else {
       res.status(200).send(response);
@@ -45,9 +45,25 @@ app.post('/users', (req, res) => {
   });
 });
 
+app.post('/start', (req, res) => {
+  dataSave.createRoom(dataSave.generator(), (response) => {
+    if (!response) {
+      console.log(response);
+      res.status(404).send('Invalid');
+    } else {
+      res.status(201).send(response);
+    }
+  });
+});
 
 io.on('connection', (socket) => {
-  console.log('a user connected');
+  console.log('a user connected', socket.adapter.nsp.name);
+  socket.on('create', (room) => {
+    socket.join(room);
+  });
+  socket.on('disconnect', () => {
+    console.log('user has disconnected');
+  });
 });
 
 server.listen(3000, () => {
