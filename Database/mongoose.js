@@ -46,12 +46,12 @@ const save = (user, hashed, callback) => {
             death_tokens: 0,
           });
 
-          newUser.save((error, info) => {
+          newUser.save((error, userInfo) => {
             if (error) {
               console.error(error);
             } else {
               console.log('user saved');
-              callback(info);
+              callback(userInfo);
             }
           });
         }
@@ -59,6 +59,7 @@ const save = (user, hashed, callback) => {
     };
   });
 };
+
 const getUser = (request, callback) => {
   User.findOne({ username: request.username }, (err, user) => {
     if (err) {

@@ -49,8 +49,8 @@ app.post('/users', (req, res) => {
       if (typeof response === 'string') {
         res.send(response);
       } else {
-        const info = { username: response.username, save_tokens: response.save_tokens, death_tokens: response.death_tokens };
-        res.send(info);
+        const userInfo = { username: response.username, save_tokens: response.save_tokens, death_tokens: response.death_tokens };
+        res.send(userInfo);
       }
     });
   });
