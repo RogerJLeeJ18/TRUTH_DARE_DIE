@@ -8,7 +8,7 @@
     "build": "webpack -D && cp client/index.html dist/index.html && webpack-dev-server --content-base client/ --inline --hot",
     "build:prod": "webpack =p && cp src/index.html dist/index.html",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "webpack": "./node_modules/.bin/webpack -w"
+    "webpack": "./node_modules/.bin/webpack --watch"
   },
   "repository": {
     "type": "git",
@@ -32,7 +32,9 @@
     "react-dom": "^16.4.0",
     "request": "^2.87.0",
     "socket.io": "^2.1.1",
-    "underscore": "^1.9.0"
+    "socket.io-client": "^2.1.1",
+    "underscore": "^1.9.0",
+    "webpack": "^4.10.2"
   },
   "devDependencies": {
     "babel": "^6.23.0",
@@ -51,7 +53,6 @@
     "mocha": "^5.2.0",
     "nodemon": "^1.17.5",
     "sinon": "^5.0.10",
-    "webpack": "^4.10.2",
     "webpack-cli": "^2.1.5",
     "webpack-dev-server": "^3.1.4"
   }

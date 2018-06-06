@@ -1,53 +1,92 @@
 import React from 'react';
 import { render } from 'react-dom';
 import axios from 'axios';
+import { Login } from './login.jsx';
+import { HomePage } from './homepage.jsx';
+import { SignUp } from './signup.jsx';
+import io from 'socket.io-client';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: '',
-      password: '',
+      isLoggedIn: false,
+      public: false,
+      private: false,
+      sessionLink: '',
+      userInfo: {},
+      signUp: false,
     };
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.login = this.login.bind(this);
+    this.signUpButton = this.signUpButton.bind(this);
+    this.signUpHandle = this.signUpHandle.bind(this);
+    this.socketHandle = this.socketHandle.bind(this);
   }
-  handleSubmit(event) {
-    console.log(this.username.value, this.password.value);
-    this.setState({
-      username: this.username.value,
-      password: this.password.value,
-    }, () => {
-      axios.get('/users', {
-        params: {
-          username: this.state.username,
-          password: this.state.password,
-        },
-      }).then((result) => {
-        console.log(result.data);
-      }).catch((error) => {
-        console.log(error);
+  signUpHandle(event) {
+    const username = event.target.username.value;
+    const password = event.target.password.value;
+    axios.post('/users', {
+      username,
+      password,
+    }).then((result) => {
+      this.setState({ isLoggedIn: !this.state.isLoggedIn, signUp: !this.state.signUp }, () => {
+        console.log('login successful', result);
       });
+    }).catch((error) => {
+      console.log(error);
     });
     event.preventDefault();
   }
+  signUpButton(event) {
+    this.setState({
+      signUp: !this.state.signUp,
+    }, () => {
+      console.log(this.state.signUp);
+    });
+  }
+  login(event) {
+    const username = event.target.username.value;
+    const password = event.target.password.value;
+    axios.get('/users', {
+      params: {
+        username,
+        password,
+      },
+    }).then(({ data }) => {
+      this.setState({ isLoggedIn: !this.state.isLoggedIn, userInfo: data }, () => {
+        console.log(this.state.userInfo);
+        console.log(`${this.state.userInfo.username} has logged in!`);
+      });
+    }).catch((error) => {
+      console.log(error);
+    });
+    event.preventDefault();
+  }
+  socketHandle(event) {
+    const roomname = event.target.socket.value;
+    // this.setState();
+    event.preventDefault();
+    console.log(roomname, 'this worked');
+    const socket = io.connect();
+    socket.emit('create', roomname);
+  }
   render() {
-    return (
-      <div className="container">
-        <div className="row">
-          <div className="col-xs-10 col-xs-offset-1">
-            <form onSubmit={this.handleSubmit}>
-              <label htmlFor="username">Username:
-                <input type="text" name="username" ref={(input) => { this.username = input; }} />
-              </label>
-              <br />
-              <label htmlFor="password">Password:
-                <input type="password" name="password" ref={(input) => { this.password = input; }} />
-              </label>
-              <button type="submit" >Submit</button>
-            </form>
-          </div>
+    const { isLoggedIn } = this.state;
+    const { userInfo } = this.state;
+    const { signUp } = this.state;
+    if (!signUp) {
+      return (
+        <div>
+          {isLoggedIn ? (
+            <HomePage userInfo={userInfo} socketHandle={this.socketHandle} />
+          ) : (
+            <Login login={this.login} signUpButton={this.signUpButton} />
+            )}
         </div>
-      </div>
+      );
+    }
+    return (
+      <SignUp signUpButton={this.signUpButton} signUpHandle={this.signUpHandle} />
     );
   }
 }
