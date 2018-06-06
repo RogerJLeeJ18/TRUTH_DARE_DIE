@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Login } from './login.jsx';
 import { HomePage } from './homepage.jsx';
 import { SignUp } from './signup.jsx';
+import io from 'socket.io-client';
 
 class App extends React.Component {
   constructor(props) {
@@ -19,6 +20,7 @@ class App extends React.Component {
     this.login = this.login.bind(this);
     this.signUpButton = this.signUpButton.bind(this);
     this.signUpHandle = this.signUpHandle.bind(this);
+    this.socketHandle = this.socketHandle.bind(this);
   }
   signUpHandle(event) {
     const username = event.target.username.value;
@@ -60,15 +62,23 @@ class App extends React.Component {
     });
     event.preventDefault();
   }
+  socketHandle(event) {
+    const roomname = event.target.socket.value;
+    // this.setState();
+    event.preventDefault();
+    console.log(roomname, 'this worked');
+    const socket = io.connect();
+    socket.emit('create', roomname);
+  }
   render() {
     const { isLoggedIn } = this.state;
-    const { userInfo } = this.state
+    const { userInfo } = this.state;
     const { signUp } = this.state;
     if (!signUp) {
       return (
         <div>
           {isLoggedIn ? (
-            <HomePage userInfo={userInfo} />
+            <HomePage userInfo={userInfo} socketHandle={this.socketHandle} />
           ) : (
             <Login login={this.login} signUpButton={this.signUpButton} />
             )}
