@@ -46,12 +46,12 @@ const save = (user, hashed, callback) => {
             death_tokens: 0,
           });
 
-          newUser.save((error) => {
+          newUser.save((error, info) => {
             if (error) {
               console.error(error);
             } else {
               console.log('user saved');
-              callback('Welcome!');
+              callback(info);
             }
           });
         }
