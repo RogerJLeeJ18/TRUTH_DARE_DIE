@@ -11,6 +11,11 @@ function HomePage(props) {
             <input type="checkbox" />
         </label>
       </form>
+      <div className="userInfo">
+      Username:{props.username}
+      Saves:{props.save_tokens}
+      Deaths:{props.death_tokens}
+      </div>
     </div>
   );
 }

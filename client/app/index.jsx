@@ -56,20 +56,19 @@ class App extends React.Component {
         console.log('login successful', result);
       });
     }).catch((error) => {
-      console.log(error);
+      (error);
     });
     event.preventDefault();
   }
   render() {
-    const isLoggedIn = this.state.isLoggedIn;
-    const password = this.state.password;
-    const username = this.state.username;
-    const signUp = this.state.signUp;
+    const { isLoggedIn } = this.state;
+    const { username } = this.state;
+    const { signUp } = this.state;
     if (!signUp) {
       return (
         <div>
           {isLoggedIn ? (
-            <HomePage username={username}/>
+            <HomePage username={username} />
           ) : (
             <Login login={this.login} signUpButton={this.signUpButton} />
             )}
