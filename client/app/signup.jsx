@@ -20,11 +20,13 @@ function SignUp(props) {
             <br />
             <button type="submit" >Submit</button>
             <br />
-            <button onClick={(e) => {
-              props.signUpButton(e);
-            }}
-            >Login
-            </button>
+            <label htmlFor="toLoginPage">Already have an account? login here:
+              <button onClick={(e) => {
+                props.signUpButton(e);
+              }}
+              >Login
+              </button>
+            </label>
           </form>
         </div>
       </div>

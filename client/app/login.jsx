@@ -20,13 +20,15 @@ function Login(props) {
             <br />
             <button type="submit" >Submit</button>
             <br />
-            <button onClick={(e) => {
+            <label htmlFor="toSignUpPage">Don't have an account? Sign up here:
+              <button onClick={(e) => {
               e.preventDefault();
               props.signUpButton(e);
             }}
-            >
+              >
             Sign up
-            </button>
+              </button>
+            </label>
           </form>
         </div>
       </div>

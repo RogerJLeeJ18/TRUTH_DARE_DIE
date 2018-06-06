@@ -10,7 +10,6 @@ class App extends React.Component {
     super(props);
     this.state = {
       username: '',
-      password: '',
       isLoggedIn: false,
       public: false,
       private: false,
@@ -20,6 +19,7 @@ class App extends React.Component {
     };
     this.login = this.login.bind(this);
     this.signUpButton = this.signUpButton.bind(this);
+    this.signUpHandle = this.signUpHandle.bind(this);
   }
   signUpHandle(event) {
     const username = event.target.username.value;
@@ -28,7 +28,7 @@ class App extends React.Component {
       username,
       password,
     }).then((result) => {
-      this.setState({ isLoggedIn: !this.state.isLoggedIn }, () => {
+      this.setState({ isLoggedIn: !this.state.isLoggedIn, signUp: !this.state.signUp }, () => {
         console.log('login successful', result);
       });
     }).catch((error) => {
@@ -69,9 +69,9 @@ class App extends React.Component {
       return (
         <div>
           {isLoggedIn ? (
-            <HomePage />
+            <HomePage username={username}/>
           ) : (
-              <Login login={this.login} signUpButton={this.signUpButton} />
+            <Login login={this.login} signUpButton={this.signUpButton} />
             )}
         </div>
       );
