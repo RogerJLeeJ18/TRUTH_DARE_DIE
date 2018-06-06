@@ -49,20 +49,12 @@ const save = (user, hash, callback) => {
         save_tokens: 0,
         death_tokens: 0,
       });
-<<<<<<< HEAD
-      newUser.save((error) => {
-=======
       newUser.save((error, userInfo) => {
->>>>>>> 46fb416dbdff83b04b8b8362d526433eead220ff
         if (error) {
           console.error(error);
         } else {
           console.log('user saved');
-<<<<<<< HEAD
-          callback('Welcome!');
-=======
           callback(userInfo);
->>>>>>> 46fb416dbdff83b04b8b8362d526433eead220ff
         }
       });
     }

@@ -9,7 +9,6 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: '',
       isLoggedIn: false,
       public: false,
       private: false,
@@ -51,9 +50,10 @@ class App extends React.Component {
         username,
         password,
       },
-    }).then((result) => {
-      this.setState({ isLoggedIn: !this.state.isLoggedIn }, () => {
-        console.log('login successful', result);
+    }).then(({ data }) => {
+      this.setState({ isLoggedIn: !this.state.isLoggedIn, userInfo: data }, () => {
+        console.log(this.state.userInfo);
+        console.log(`${this.state.userInfo.username} has logged in!`);
       });
     }).catch((error) => {
       console.log(error);
@@ -61,15 +61,14 @@ class App extends React.Component {
     event.preventDefault();
   }
   render() {
-    const isLoggedIn = this.state.isLoggedIn;
-    const password = this.state.password;
-    const username = this.state.username;
-    const signUp = this.state.signUp;
+    const { isLoggedIn } = this.state;
+    const { userInfo } = this.state
+    const { signUp } = this.state;
     if (!signUp) {
       return (
         <div>
           {isLoggedIn ? (
-            <HomePage username={username}/>
+            <HomePage userInfo={userInfo} />
           ) : (
             <Login login={this.login} signUpButton={this.signUpButton} />
             )}
