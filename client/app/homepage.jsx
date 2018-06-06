@@ -1,8 +1,7 @@
 import React from 'react';
 
 function HomePage(props) {
-  const user = props.userInfo;
-  return (
+  const element = (
     <div className="container">
       <form>
         <label htmlFor="public">Public
@@ -12,15 +11,25 @@ function HomePage(props) {
           <input type="checkbox" />
         </label>
       </form>
+      <div className="socketInput">
+        <form onSubmit={(e) => {
+          e.preventDefault();
+          props.socketHandle(e);
+          }}
+        >
+          <input type="text" name="socket" />
+        </form>
+      </div>
       <div className="userInfo">
-      Username:{user.username}
+      Username:{props.userInfo.username}
         <br />
-      Saves:{user.save_tokens}
+        Saves:{props.userInfo.save_tokens}
         <br />
-      Deaths:{user.death_tokens}
+        Deaths:{props.userInfo.death_tokens}
       </div>
     </div>
   );
+  return element;
 }
 
 export { HomePage };
