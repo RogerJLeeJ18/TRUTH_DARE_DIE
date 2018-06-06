@@ -19,6 +19,7 @@ app.get('/', (req, res) => {
 
 app.use(bodyParser.json());
 
+// get request for login
 app.get('/users', (req, res) => {
   const request = req.query;
   console.log(request, 'this is the request');
@@ -40,7 +41,12 @@ app.post('/users', (req, res) => {
       console.log(err);
     }
     dataSave.save(data, hash, (response) => {
-      res.send(response);
+      if (typeof response === 'string') {
+        res.send(response);
+      } else {
+        const info = { username: response.username, save_tokens: response.save_tokens, death_tokens: response.death_tokens };
+        res.send(info);
+      }
     });
   });
 });
