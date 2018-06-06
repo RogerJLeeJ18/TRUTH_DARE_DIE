@@ -59,7 +59,6 @@ const save = (user, hashed, callback) => {
     };
   });
 };
-
 const getUser = (request, callback) => {
   User.findOne({ username: request.username }, (err, user) => {
     if (err) {

@@ -22,17 +22,12 @@ app.use(bodyParser.json());
 // get request for login
 app.get('/users', (req, res) => {
   const request = req.query;
-  console.log(request);
-  bcrypt.hash(request.password, 10, (err, hash) => {
-    if (err) {
-      res.status(404).send('Error with hashing');
+  console.log(request, 'this is the request');
+  dataSave.getUser(request, (response) => {
+    if (response !== 'Match') {
+      res.status(404).send(response);
     } else {
-      dataSave.getUser(request, hash, (err1, response) => {
-        if (err1) {
-          res.status(404).send('Username or Password is incorrect!');
-        }
-        res.status(200).send('Success');
-      });
+      res.status(200).send(response);
     }
   });
 });
@@ -49,8 +44,8 @@ app.post('/users', (req, res) => {
       if (typeof response === 'string') {
         res.send(response);
       } else {
-        const userInfo = { username: response.username, save_tokens: response.save_tokens, death_tokens: response.death_tokens };
-        res.send(userInfo);
+        const info = { username: response.username, save_tokens: response.save_tokens, death_tokens: response.death_tokens };
+        res.send(info);
       }
     });
   });
