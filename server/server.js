@@ -5,6 +5,7 @@ const http = require('http');
 const path = require('path');
 const socketIO = require('socket.io');
 const bcrypt = require('bcrypt');
+const cookieSession = require('cookie-session');
 
 const app = express();
 const server = http.Server(app);
@@ -18,6 +19,13 @@ app.get('/', (req, res) => {
 });
 
 app.use(bodyParser.json());
+
+app.use(cookieSession({
+  name: 'session',
+  secret: 'TDD',
+  maxAge: 24 * 60 * 60 * 1000,
+
+}));
 
 // get request for login
 app.get('/users', (req, res) => {
@@ -51,8 +59,11 @@ app.post('/users', (req, res) => {
   });
 });
 
+// post request to add a room to db
 app.post('/start', (req, res) => {
-  dataSave.createRoom(dataSave.generator(), (response) => {
+  const request = req.body;
+  console.log(request);
+  dataSave.createRoom(request, (response) => {
     if (!response) {
       console.log(response);
       res.status(404).send('Invalid');
@@ -62,13 +73,56 @@ app.post('/start', (req, res) => {
   });
 });
 
+
+app.get('/rooms/:id', (req, res) => {
+  console.log(req.params.id);
+  const response = req.params.id;
+  dataSave.findRooms(response, (err, room) => {
+    if (err || room === null) {
+      res.status(404).send('Room not available');
+    } else {
+      res.status(200).send(`${room} available`);
+    }
+  });
+});
+
+// get request to get truth from db
+app.get('/truths', (req, res) => {
+  dataSave.getTruth(dataSave.randomID(), req.query.category, (response) => {
+    console.log(`the truth is: ${response.truth}`);
+    res.status(201).send(response.truth);
+  });
+});
+
+// get request to get dare from db
+app.get('/dares', (req, res) => {
+  dataSave.getDare(dataSave.randomID(), req.query.category, (response) => {
+    console.log(`The dare is: ${response.dare}`);
+    res.status(201).send(response.dare);
+  });
+});
+
+
 io.on('connection', (socket) => {
-  console.log('a user connected', socket.adapter.nsp.name);
+  console.log('a user connected');
   socket.on('create', (room) => {
+    console.log('Joined');
     socket.join(room);
   });
+
   socket.on('disconnect', () => {
     console.log('user has disconnected');
+  });
+  socket.on('sendTruth', (truth) => {
+    socket.broadcast.emit('sendTruth', truth);
+  });
+  socket.on('sendMessage', (message) => {
+    console.log(message);
+    io.emit('sendMessage', message);
+  });
+  socket.on('join', (room) => {
+    socket.join(room);
+    socket.emit('join', room);
   });
 });
 

@@ -39,26 +39,40 @@ class HomePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      roomname: '',
+      roomName: '',
       roomCreated: false,
+      endpoint: 'http://127.0.0.1:3000',
     };
-    this.socketHandle = this.socketHandle.bind(this);
+    this.socketHandle = this.makeRoom.bind(this);
   }
-  socketHandle(event) {
+  makeRoom(event) {
     const roomName = event.target.socket.value;
     axios.post('/start', {
       room: roomName,
     }).then((result) => {
-      this.setState({ roomname: roomName, roomCreated: !this.state.roomCreated }, () => {
-        console.log(`room ${roomName} has been created`, result);
+      this.setState({ roomName, roomCreated: !this.state.roomCreated }, () => {
+        console.log(`${this.state.roomName} has been created`, result);
       });
     }).catch((error) => {
       console.log(error);
     });
     event.preventDefault();
-    const socket = io.connect();
+    const socket = io.connect(this.state.endpoint, { 'reconnect': false });
     socket.emit('create', roomName);
     console.log(roomName, 'this worked');
+  }
+  joinRoom(event) {
+    const roomName = event.target.join.value;
+    axios.get(`/rooms/${roomName}`).then((result) => {
+      this.setState({ roomName, roomCreated: !this.state.roomCreated }, () => {
+        console.log(`you have joined ${this.state.roomName}`, result);
+      });
+    }).catch((error) => {
+      console.log(error, 'unable to join');
+    });
+    event.preventDefault();
+    const socket = io.connect(this.state.endpoint, { reconnect: false });
+    socket.emit('join', roomName);
   }
   render() {
     const element = (
@@ -72,13 +86,22 @@ class HomePage extends React.Component {
             <input type="checkbox" />
           </label>
         </form>
-        <div className="socketInput">
+        <div className="socketMakeRoom">
           <form onSubmit={(e) => {
             e.preventDefault();
-            this.socketHandle(e);
+            this.makeRoom(e);
             }}
           >
-            <input type="text" placeholder="make/join a room here" name="socket" />
+            <input type="text" placeholder="Make a room here" name="socket" />
+          </form>
+        </div>
+        <div className="socketJoinRoom">
+          <form onSubmit={(e) => {
+            e.preventDefault();
+            this.joinRoom(e);
+          }}
+          >
+            <input type="text" placeholder="Join a room here" name="join" />
           </form>
         </div>
         <div className="userInfo">
@@ -90,7 +113,7 @@ class HomePage extends React.Component {
         </div>
       </div>
     );
-    const gameRoom = (<GameRoom />);
+    const gameRoom = (<GameRoom roomname={this.state.roomName} userInfo={this.props.userInfo} />);
     const { roomCreated } = this.state;
     return (
       <div>
