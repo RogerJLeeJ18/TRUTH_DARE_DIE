@@ -16,7 +16,6 @@ const Form = styled.form`
 
 const Label = styled.label`
     display: inline-block;
-    width: 90px;
     font-size: 30px;
 `;
 
