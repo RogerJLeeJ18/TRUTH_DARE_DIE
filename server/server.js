@@ -5,6 +5,7 @@ const http = require('http');
 const path = require('path');
 const socketIO = require('socket.io');
 const bcrypt = require('bcrypt');
+const cookieSession = require('cookie-session');
 
 const app = express();
 const server = http.Server(app);
@@ -18,6 +19,13 @@ app.get('/', (req, res) => {
 });
 
 app.use(bodyParser.json());
+
+app.use(cookieSession({
+  name: 'session',
+  secret: 'TDD',
+  maxAge: 24 * 60 * 60 * 1000,
+
+}));
 
 // get request for login
 app.get('/users', (req, res) => {
@@ -52,7 +60,9 @@ app.post('/users', (req, res) => {
 });
 
 app.post('/start', (req, res) => {
-  dataSave.createRoom(dataSave.generator(), (response) => {
+  const request = req.body;
+  console.log(request);
+  dataSave.createRoom(request, (response) => {
     if (!response) {
       console.log(response);
       res.status(404).send('Invalid');
@@ -62,13 +72,35 @@ app.post('/start', (req, res) => {
   });
 });
 
+app.get('/rooms/:id', (req, res) => {
+  console.log(req.params);
+  const response = req.params.id;
+  dataSave.findRooms(response, (err, room) => {
+    if (err) {
+      res.status(404).send('Room not available');
+    } else {
+      res.status(200).send(`${room} available`);
+    }
+  });
+});
+
 io.on('connection', (socket) => {
-  console.log('a user connected', socket.adapter.nsp.name);
+  console.log('a user connected');
   socket.on('create', (room) => {
+    console.log('Joined');
+    console.log(room);
     socket.join(room);
   });
+
   socket.on('disconnect', () => {
     console.log('user has disconnected');
+  });
+  socket.on('sendTruth', (truth) => {
+    socket.broadcast.emit('sendTruth', truth);
+  });
+  socket.on('sendMessage', (message) => {
+    console.log(message);
+    socket.emit('hello');
   });
 });
 

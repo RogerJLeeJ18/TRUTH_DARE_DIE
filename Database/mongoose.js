@@ -86,7 +86,7 @@ const getUser = (request, callback) => {
 
 const createRoom = (roomName, callback) => {
   const newRoom = new Room({
-    room: roomName,
+    room: roomName.room,
     status: 'waiting',
   });
   newRoom.save((err) => {
@@ -99,12 +99,18 @@ const createRoom = (roomName, callback) => {
   });
 };
 
-const generator = () => {
-  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+const findRooms = (data, callback) => {
+  Room.findOne({ room: data }, (err, room) => {
+    if (err) {
+      callback(err, null);
+    } else {
+      callback(null, room);
+    }
+  });
 };
 
 module.exports.save = save;
 module.exports.getUser = getUser;
 module.exports.createRoom = createRoom;
-module.exports.generator = generator;
+module.exports.findRooms = findRooms;
 
