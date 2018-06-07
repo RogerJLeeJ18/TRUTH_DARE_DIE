@@ -61,6 +61,7 @@ app.post('/users', (req, res) => {
 
 app.post('/start', (req, res) => {
   const request = req.body;
+  console.log(request);
   dataSave.createRoom(request, (response) => {
     if (!response) {
       console.log(response);
@@ -71,11 +72,23 @@ app.post('/start', (req, res) => {
   });
 });
 
+app.get('/rooms/:id', (req, res) => {
+  console.log(req.params);
+  const response = req.params.id;
+  dataSave.findRooms(response, (err, room) => {
+    if (err) {
+      res.status(404).send('Room not available');
+    } else {
+      res.status(200).send(`${room} available`);
+    }
+  });
+});
+
 io.on('connection', (socket) => {
   console.log('a user connected');
   socket.on('create', (room) => {
-    console.log(room);
     console.log('Joined');
+    console.log(room);
     socket.join(room);
   });
 
@@ -86,7 +99,8 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('sendTruth', truth);
   });
   socket.on('sendMessage', (message) => {
-    socket.emit('sendMessage', message);
+    console.log(message);
+    socket.emit('hello');
   });
 });
 
