@@ -78,7 +78,7 @@ app.get('/rooms/:id', (req, res) => {
   console.log(req.params);
   const response = req.params.id;
   dataSave.findRooms(response, (err, room) => {
-    if (err) {
+    if (err || room === null) {
       res.status(404).send('Room not available');
     } else {
       res.status(200).send(`${room} available`);
