@@ -11,6 +11,8 @@ db.on('error', console.error.bind(console, 'connection error:'));
 
 const Schema = mongoose.Schema;
 
+
+// user schema
 const UserSchema = new Schema({
   username: String,
   password: String,
@@ -22,12 +24,33 @@ const UserSchema = new Schema({
 
 const User = mongoose.model('User', UserSchema);
 
+// room schema
 const RoomSchema = new Schema({
   room: String,
   status: String,
 });
 
 const Room = mongoose.model('Room', RoomSchema);
+
+
+// Truths schema
+const TruthSchema = new Schema({
+  category: String,
+  truth_id: Number,
+  truth: String,
+});
+
+const Truth = mongoose.model('Truth', TruthSchema);
+
+
+// Dares Schema
+const DareSchema = new Schema({
+  category: String,
+  dare: String,
+  dare_id: Number,
+});
+
+const Dare = mongoose.model('Dare', DareSchema);
 
 
 // function for sign in
@@ -60,6 +83,7 @@ const save = (user, hash, callback) => {
     }
   });
 };
+
 const getUser = (request, callback) => {
   User.findOne({ username: request.username }, (err, user) => {
     if (err) {
@@ -99,12 +123,41 @@ const createRoom = (roomName, callback) => {
   });
 };
 
-const generator = () => {
-  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+const generator = () => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+
+// function that will return a random number to use for getTruth and getDares functions
+const randomID = () => Math.floor((Math.random() * 5) + 1);
+
+// function to get the truths randomly
+const getTruth = (id, reqCategory, callback) => {
+  Truth.findOne({ truth_id: id, category: reqCategory }, (err, truth) => {
+    if (err) {
+      console.error(err);
+      callback(err);
+    } else {
+      callback(truth);
+    }
+  });
 };
+
+// function to get the dares randomly
+const getDare = (id, reqCategory, callback) => {
+  Dare.find({ dare_id: id, category: reqCategory }, (err, dare) => {
+    if (err) {
+      console.error(err);
+      callback(err);
+    } else {
+      callback(dare[0]);
+    }
+  });
+};
+
 
 module.exports.save = save;
 module.exports.getUser = getUser;
 module.exports.createRoom = createRoom;
 module.exports.generator = generator;
+module.exports.randomID = randomID;
+module.exports.getTruth = getTruth;
+module.exports.getDare = getDare;
 

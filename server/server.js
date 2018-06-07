@@ -51,6 +51,7 @@ app.post('/users', (req, res) => {
   });
 });
 
+// post request to add a room to db
 app.post('/start', (req, res) => {
   dataSave.createRoom(dataSave.generator(), (response) => {
     if (!response) {
@@ -61,6 +62,23 @@ app.post('/start', (req, res) => {
     }
   });
 });
+
+// get request to get truth from db
+app.get('/truths', (req, res) => {
+  dataSave.getTruth(dataSave.randomID(), req.query.category, (response) => {
+    console.log(`the truth is: ${response.truth}`);
+    res.status(201).send(response.truth);
+  });
+});
+
+// get request to get dare from db
+app.get('/dares', (req, res) => {
+  dataSave.getDare(dataSave.randomID(), req.query.category, (response) => {
+    console.log(`The dare is: ${response.dare}`);
+    res.status(201).send(response.dare);
+  });
+});
+
 
 io.on('connection', (socket) => {
   console.log('a user connected', socket.adapter.nsp.name);
