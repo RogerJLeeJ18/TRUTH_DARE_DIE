@@ -84,20 +84,6 @@ const getUser = (request, callback) => {
   });
 };
 
-const createRoom = (roomName, callback) => {
-  const newRoom = new Room({
-    room: roomName.room,
-    status: 'waiting',
-  });
-  newRoom.save((err) => {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log('Room Created');
-      callback('Room Created');
-    }
-  });
-};
 
 const findRooms = (data, callback) => {
   Room.findOne({ room: data }, (err, room) => {
@@ -105,6 +91,28 @@ const findRooms = (data, callback) => {
       callback(err, null);
     } else {
       callback(null, room);
+    }
+  });
+};
+const createRoom = (roomName, callback) => {
+  findRooms(roomName.room, (err, response) => {
+    if (err) {
+      callback(err);
+    } else if (response !== null && response.room === roomName.room) {
+      callback('Room already Exists!');
+    } else {
+      const newRoom = new Room({
+        room: roomName.room,
+        status: 'waiting',
+      });
+      newRoom.save((error) => {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Room Created');
+          callback('Room Created');
+        }
+      });
     }
   });
 };
