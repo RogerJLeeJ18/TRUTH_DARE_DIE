@@ -26,9 +26,10 @@ const Input = styled.input`
     border:1px solid black;
     cursor:pointer;
     width: 200px;
-    padding-bottom: 10px;
-    padding-top: 10px;
+    padding-bottom: 8px;
+    padding-top: 8px;
     height: 50%
+    font-size: 20px;
     -webkit-border-radius: 5px;
     border-radius: 5px; 
 `;
