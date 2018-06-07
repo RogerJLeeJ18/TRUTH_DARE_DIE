@@ -5,6 +5,7 @@ const http = require('http');
 const path = require('path');
 const socketIO = require('socket.io');
 const bcrypt = require('bcrypt');
+const cookieSession = require('cookie-session');
 
 const app = express();
 const server = http.Server(app);
@@ -18,6 +19,13 @@ app.get('/', (req, res) => {
 });
 
 app.use(bodyParser.json());
+
+app.use(cookieSession({
+  name: 'session',
+  secret: 'TDD',
+  maxAge: 24 * 60 * 60 * 1000,
+
+}));
 
 // get request for login
 app.get('/users', (req, res) => {
@@ -64,12 +72,21 @@ app.post('/start', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-  console.log('a user connected', socket.adapter.nsp.name);
+  console.log('a user connected');
   socket.on('create', (room) => {
+    console.log(room);
+    console.log('Joined');
     socket.join(room);
   });
+
   socket.on('disconnect', () => {
     console.log('user has disconnected');
+  });
+  socket.on('sendTruth', (truth) => {
+    socket.broadcast.emit('sendTruth', truth);
+  });
+  socket.on('sendMessage', (message) => {
+    socket.emit('sendMessage', message);
   });
 });
 
