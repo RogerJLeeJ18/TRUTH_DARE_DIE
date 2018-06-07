@@ -119,6 +119,29 @@ const findRooms = (data, callback) => {
   });
 };
 
+const createRoom = (roomName, callback) => {
+  findRooms(roomName.room, (err, response) => {
+    if (err) {
+      callback(err);
+    } else if (response !== null && response.room === roomName.room) {
+      callback('Room already Exists!');
+    } else {
+      const newRoom = new Room({
+        room: roomName.room,
+        status: 'waiting',
+      });
+      newRoom.save((error) => {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Room Created');
+          callback('Room Created');
+        }
+      });
+    }
+  });
+};
+
 const generator = () => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 
 // function that will return a random number to use for getTruth and getDares functions
@@ -147,30 +170,6 @@ const getDare = (id, reqCategory, callback) => {
     }
   });
 };
-
-const createRoom = (roomName, callback) => {
-  findRooms(roomName.room, (err, response) => {
-    if (err) {
-      callback(err);
-    } else if (response !== null && response.room === roomName.room) {
-      callback('Room already Exists!');
-    } else {
-      const newRoom = new Room({
-        room: roomName.room,
-        status: 'waiting',
-      });
-      newRoom.save((error) => {
-        if (error) {
-          console.log(error);
-        } else {
-          console.log('Room Created');
-          callback('Room Created');
-        }
-      });
-    }
-  });
-};
-
 
 module.exports.save = save;
 module.exports.getUser = getUser;
