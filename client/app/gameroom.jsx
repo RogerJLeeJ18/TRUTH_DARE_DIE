@@ -10,14 +10,18 @@ class GameRoom extends React.Component {
       socket: '',
       userInfo: {},
       messageHistory: [],
+      truth: '',
     };
+    // bind function to send messages and truth answer to component
     this.userSendMessage = this.userSendMessage.bind(this);
+    this.userSendTruth = this.userSendTruth.bind(this);
   }
+
   userSendTruth(event) {
     const truth = event.target.sendMessage.value;
     const socket = io.connect();
-    this.setState({ messageHistory: [...this.state.messageHistory, truth] }, () => {
-      socket.emit('sendMessage', truth);
+    this.setState({ truth }, () => {
+      socket.emit('sendTruth', this.state.truth);
     });
     event.preventDefault();
   }
@@ -31,7 +35,9 @@ class GameRoom extends React.Component {
     event.preventDefault();
   }
   render() {
-    const messageList = this.state.messageHistory.map(message => <li key={message}>{message}</li>);
+    const { username } = this.props.userInfo;
+    const messageList = this.state.messageHistory.map(message =>
+      <li key={message}>{username}: {message}</li>);
     return (
       <div>
         <form onSubmit={(e) => {

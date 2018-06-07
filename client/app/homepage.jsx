@@ -57,7 +57,7 @@ class HomePage extends React.Component {
         </div>
       </div>
     );
-    const gameRoom = (<GameRoom roomname={this.state.roomName} />);
+    const gameRoom = (<GameRoom roomname={this.state.roomName} userInfo={this.props.userInfo} />);
     const { roomCreated } = this.state;
     return (
       <div>
