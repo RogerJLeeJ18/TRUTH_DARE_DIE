@@ -7,7 +7,7 @@ class HomePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      roomname: '',
+      roomName: '',
       roomCreated: false,
     };
     this.socketHandle = this.socketHandle.bind(this);
@@ -17,8 +17,8 @@ class HomePage extends React.Component {
     axios.post('/start', {
       room: roomName,
     }).then((result) => {
-      this.setState({ roomname: roomName, roomCreated: !this.state.roomCreated }, () => {
-        console.log(`room ${roomName} has been created`, result);
+      this.setState({ roomName, roomCreated: !this.state.roomCreated }, () => {
+        console.log(`room ${this.state.roomName} has been created`, result);
       });
     }).catch((error) => {
       console.log(error);
@@ -57,7 +57,7 @@ class HomePage extends React.Component {
         </div>
       </div>
     );
-    const gameRoom = (<GameRoom />);
+    const gameRoom = (<GameRoom roomname={this.state.roomName} />);
     const { roomCreated } = this.state;
     return (
       <div>
