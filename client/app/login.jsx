@@ -1,49 +1,26 @@
 import React from 'react';
 import styled from 'styled-components';
 
-
-const Form = styled.form`
-  margin-left: 30%
-  width: 400px;
-  padding-left: 5%;
-  padding-right: 5%
-  padding-bottom: 3%;
-  padding-top: 3%
-  border: 1px solid black;
-  border-radius: 15px;
-  background-color: gray;
-`;
-
-const Label = styled.label`
-    display: inline-block;
-    width: 90px;
-    font-size: 30px;
-`;
-
-const Div = styled.div`
-  margin-top: 1em;
-`;
-
-const Button = styled.button`
-  background-color: black;
-  border: none;
-  color: white;
-  padding: 5px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
-  border-radius: 12px
-`;
-
 const Title = styled.h1`
   font-family: Nosifer;
   font-size: 50px;
-  padding-left: 24%;
+  padding-left: 26%;
   color: black;
 `;
 
+
+const Form = styled.form`
+margin-left: 30%
+width: 400px;
+  padding-left: 5%;
+  padding-right: 5%
+  padding-bottom: 3%;
+  padding-top: 2%
+  border: 1px solid black;
+  border-radius: 15px;
+  background-color: gray;
+  `;
+  
 const Input = styled.input`
     padding:5px 15px; 
     border:1px solid black;
@@ -56,6 +33,29 @@ const Input = styled.input`
     border-radius: 5px; 
 `;
 
+const Label = styled.label`
+    display: inline-block;
+    width: 90px;
+    font-size: 30px;
+    font-family: Nosifer;
+`;
+
+const Div = styled.div`
+  margin-top: 1em;
+`;
+
+const Button = styled.button`
+  background-color: black;
+  border: none;
+  color: white;
+  padding: 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  border-radius: 12px
+`;
 
 function Login(props) {
   const element = (
@@ -81,7 +81,7 @@ function Login(props) {
               </Label>
             </Div>
             <Div>
-              <Button type="submit" >Submit</Button>
+              <Button type="submit" >Login</Button>
             </Div>
             <Div>
               <label htmlFor="toSignUpPage">Don't have an account? Sign up here:
