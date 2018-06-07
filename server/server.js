@@ -102,6 +102,9 @@ io.on('connection', (socket) => {
     console.log(message);
     socket.emit('hello');
   });
+  socket.on('join', (room) => {
+    socket.join(room);
+  });
 });
 
 server.listen(3000, () => {
