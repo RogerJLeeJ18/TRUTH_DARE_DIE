@@ -9,9 +9,8 @@ const Title = styled.h1`
   color: black;
 `;
 
-
 const Form = styled.form`
-margin-left: 30%
+margin-left: 30%;
 width: 400px;
   padding-left: 5%;
   padding-right: 5%
