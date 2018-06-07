@@ -69,12 +69,12 @@ function SignUp(props) {
           >
             <Div>
               <Label htmlFor="username">Username:
-                <Input type="text" name="username" />
+                <Input type="text" name="username" placeholder="username"/>
               </Label>
             </Div>
             <Div>
               <Label htmlFor="password">Password:
-                <Input type="password" name="password" />
+                <Input type="password" name="password" placeholder="email"/>
               </Label>
             </Div>
             <Div>

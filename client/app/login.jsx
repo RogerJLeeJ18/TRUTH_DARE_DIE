@@ -66,6 +66,7 @@ function Login(props) {
           }}
             classame="form"
           >
+<<<<<<< HEAD
             <Div>
               <Label htmlFor="username">Username:
                 <Input type="text" name="username" />
@@ -82,6 +83,20 @@ function Login(props) {
             <Div>
               <label htmlFor="toSignUpPage">Don't have an account? Sign up here:
                 <Button onClick={(e) => {
+=======
+            <label htmlFor="username">Username:
+              <input type="text" name="username" placeholder="username" />
+            </label>
+            <br />
+            <label htmlFor="password">Password:
+              <input type="password" name="password" placeholder="password" />
+            </label>
+            <br />
+            <button type="submit" >Submit</button>
+            <br />
+            <label htmlFor="toSignUpPage">Don't have an account? Sign up here:
+              <button onClick={(e) => {
+>>>>>>> 1b3d4b5f63fdbfab05a28243a6e2bbf55314e50e
               e.preventDefault();
               props.signUpButton(e);
             }}
