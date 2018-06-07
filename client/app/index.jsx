@@ -4,6 +4,8 @@ import axios from 'axios';
 import { Login } from './login.jsx';
 import { HomePage } from './homepage.jsx';
 import { SignUp } from './signup.jsx';
+import styled from 'styled-components';
+
 
 class App extends React.Component {
   constructor(props) {
@@ -69,7 +71,7 @@ class App extends React.Component {
       return (
         <div>
           {isLoggedIn ? (
-            <HomePage username={username}/>
+            <HomePage username={username} />
           ) : (
             <Login login={this.login} signUpButton={this.signUpButton} />
             )}
