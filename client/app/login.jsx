@@ -11,12 +11,13 @@ const Form = styled.form`
   padding-top: 3%
   border: 1px solid black;
   border-radius: 15px;
+  background-color: gray;
 `;
 
 const Label = styled.label`
     display: inline-block;
     width: 90px;
-    font-size: 50px;
+    font-size: 30px;
 `;
 
 const Div = styled.div`
@@ -48,6 +49,9 @@ const Input = styled.input`
     border:1px solid black;
     cursor:pointer;
     width: 200px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    height: 50%
     -webkit-border-radius: 5px;
     border-radius: 5px; 
 `;
@@ -66,15 +70,14 @@ function Login(props) {
           }}
             classame="form"
           >
-<<<<<<< HEAD
             <Div>
               <Label htmlFor="username">Username:
-                <Input type="text" name="username" />
+                <Input type="text" name="username" placeholder="username" />
               </Label>
             </Div>
             <Div>
               <Label htmlFor="password">Password:
-                <Input type="password" name="password" />
+                <Input type="password" name="password" placeholder="password" />
               </Label>
             </Div>
             <Div>
@@ -83,20 +86,6 @@ function Login(props) {
             <Div>
               <label htmlFor="toSignUpPage">Don't have an account? Sign up here:
                 <Button onClick={(e) => {
-=======
-            <label htmlFor="username">Username:
-              <input type="text" name="username" placeholder="username" />
-            </label>
-            <br />
-            <label htmlFor="password">Password:
-              <input type="password" name="password" placeholder="password" />
-            </label>
-            <br />
-            <button type="submit" >Submit</button>
-            <br />
-            <label htmlFor="toSignUpPage">Don't have an account? Sign up here:
-              <button onClick={(e) => {
->>>>>>> 1b3d4b5f63fdbfab05a28243a6e2bbf55314e50e
               e.preventDefault();
               props.signUpButton(e);
             }}

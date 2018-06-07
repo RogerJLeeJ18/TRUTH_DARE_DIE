@@ -11,13 +11,13 @@ const Form = styled.form`
   padding-top: 3%
   border: 1px solid black;
   border-radius: 15px;
-  background-color: white;
+  background-color: gray;
 `;
 
 const Label = styled.label`
     display: inline-block;
     width: 90px;
-    font-size: 20px;
+    font-size: 30px;
 `;
 
 const Div = styled.div`
@@ -49,6 +49,9 @@ const Input = styled.input`
     border:1px solid black;
     cursor:pointer;
     width: 200px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    height: 50%
     -webkit-border-radius: 5px;
     border-radius: 5px; 
 `;
@@ -69,12 +72,12 @@ function SignUp(props) {
           >
             <Div>
               <Label htmlFor="username">Username:
-                <Input type="text" name="username" placeholder="username"/>
+                <Input type="text" name="username" placeholder="username" />
               </Label>
             </Div>
             <Div>
               <Label htmlFor="password">Password:
-                <Input type="password" name="password" placeholder="email"/>
+                <Input type="password" name="password" placeholder="password" />
               </Label>
             </Div>
             <Div>
