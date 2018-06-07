@@ -11,11 +11,11 @@ function SignUp(props) {
           }}
           >
             <label htmlFor="username">Username:
-              <input type="text" name="username" />
+              <input type="text" name="username" placeholder="username" />
             </label>
             <br />
             <label htmlFor="password">Password:
-              <input type="password" name="password" />
+              <input type="password" name="password" placeholder="password" />
             </label>
             <br />
             <button type="submit" >Submit</button>
