@@ -121,28 +121,6 @@ const findRooms = (data, callback) => {
 
 const generator = () => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 
-const createRoom = (roomName, callback) => {
-  findRooms(roomName.room, (err, response) => {
-    if (err) {
-      callback(err);
-    } else if (response !== null && response.room === roomName.room) {
-      callback('Room already Exists!');
-    } else {
-      const newRoom = new Room({
-        room: roomName.room,
-        status: 'waiting',
-      });
-      newRoom.save((error) => {
-        if (error) {
-          console.log(error);
-        } else {
-          console.log('Room Created');
-          callback('Room Created');
-        }
-      });
-    }
-}
-
 // function that will return a random number to use for getTruth and getDares functions
 const randomID = () => Math.floor((Math.random() * 5) + 1);
 
@@ -166,6 +144,29 @@ const getDare = (id, reqCategory, callback) => {
       callback(err);
     } else {
       callback(dare[0]);
+    }
+  });
+};
+
+const createRoom = (roomName, callback) => {
+  findRooms(roomName.room, (err, response) => {
+    if (err) {
+      callback(err);
+    } else if (response !== null && response.room === roomName.room) {
+      callback('Room already Exists!');
+    } else {
+      const newRoom = new Room({
+        room: roomName.room,
+        status: 'waiting',
+      });
+      newRoom.save((error) => {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Room Created');
+          callback('Room Created');
+        }
+      });
     }
   });
 };
