@@ -75,7 +75,7 @@ app.post('/start', (req, res) => {
 
 
 app.get('/rooms/:id', (req, res) => {
-  console.log(req.params);
+  console.log(req.params.id);
   const response = req.params.id;
   dataSave.findRooms(response, (err, room) => {
     if (err || room === null) {
@@ -107,7 +107,6 @@ io.on('connection', (socket) => {
   console.log('a user connected');
   socket.on('create', (room) => {
     console.log('Joined');
-    console.log(room);
     socket.join(room);
   });
 
@@ -119,7 +118,7 @@ io.on('connection', (socket) => {
   });
   socket.on('sendMessage', (message) => {
     console.log(message);
-    socket.emit('hello');
+    io.emit('sendMessage', message);
   });
   socket.on('join', (room) => {
     socket.join(room);
