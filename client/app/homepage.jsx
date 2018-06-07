@@ -2,6 +2,38 @@ import React from 'react';
 import axios from 'axios';
 import io from 'socket.io-client';
 import { GameRoom } from './gameroom.jsx';
+import styled from 'styled-components';
+
+const Title = styled.h1`
+  font-family: Nosifer;
+  font-size: 50px;
+  color: black;
+`;
+
+const Form = styled.form`
+  margin-left: 30%;
+  width: 400px;
+  padding-left: 5%;
+  padding-right: 5%
+  padding-bottom: 3%;
+  padding-top: 2%
+  border: 1px solid black;
+  border-radius: 15px;
+  background-color: gray;
+`;
+
+const Input = styled.form`
+
+`;
+
+const Div = styled.div`
+
+`;
+
+const Button = styled.button`
+
+`;
+
 
 class HomePage extends React.Component {
   constructor(props) {
@@ -31,6 +63,7 @@ class HomePage extends React.Component {
   render() {
     const element = (
       <div className="container">
+        <h1>Truth Dare Or Die</h1>
         <form>
           <label htmlFor="public">Public
             <input type="checkbox" />
