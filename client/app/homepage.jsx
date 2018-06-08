@@ -167,7 +167,11 @@ class HomePage extends React.Component {
           <Wins>Wins: {this.props.userInfo.win_tokens}</Wins>
         </TopBar>
         <Title>Truth Dare Or Die</Title>
-        <Form>
+        <Form onSubmit={(e) => {
+          e.preventDefault();
+          this.makeRoom(e);
+        }}
+        >
           <Div>
             <Div>
               <Label>Make A Room</Label>
@@ -183,29 +187,29 @@ class HomePage extends React.Component {
           <Div className="socketMakeRoom">
             <Div>
               <Input type="text" placeholder="Make a room here" name="socket" />
-              <Button onSubmit={(e) => {
-              e.preventDefault();
-              this.makeRoom(e);
-            }}
-              >Create
-              </Button>
-            </Div>
-          </Div>
-          <Div className="socketJoinRoom">
-            <Div>
-              <Label>Join A Room</Label>
-            </Div>
-            <Div>
-              <Input type="text" placeholder="Join a room here" name="join" />
-              <Button onSubmit={(e) => {
-              e.preventDefault();
-              this.joinRoom(e);
-            }}
-              >Join
+              <Button>Create
               </Button>
             </Div>
           </Div>
         </Form>
+        <Div>
+          <Form onSubmit={(e) => {
+          e.preventDefault();
+          this.joinRoom(e);
+          }}
+          >
+            <Div className="socketJoinRoom">
+              <Div>
+                <Label>Join A Room</Label>
+              </Div>
+              <Div>
+                <Input type="text" placeholder="Join a room here" name="join" />
+                <Button>Join
+                </Button>
+              </Div>
+            </Div>
+          </Form>
+        </Div>
       </div>
     );
     const gameRoom = (<GameRoom roomname={this.state.roomName} socket={this.state.socket} userInfo={this.props.userInfo} />);

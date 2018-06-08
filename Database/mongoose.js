@@ -129,8 +129,8 @@ const generator = () => Math.random().toString(36).substring(2, 15) + Math.rando
 const randomID = () => Math.floor((Math.random() * 5) + 1);
 
 // function to get the truths randomly
-const getTruth = (id, reqCategory, callback) => {
-  Truth.findOne({ truth_id: id, category: reqCategory }, (err, truth) => {
+const getTruth = (id, callback) => {
+  Truth.findOne({ truth_id: id }, (err, truth) => {
     if (err) {
       console.error(err);
       callback(err);
@@ -141,8 +141,8 @@ const getTruth = (id, reqCategory, callback) => {
 };
 
 // function to get the dares randomly
-const getDare = (id, reqCategory, callback) => {
-  Dare.find({ dare_id: id, category: reqCategory }, (err, dare) => {
+const getDare = (id, callback) => {
+  Dare.find({ dare_id: id }, (err, dare) => {
     if (err) {
       console.error(err);
       callback(err);
