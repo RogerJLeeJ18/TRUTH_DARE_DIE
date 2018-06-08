@@ -9,8 +9,8 @@ const Title = styled.h1`
 `;
 
 const Form = styled.form`
-margin-left: 30%;
-width: 400px;
+  margin-left: 30%;
+  width: 400px;
   padding-left: 5%;
   padding-right: 5%
   padding-bottom: 3%;
@@ -23,7 +23,6 @@ width: 400px;
 const Input = styled.input`
     padding:5px 15px; 
     border:1px solid black;
-    cursor:pointer;
     width: 200px;
     padding-bottom: 8px;
     padding-top: 8px;
