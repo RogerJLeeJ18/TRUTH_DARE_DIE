@@ -156,7 +156,11 @@ class HomePage extends React.Component {
           <Deaths>Deaths: {this.props.userInfo.death_tokens}</Deaths>
         </TopBar>
         <Title>Truth Dare Or Die</Title>
-        <Form>
+        <Form onSubmit={(e) => {
+          e.preventDefault();
+          this.makeRoom(e);
+        }}
+        >
           <Div>
             <Div>
               <Label>Make A Room</Label>
@@ -172,25 +176,23 @@ class HomePage extends React.Component {
           <Div className="socketMakeRoom">
             <Div>
               <Input type="text" placeholder="Make a room here" name="socket" />
-              <Button onSubmit={(e) => {
-              e.preventDefault();
-              this.makeRoom(e);
-            }}
-              >Create
+              <Button>Create
               </Button>
             </Div>
           </Div>
+        </Form>
+        <Form onSubmit={(e) => {
+          e.preventDefault();
+          this.joinRoom(e);
+        }}
+        >
           <Div className="socketJoinRoom">
             <Div>
               <Label>Join A Room</Label>
             </Div>
             <Div>
               <Input type="text" placeholder="Join a room here" name="join" />
-              <Button onSubmit={(e) => {
-              e.preventDefault();
-              this.joinRoom(e);
-            }}
-              >Join
+              <Button>Join
               </Button>
             </Div>
           </Div>

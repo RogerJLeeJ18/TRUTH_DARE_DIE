@@ -2,6 +2,8 @@ import React from 'react';
 import { render } from 'react-dom';
 import axios from 'axios';
 import io from 'socket.io-client';
+import Webcam from 'react-webcam';
+import { WebcamCapture } from './recorder.jsx';
 
 class GameRoom extends React.Component {
   constructor(props) {
@@ -22,7 +24,7 @@ class GameRoom extends React.Component {
     });
   }
   userSendTruth(event) {
-    const truth = event.target.sendMessage.value;
+    const truth = event.target.truth.value;
     this.setState({ truth }, () => {
       this.props.socket.emit('sendTruth', this.state.truth);
     });
@@ -32,14 +34,12 @@ class GameRoom extends React.Component {
     const message = `${this.props.userInfo.username}: ${event.target.sendMessage.value}`;
     this.setState({ messageHistory: [...this.state.messageHistory, message] }, () => {
       this.props.socket.emit('sendMessage', message);
-      console.log(message);
     });
     event.preventDefault();
   }
   render() {
     const { username } = this.props.userInfo;
-    const messageList = this.state.messageHistory.map(message =>
-      <li key={message}>{message}</li>);
+    const messageList = this.state.messageHistory.map(message => <li key={message}>{message}</li>);
     return (
       <div>
         <form onSubmit={(e) => {
@@ -62,7 +62,9 @@ class GameRoom extends React.Component {
           <label htmlFor="truth">
             <input type="text" name="truth" />
           </label>
+          <input type="submit" value="Send Truth" />
         </form>
+        <WebcamCapture />
       </div>
     );
   }

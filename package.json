@@ -23,6 +23,7 @@
   "homepage": "https://github.com/10-percent/immersion-2018-04-greenfield#readme",
   "dependencies": {
     "axios": "^0.18.0",
+    "babel-plugin-add-module-exports": "^0.2.1",
     "bcrypt": "^2.0.1",
     "body-parser": "^1.18.3",
     "cookie-session": "^2.0.0-beta.3",
@@ -31,6 +32,7 @@
     "node": "^10.3.0",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
+    "react-webcam": "^0.5.0",
     "request": "^2.87.0",
     "socket.io": "^2.1.1",
     "socket.io-client": "^2.1.1",
