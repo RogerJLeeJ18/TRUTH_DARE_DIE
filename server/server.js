@@ -126,7 +126,15 @@ app.get('/end', (req, res) => {
     } else {
       res.status(200).send('The game has ended!');
     }
-  })
+  });
+});
+
+
+app.get('/room', (req, res) => {
+  const sockets = Object.keys(io.sockets.sockets);
+  const randomSocket = Math.floor((Math.random() * sockets.length) + 1);
+  console.log(sockets);
+  res.send(sockets[randomSocket]);
 });
 
 
