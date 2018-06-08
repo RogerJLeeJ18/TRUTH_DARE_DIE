@@ -44,7 +44,7 @@ class GameRoom extends React.Component {
       });
       event.preventDefault();
     } else {
-      this.setState({ messageHistory: [...messages, message] }, () => {
+      this.setState({ messageHistory: [...this.state.messageHistory, message] }, () => {
         this.props.socket.emit('sendMessage', message);
       });
       event.preventDefault();
@@ -112,7 +112,7 @@ class GameRoom extends React.Component {
             }}
           >DARE
           </button>
-          {this.state.truth ? this.state.truth : this.state.dare };
+          {this.state.truth ? this.state.truth : this.state.dare};
         </div>
       </div>
     );
