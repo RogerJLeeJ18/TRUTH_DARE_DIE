@@ -23,7 +23,6 @@ const Form = styled.form`
 const Input = styled.input`
     padding:5px 15px; 
     border:1px solid black;
-    cursor:pointer;
     width: 200px;
     padding-bottom: 8px;
     padding-top: 8px;
