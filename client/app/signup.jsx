@@ -58,6 +58,9 @@ const Button = styled.button`
   border-radius: 12px
 `;
 
+const Login = styled.label`
+  font-size: 20px;
+`;
 
 function SignUp(props) {
   const element = (
@@ -86,13 +89,13 @@ function SignUp(props) {
               <Button type="submit" >Submit</Button>
             </Div>
             <Div>
-              <label htmlFor="toLoginPage">Already have an account? login here:
+              <Login htmlFor="toLoginPage">Already have an account? login here:
                 <Button onClick={(e) => {
                   props.signUpButton(e);
                 }}
                 >Login
                 </Button>
-              </label>
+              </Login>
             </Div>
           </Form>
         </div>
