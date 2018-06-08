@@ -9,7 +9,7 @@ class HomePage extends React.Component {
     this.state = {
       roomName: '',
       roomCreated: false,
-      endpoint: 'http://127.0.0.1:3000',
+      socket: io.connect('http://127.0.0.1:3000', { reconnection: false }),
     };
     this.socketHandle = this.makeRoom.bind(this);
   }
@@ -25,8 +25,7 @@ class HomePage extends React.Component {
       console.log(error);
     });
     event.preventDefault();
-    const socket = io.connect(this.state.endpoint, { 'reconnect': false });
-    socket.emit('create', roomName);
+    this.state.socket.emit('create', roomName);
     console.log(roomName, 'this worked');
   }
   joinRoom(event) {
@@ -39,8 +38,7 @@ class HomePage extends React.Component {
       console.log(error, 'unable to join');
     });
     event.preventDefault();
-    const socket = io.connect(this.state.endpoint, { reconnect: false });
-    socket.emit('join', roomName);
+    this.state.socket.emit('join', roomName);
   }
   render() {
     const element = (
@@ -80,7 +78,7 @@ class HomePage extends React.Component {
         </div>
       </div>
     );
-    const gameRoom = (<GameRoom roomname={this.state.roomName} userInfo={this.props.userInfo} />);
+    const gameRoom = (<GameRoom roomname={this.state.roomName} socket={this.state.socket} userInfo={this.props.userInfo} />);
     const { roomCreated } = this.state;
     return (
       <div>

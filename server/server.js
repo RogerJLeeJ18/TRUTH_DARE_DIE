@@ -107,22 +107,22 @@ io.on('connection', (socket) => {
   console.log('a user connected');
   socket.on('create', (room) => {
     console.log('Joined');
-    socket.join(room);
+    socket.broadcast.join(room);
   });
 
-  socket.on('disconnect', () => {
-    console.log('user has disconnected');
-  });
   socket.on('sendTruth', (truth) => {
     socket.broadcast.emit('sendTruth', truth);
   });
   socket.on('sendMessage', (message) => {
     console.log(message);
-    io.emit('sendMessage', message);
+    socket.broadcast.emit('sentMessage', message);
   });
   socket.on('join', (room) => {
     socket.join(room);
-    socket.emit('join', room);
+    socket.broadcast.emit('join', room);
+  });
+  socket.on('disconnect', (user) => {
+    console.log(`${user} has disconnected`);
   });
 });
 
