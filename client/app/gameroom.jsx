@@ -24,7 +24,7 @@ class GameRoom extends React.Component {
     });
   }
   userSendTruth(event) {
-    const truth = event.target.sendMessage.value;
+    const truth = event.target.truth.value;
     this.setState({ truth }, () => {
       this.props.socket.emit('sendTruth', this.state.truth);
     });
@@ -34,7 +34,6 @@ class GameRoom extends React.Component {
     const message = `${this.props.userInfo.username}: ${event.target.sendMessage.value}`;
     this.setState({ messageHistory: [...this.state.messageHistory, message] }, () => {
       this.props.socket.emit('sendMessage', message);
-      console.log(message);
     });
     event.preventDefault();
   }
@@ -63,6 +62,7 @@ class GameRoom extends React.Component {
           <label htmlFor="truth">
             <input type="text" name="truth" />
           </label>
+          <input type="submit" value="Send Truth" />
         </form>
         <WebcamCapture />
       </div>
