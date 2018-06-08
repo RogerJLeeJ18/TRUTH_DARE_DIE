@@ -128,7 +128,17 @@ app.get('/end', (req, res) => {
     } else {
       res.status(200).send('The game has ended!');
     }
-  })
+  });
+});
+
+app.post('/video', (req, res) => {
+  console.log(req.body);
+  const video = req.body.video.get('userVideo');
+  console.log(video);
+});
+
+app.post('/votes', (req, res) => {
+
 });
 
 app.post('/video', (req, res) => {
