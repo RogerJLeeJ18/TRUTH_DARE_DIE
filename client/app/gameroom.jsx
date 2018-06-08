@@ -13,10 +13,13 @@ class GameRoom extends React.Component {
       userInfo: {},
       messageHistory: [],
       truth: '',
+      alive: true,
     };
     // bind function to send messages and truth answer to component
     this.userSendMessage = this.userSendMessage.bind(this);
     this.userSendTruth = this.userSendTruth.bind(this);
+    this.userSelectDare = this.userSelectDare.bind(this);
+    this.userSelectTruth = this.userSelectTruth.bind(this);
   }
   componentDidMount() {
     this.props.socket.on('sentMessage', (message) => {
@@ -41,11 +44,27 @@ class GameRoom extends React.Component {
       });
       event.preventDefault();
     } else {
-      this.setState({ messageHistory: [...messages, message] }, () => {
+      this.setState({ messageHistory: [...this.state.messageHistory, message] }, () => {
         this.props.socket.emit('sendMessage', message);
       });
       event.preventDefault();
     }
+  }
+  userSelectTruth(event) {
+    axios.get('/truths').then(({ data }) => {
+      this.setState({ truth: data });
+    }).catch((error) => {
+      console.log(error);
+    });
+    this.props.socket.emit('truth');
+  }
+  userSelectDare(event) {
+    axios.get('/dares').then(({ data }) => {
+      this.setState({ truth: data });
+    }).catch((error) => {
+      console.log(error);
+    });
+    this.props.socket.emit('dare');
   }
   render() {
     const { username } = this.props.userInfo;
@@ -72,9 +91,29 @@ class GameRoom extends React.Component {
           <label htmlFor="truth">
             <input type="text" name="truth" />
           </label>
-          <input type="submit" value="Send Truth" />
+          <input type="submit" name="Send Truth" />
         </form>
         <WebcamCapture />
+        <div>
+          <button
+            type="submit"
+            name="truth"
+            onClick={(e) => {
+              this.userSelectTruth(e);
+            }}
+          >TRUTH
+          </button>
+          or
+          <button
+            type="submit"
+            name="dare"
+            onClick={(e) => {
+              this.userSelectDare(e);
+            }}
+          >DARE
+          </button>
+          {this.state.truth ? this.state.truth : this.state.dare};
+        </div>
       </div>
     );
   }
