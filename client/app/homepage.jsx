@@ -9,18 +9,28 @@ const Title = styled.h1`
   font-size: 50px;
   color: black;
   margin-top: 5%
+  padding-left: 24%;
 `;
 
 const Form = styled.form`
-  margin-left: 30%;
+  margin-left: 6%;
   width: 400px;
   padding-left: 5%;
   padding-right: 5%
   padding-bottom: 3%;
   padding-top: 2%
-  border: 1px solid black;
-  border-radius: 15px;
-  background-color: gray;
+  float: left;
+`;
+
+const CreateForm = styled.form`
+  margin-left: 6%;
+  width: 400px;
+  padding-left: 5%;
+  padding-right: 5%
+  padding-bottom: 3%;
+  padding-top: 2%
+  border-right: 1px solid black;
+  float: left;
 `;
 
 const Label = styled.label`
@@ -167,7 +177,7 @@ class HomePage extends React.Component {
           <Wins>Wins: {this.props.userInfo.win_tokens}</Wins>
         </TopBar>
         <Title>Truth Dare Or Die</Title>
-        <Form onSubmit={(e) => {
+        <CreateForm onSubmit={(e) => {
           e.preventDefault();
           this.makeRoom(e);
         }}
@@ -191,7 +201,7 @@ class HomePage extends React.Component {
               </Button>
             </Div>
           </Div>
-        </Form>
+        </CreateForm>
         <Div>
           <Form onSubmit={(e) => {
           e.preventDefault();
