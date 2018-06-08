@@ -41,10 +41,20 @@ class GameRoom extends React.Component {
     event.preventDefault();
   }
   userSelectTruth(event) {
-    console.log(event);
+    axios.get('/truths').then(({ data }) => {
+      this.setState({ truth: data });
+    }).catch((error) => {
+      console.log(error);
+    });
+    this.props.socket.emit('truth');
   }
   userSelectDare(event) {
-    console.log(event);
+    axios.get('/dares').then(({ data }) => {
+      this.setState({ truth: data });
+    }).catch((error) => {
+      console.log(error);
+    });
+    this.props.socket.emit('dare');
   }
   render() {
     const { username } = this.props.userInfo;
@@ -79,7 +89,7 @@ class GameRoom extends React.Component {
             type="submit"
             name="truth"
             onClick={(e) => {
-              this.userSelectDare(e);
+              this.userSelectTruth(e);
             }}
           >TRUTH
           </button>
@@ -92,6 +102,7 @@ class GameRoom extends React.Component {
             }}
           >DARE
           </button>
+          {this.state.truth ? this.state.truth : this.state.dare };
         </div>
       </div>
     );

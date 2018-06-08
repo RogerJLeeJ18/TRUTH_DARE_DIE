@@ -88,7 +88,7 @@ app.get('/rooms/:id', (req, res) => {
 
 // get request to get truth from db
 app.get('/truths', (req, res) => {
-  dataSave.getTruth(dataSave.randomID(), req.query.category, (response) => {
+  dataSave.getTruth(dataSave.randomID(), (response) => {
     console.log(`the truth is: ${response.truth}`);
     res.status(201).send(response.truth);
   });
@@ -96,7 +96,7 @@ app.get('/truths', (req, res) => {
 
 // get request to get dare from db
 app.get('/dares', (req, res) => {
-  dataSave.getDare(dataSave.randomID(), req.query.category, (response) => {
+  dataSave.getDare(dataSave.randomID(), (response) => {
     console.log(`The dare is: ${response.dare}`);
     res.status(201).send(response.dare);
   });
