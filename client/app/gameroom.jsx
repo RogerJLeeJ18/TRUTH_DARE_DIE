@@ -66,8 +66,13 @@ class GameRoom extends React.Component {
     });
     this.props.socket.emit('dare');
   }
-  userSendVideo(event) {
-    axios.post('/video')
+  userSendVideo(video) {
+    axios.post('/video', { video })
+      .then((result) => {
+        console.log(result);
+      }).catch((err) => {
+        console.log(err);
+      });
   }
   render() {
     const { username } = this.props.userInfo;

@@ -79,7 +79,7 @@ class WebcamCapture extends React.Component {
   }
   downloadVideo(blob) {
     const videoData = new FormData();
-    videoData.set('userVid', blob);
+    videoData.set('userVideo', blob);
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.style.display = 'none';
