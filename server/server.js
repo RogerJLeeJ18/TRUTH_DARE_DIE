@@ -52,7 +52,12 @@ app.post('/users', (req, res) => {
       if (typeof response === 'string') {
         res.send(response);
       } else {
-        const info = { username: response.username, save_tokens: response.save_tokens, death_tokens: response.death_tokens };
+        const info = {
+          username: response.username,
+          save_tokens: response.save_tokens,
+          death_tokens: response.death_tokens,
+          win_tokens: response.win_tokens,
+        };
         res.send(info);
       }
     });
@@ -102,6 +107,28 @@ app.get('/dares', (req, res) => {
   });
 });
 
+app.get('/ready', (req, res) => {
+  const roomName = req.headers;
+  dataSave.updateRoom(roomName, (err, response) => {
+    if (err) {
+      res.status(404).send('Something went wrong!');
+    } else {
+      res.status(200).send('Updated');
+    }
+  });
+});
+
+app.get('/end', (req, res) => {
+  const roomName = req.headers;
+  dataSave.endRoom(roomName, (err, response) => {
+    if (err) {
+      res.status(404).send('Invalid room');
+    } else {
+      res.status(200).send('The game has ended!');
+    }
+  })
+});
+
 
 io.on('connection', (socket) => {
   console.log('a user connected');
@@ -121,8 +148,9 @@ io.on('connection', (socket) => {
     socket.join(room);
     socket.broadcast.emit('join', room);
   });
-  socket.on('disconnect', (user) => {
-    console.log(`${user} has disconnected`);
+  socket.on('disconnect', () => {
+    console.log('user has disconnected');
+    socket.disconnect(true);
   });
 });
 

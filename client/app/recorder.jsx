@@ -3,8 +3,8 @@ import MediaCapturer from 'react-multimedia-capture';
 
 
 class WebcamCapture extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       granted: false,
       rejectedReason: '',
@@ -78,14 +78,16 @@ class WebcamCapture extends React.Component {
     this.refs.app.querySelector('video').src = '';
   }
   downloadVideo(blob) {
+    const videoData = new FormData();
+    videoData.set('userVid', blob);
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.style.display = 'none';
     a.href = url;
     a.target = '_blank';
     document.body.appendChild(a);
-
     a.click();
+    this.props.userSendVideo(videoData);
   }
   render() {
     const { granted } = this.state;

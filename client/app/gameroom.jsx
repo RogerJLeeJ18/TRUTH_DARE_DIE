@@ -15,6 +15,7 @@ class GameRoom extends React.Component {
       alive: true,
     };
     // bind function to send messages and truth answer to component
+    this.userSendVideo = this.userSendVideo.bind(this);
     this.userSendMessage = this.userSendMessage.bind(this);
     this.userSendTruth = this.userSendTruth.bind(this);
     this.userSelectDare = this.userSelectDare.bind(this);
@@ -65,6 +66,9 @@ class GameRoom extends React.Component {
     });
     this.props.socket.emit('dare');
   }
+  userSendVideo(event) {
+    axios.post('/video')
+  }
   render() {
     const { username } = this.props.userInfo;
     const messageList = this.state.messageHistory.map(message => <li key={message}>{message}</li>);
@@ -92,7 +96,7 @@ class GameRoom extends React.Component {
           </label>
           <input type="submit" name="Send Truth" />
         </form>
-        <WebcamCapture />
+        <WebcamCapture userSendVideo={this.userSendVideo} />
         <div>
           <button
             type="submit"

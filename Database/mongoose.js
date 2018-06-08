@@ -20,6 +20,7 @@ const UserSchema = new Schema({
   email: String,
   save_tokens: Number,
   death_tokens: Number,
+  win_tokens: Number,
 });
 
 const User = mongoose.model('User', UserSchema);
@@ -71,6 +72,7 @@ const save = (user, hash, callback) => {
         email: user.email,
         save_tokens: 0,
         death_tokens: 0,
+        win_tokens: 0,
       });
       newUser.save((error, userInfo) => {
         if (error) {
@@ -84,6 +86,7 @@ const save = (user, hash, callback) => {
   });
 };
 
+// function that will get a user from db when user logs in
 const getUser = (request, callback) => {
   User.findOne({ username: request.username }, (err, user) => {
     if (err) {
@@ -101,6 +104,7 @@ const getUser = (request, callback) => {
             username: user.username,
             save_tokens: user.save_tokens,
             death_tokens: user.death_tokens,
+            win_tokens: user.win_tokens,
           });
         }
       });
@@ -108,7 +112,7 @@ const getUser = (request, callback) => {
   });
 };
 
-
+// function that will find a room that already exists
 const findRooms = (data, callback) => {
   Room.findOne({ room: data }, (err, room) => {
     if (err) {
@@ -148,6 +152,7 @@ const getDare = (id, callback) => {
   });
 };
 
+// function that will create a new room
 const createRoom = (roomName, callback) => {
   findRooms(roomName.room, (err, response) => {
     if (err) {
@@ -171,6 +176,27 @@ const createRoom = (roomName, callback) => {
   });
 };
 
+const updateRoom = (room, callback) => {
+  Room.updateOne({ room: room.room }, {
+    status: 'start',
+  }, (err, resp) => {
+    if (err) {
+      callback(err, null);
+    } else {
+      callback(null, 'Updated and ready!');
+    }
+  });
+};
+
+const endRoom = (room, callback) => {
+  Room.deleteOne({ room: room.room }, (err) => {
+    if (err) {
+      callback('Room not found.', null);
+    } else {
+      callback(null, 'Game has finished');
+    }
+  });
+};
 
 module.exports.save = save;
 module.exports.getUser = getUser;
@@ -180,3 +206,5 @@ module.exports.randomID = randomID;
 module.exports.getTruth = getTruth;
 module.exports.getDare = getDare;
 module.exports.findRooms = findRooms;
+module.exports.updateRoom = updateRoom;
+module.exports.endRoom = endRoom;
