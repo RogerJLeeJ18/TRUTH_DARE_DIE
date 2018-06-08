@@ -126,7 +126,11 @@ app.get('/end', (req, res) => {
     } else {
       res.status(200).send('The game has ended!');
     }
-  })
+  });
+});
+
+app.post('/video', (req, res) => {
+  console.log(req.body);
 });
 
 
