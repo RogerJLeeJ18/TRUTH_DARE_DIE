@@ -2,6 +2,8 @@ import React from 'react';
 import { render } from 'react-dom';
 import axios from 'axios';
 import io from 'socket.io-client';
+import Webcam from 'react-webcam';
+import { WebcamCapture } from './recorder.jsx';
 
 class GameRoom extends React.Component {
   constructor(props) {
@@ -38,8 +40,7 @@ class GameRoom extends React.Component {
   }
   render() {
     const { username } = this.props.userInfo;
-    const messageList = this.state.messageHistory.map(message =>
-      <li key={message}>{message}</li>);
+    const messageList = this.state.messageHistory.map(message => <li key={message}>{message}</li>);
     return (
       <div>
         <form onSubmit={(e) => {
@@ -63,6 +64,7 @@ class GameRoom extends React.Component {
             <input type="text" name="truth" />
           </label>
         </form>
+        <WebcamCapture />
       </div>
     );
   }
