@@ -97,6 +97,16 @@ const Saves = styled.li`
   background-color: gold;
 `;
 
+const Wins = styled.li`
+  font-size: 22px;
+  list-style-type: none;
+  float: right;
+  display: block;
+  text-align: center;
+  padding: 14px 16px;
+  background-color: white;
+`;
+
 
 const TopBar = styled.ul`
   list-style-type: none;
@@ -154,6 +164,7 @@ class HomePage extends React.Component {
           <User>Hello, {this.props.userInfo.username}</User>
           <Saves>Saves: {this.props.userInfo.save_tokens}</Saves>
           <Deaths>Deaths: {this.props.userInfo.death_tokens}</Deaths>
+          <Wins>Wins: {this.props.userInfo.win_tokens}</Wins>
         </TopBar>
         <Title>Truth Dare Or Die</Title>
         <Form>
