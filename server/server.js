@@ -129,7 +129,7 @@ app.get('/end', (req, res) => {
   });
 });
 
-
+// request to get the random socket id
 app.get('/room', (req, res) => {
   const sockets = Object.keys(io.sockets.sockets);
   const randomSocket = Math.floor((Math.random() * sockets.length) + 1);
