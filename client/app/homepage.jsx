@@ -181,22 +181,24 @@ class HomePage extends React.Component {
             </Div>
           </Div>
         </Form>
-        <Form onSubmit={(e) => {
+        <Div>
+          <Form onSubmit={(e) => {
           e.preventDefault();
           this.joinRoom(e);
-        }}
-        >
-          <Div className="socketJoinRoom">
-            <Div>
-              <Label>Join A Room</Label>
+          }}
+          >
+            <Div className="socketJoinRoom">
+              <Div>
+                <Label>Join A Room</Label>
+              </Div>
+              <Div>
+                <Input type="text" placeholder="Join a room here" name="join" />
+                <Button>Join
+                </Button>
+              </Div>
             </Div>
-            <Div>
-              <Input type="text" placeholder="Join a room here" name="join" />
-              <Button>Join
-              </Button>
-            </Div>
-          </Div>
-        </Form>
+          </Form>
+        </Div>
       </div>
     );
     const gameRoom = (<GameRoom roomname={this.state.roomName} socket={this.state.socket} userInfo={this.props.userInfo} />);
