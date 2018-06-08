@@ -20,6 +20,7 @@ const UserSchema = new Schema({
   email: String,
   save_tokens: Number,
   death_tokens: Number,
+  win_tokens: Number,
 });
 
 const User = mongoose.model('User', UserSchema);
@@ -71,6 +72,7 @@ const save = (user, hash, callback) => {
         email: user.email,
         save_tokens: 0,
         death_tokens: 0,
+        win_tokens: 0,
       });
       newUser.save((error, userInfo) => {
         if (error) {
@@ -84,6 +86,7 @@ const save = (user, hash, callback) => {
   });
 };
 
+// function that will get a user from db when user logs in
 const getUser = (request, callback) => {
   User.findOne({ username: request.username }, (err, user) => {
     if (err) {
@@ -101,6 +104,7 @@ const getUser = (request, callback) => {
             username: user.username,
             save_tokens: user.save_tokens,
             death_tokens: user.death_tokens,
+            win_tokens: user.win_tokens,
           });
         }
       });
@@ -108,7 +112,7 @@ const getUser = (request, callback) => {
   });
 };
 
-
+// function that will find a room that already exists
 const findRooms = (data, callback) => {
   Room.findOne({ room: data }, (err, room) => {
     if (err) {
@@ -148,8 +152,8 @@ const generator = () => Math.random().toString(36).substring(2, 15) + Math.rando
 const randomID = () => Math.floor((Math.random() * 5) + 1);
 
 // function to get the truths randomly
-const getTruth = (id, reqCategory, callback) => {
-  Truth.findOne({ truth_id: id, category: reqCategory }, (err, truth) => {
+const getTruth = (id, callback) => {
+  Truth.findOne({ truth_id: id }, (err, truth) => {
     if (err) {
       console.error(err);
       callback(err);
@@ -160,8 +164,8 @@ const getTruth = (id, reqCategory, callback) => {
 };
 
 // function to get the dares randomly
-const getDare = (id, reqCategory, callback) => {
-  Dare.find({ dare_id: id, category: reqCategory }, (err, dare) => {
+const getDare = (id, callback) => {
+  Dare.find({ dare_id: id }, (err, dare) => {
     if (err) {
       console.error(err);
       callback(err);
@@ -170,6 +174,31 @@ const getDare = (id, reqCategory, callback) => {
     }
   });
 };
+
+// function that will create a new room
+const createRoom = (roomName, callback) => {
+  findRooms(roomName.room, (err, response) => {
+    if (err) {
+      callback(err);
+    } else if (response !== null && response.room === roomName.room) {
+      callback('Room already Exists!');
+    } else {
+      const newRoom = new Room({
+        room: roomName.room,
+        status: 'waiting',
+      });
+      newRoom.save((error) => {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Room Created');
+          callback('Room Created');
+        }
+      });
+    }
+  });
+};
+
 
 module.exports.save = save;
 module.exports.getUser = getUser;

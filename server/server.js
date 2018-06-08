@@ -52,7 +52,12 @@ app.post('/users', (req, res) => {
       if (typeof response === 'string') {
         res.send(response);
       } else {
-        const info = { username: response.username, save_tokens: response.save_tokens, death_tokens: response.death_tokens };
+        const info = {
+          username: response.username,
+          save_tokens: response.save_tokens,
+          death_tokens: response.death_tokens,
+          win_tokens: response.win_tokens,
+        };
         res.send(info);
       }
     });
@@ -75,10 +80,10 @@ app.post('/start', (req, res) => {
 
 
 app.get('/rooms/:id', (req, res) => {
-  console.log(req.params);
+  console.log(req.params.id);
   const response = req.params.id;
   dataSave.findRooms(response, (err, room) => {
-    if (err) {
+    if (err || room === null) {
       res.status(404).send('Room not available');
     } else {
       res.status(200).send(`${room} available`);
@@ -88,7 +93,7 @@ app.get('/rooms/:id', (req, res) => {
 
 // get request to get truth from db
 app.get('/truths', (req, res) => {
-  dataSave.getTruth(dataSave.randomID(), req.query.category, (response) => {
+  dataSave.getTruth(dataSave.randomID(), (response) => {
     console.log(`the truth is: ${response.truth}`);
     res.status(201).send(response.truth);
   });
@@ -96,7 +101,7 @@ app.get('/truths', (req, res) => {
 
 // get request to get dare from db
 app.get('/dares', (req, res) => {
-  dataSave.getDare(dataSave.randomID(), req.query.category, (response) => {
+  dataSave.getDare(dataSave.randomID(), (response) => {
     console.log(`The dare is: ${response.dare}`);
     res.status(201).send(response.dare);
   });
@@ -107,19 +112,22 @@ io.on('connection', (socket) => {
   console.log('a user connected');
   socket.on('create', (room) => {
     console.log('Joined');
-    console.log(room);
-    socket.join(room);
+    socket.broadcast.join(room);
   });
 
-  socket.on('disconnect', () => {
-    console.log('user has disconnected');
-  });
   socket.on('sendTruth', (truth) => {
     socket.broadcast.emit('sendTruth', truth);
   });
   socket.on('sendMessage', (message) => {
     console.log(message);
-    socket.emit('hello');
+    socket.broadcast.emit('sentMessage', message);
+  });
+  socket.on('join', (room) => {
+    socket.join(room);
+    socket.broadcast.emit('join', room);
+  });
+  socket.on('disconnect', (user) => {
+    console.log(`${user} has disconnected`);
   });
 });
 
