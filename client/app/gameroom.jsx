@@ -67,7 +67,8 @@ class GameRoom extends React.Component {
     this.props.socket.emit('dare');
   }
   userSendVideo(video) {
-    axios.post('/video', { video })
+    console.log(video.get('file'));
+    axios.post('/video', video)
       .then((result) => {
         console.log(result);
       }).catch((err) => {

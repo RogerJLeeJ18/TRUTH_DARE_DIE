@@ -78,8 +78,8 @@ class WebcamCapture extends React.Component {
     this.refs.app.querySelector('video').src = '';
   }
   downloadVideo(blob) {
-    const videoData = new FormData();
-    videoData.set('userVideo', blob);
+    const vid = new FormData();
+    vid.append('file', blob);
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.style.display = 'none';
@@ -87,7 +87,7 @@ class WebcamCapture extends React.Component {
     a.target = '_blank';
     document.body.appendChild(a);
     a.click();
-    this.props.userSendVideo(videoData);
+    this.props.userSendVideo(vid);
   }
   render() {
     const { granted } = this.state;

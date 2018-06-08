@@ -6,6 +6,7 @@ const path = require('path');
 const socketIO = require('socket.io');
 const bcrypt = require('bcrypt');
 const cookieSession = require('cookie-session');
+const formidable = require('express-formidable');
 
 const app = express();
 const server = http.Server(app);
@@ -13,6 +14,7 @@ const io = socketIO.listen(server);
 
 app.use(express.static(path.join(__dirname, '/../database')));
 app.use(express.static(path.join(__dirname, '/../dist')));
+app.use(formidable());
 
 app.get('/', (req, res) => {
   res.sendStatus(201);
@@ -129,6 +131,11 @@ app.get('/end', (req, res) => {
   })
 });
 
+app.post('/video', (req, res) => {
+  console.log(req.files, 'this is the req.body');
+  console.log(req.data, 'this is the req.data');
+  console.log(req.params, 'this is the req.params');
+});
 
 io.on('connection', (socket) => {
   console.log('a user connected');
