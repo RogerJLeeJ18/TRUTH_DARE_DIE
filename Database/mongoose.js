@@ -123,6 +123,7 @@ const findRooms = (data, callback) => {
   });
 };
 
+// function that will create a new room
 const createRoom = (roomName, callback) => {
   findRooms(roomName.room, (err, response) => {
     if (err) {
@@ -175,28 +176,18 @@ const getDare = (id, callback) => {
   });
 };
 
-// function that will create a new room
-const createRoom = (roomName, callback) => {
-  findRooms(roomName.room, (err, response) => {
+
+const randomUser = (callback) => {
+  const usersArr = [];
+  User.find({}, (err, users) => {
     if (err) {
-      callback(err);
-    } else if (response !== null && response.room === roomName.room) {
-      callback('Room already Exists!');
+      console.error(err);
     } else {
-      const newRoom = new Room({
-        room: roomName.room,
-        status: 'waiting',
-      });
-      newRoom.save((error) => {
-        if (error) {
-          console.log(error);
-        } else {
-          console.log('Room Created');
-          callback('Room Created');
-        }
-      });
-    }
+      usersArr.push(users);
+    };
   });
+  let randomIndex = Math.floor((Math.random() * usersArr.length) + 1)
+  callback(usersArr[randomIndex]);
 };
 
 
@@ -208,3 +199,4 @@ module.exports.randomID = randomID;
 module.exports.getTruth = getTruth;
 module.exports.getDare = getDare;
 module.exports.findRooms = findRooms;
+module.exports.randomUser = randomUser;
