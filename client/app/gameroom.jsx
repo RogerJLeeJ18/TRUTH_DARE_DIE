@@ -32,10 +32,20 @@ class GameRoom extends React.Component {
   }
   userSendMessage(event) {
     const message = `${this.props.userInfo.username}: ${event.target.sendMessage.value}`;
-    this.setState({ messageHistory: [...this.state.messageHistory, message] }, () => {
-      this.props.socket.emit('sendMessage', message);
-    });
-    event.preventDefault();
+    if (this.state.messageHistory.length > 15) {
+      const messages = this.state.messageHistory;
+      messages.splice(0, 1);
+      messages.push(message);
+      this.setState({ messageHistory: messages }, () => {
+        this.props.socket.emit('sendMessage', message);
+      });
+      event.preventDefault();
+    } else {
+      this.setState({ messageHistory: [...messages, message] }, () => {
+        this.props.socket.emit('sendMessage', message);
+      });
+      event.preventDefault();
+    }
   }
   render() {
     const { username } = this.props.userInfo;
