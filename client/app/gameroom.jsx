@@ -2,7 +2,6 @@ import React from 'react';
 import { render } from 'react-dom';
 import axios from 'axios';
 import io from 'socket.io-client';
-import Webcam from 'react-webcam';
 import { WebcamCapture } from './recorder.jsx';
 
 class GameRoom extends React.Component {
@@ -112,7 +111,7 @@ class GameRoom extends React.Component {
             }}
           >DARE
           </button>
-          {this.state.truth ? this.state.truth : this.state.dare};
+          {this.state.truth ? this.state.truth : this.state.dare}
         </div>
       </div>
     );
