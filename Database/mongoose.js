@@ -190,6 +190,27 @@ const randomUser = (callback) => {
   callback(usersArr[randomIndex]);
 };
 
+const updateRoom = (room, callback) => {
+  Room.updateOne({ room: room.room }, {
+    status: 'start',
+  }, (err, resp) => {
+    if (err) {
+      callback(err, null);
+    } else {
+      callback(null, 'Updated and ready!');
+    }
+  });
+};
+
+const endRoom = (room, callback) => {
+  Room.deleteOne({ room: room.room }, (err) => {
+    if (err) {
+      callback('Room not found.', null);
+    } else {
+      callback(null, 'Game has finished');
+    }
+  });
+};
 
 module.exports.save = save;
 module.exports.getUser = getUser;
@@ -199,4 +220,9 @@ module.exports.randomID = randomID;
 module.exports.getTruth = getTruth;
 module.exports.getDare = getDare;
 module.exports.findRooms = findRooms;
+<<<<<<< HEAD
 module.exports.randomUser = randomUser;
+=======
+module.exports.updateRoom = updateRoom;
+module.exports.endRoom = endRoom;
+>>>>>>> e65d8cd1648f556a4fadf9c9db1335c24e658595
