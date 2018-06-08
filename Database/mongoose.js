@@ -176,6 +176,27 @@ const createRoom = (roomName, callback) => {
   });
 };
 
+const updateRoom = (room, callback) => {
+  Room.updateOne({ room: room.room }, {
+    status: 'start',
+  }, (err, resp) => {
+    if (err) {
+      callback(err, null);
+    } else {
+      callback(null, 'Updated and ready!');
+    }
+  });
+};
+
+const endRoom = (room, callback) => {
+  Room.deleteOne({ room: room.room }, (err) => {
+    if (err) {
+      callback('Room not found.', null);
+    } else {
+      callback(null, 'Game has finished');
+    }
+  });
+};
 
 module.exports.save = save;
 module.exports.getUser = getUser;
@@ -185,3 +206,5 @@ module.exports.randomID = randomID;
 module.exports.getTruth = getTruth;
 module.exports.getDare = getDare;
 module.exports.findRooms = findRooms;
+module.exports.updateRoom = updateRoom;
+module.exports.endRoom = endRoom;
