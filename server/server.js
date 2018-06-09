@@ -51,9 +51,11 @@ app.post('/users', (req, res) => {
       console.log(err);
     }
     dataSave.save(data, hash, (response) => {
+      console.log(data);
       if (typeof response === 'string') {
         res.send(response);
       } else {
+        console.log(response);
         const info = {
           username: response.username,
           save_tokens: response.save_tokens,
@@ -153,6 +155,7 @@ io.on('connection', (socket) => {
   socket.on('join', (room) => {
     socket.join(room);
     // request to get the random socket id
+    let response;
     app.get('/room', (req, res) => {
       const reqRoom = req.query.room;
       const roomArray = Object.keys(io.sockets.adapter.rooms[reqRoom].sockets);
@@ -163,7 +166,7 @@ io.on('connection', (socket) => {
       response = roomArray[randomSocket];
       res.send(roomArray[randomSocket]);
     });
-    console.log(roomSockets);
+    // console.log(roomSockets);
     socket.broadcast.emit('join', room);
     socket.broadcast.emit('join', response);
   });
