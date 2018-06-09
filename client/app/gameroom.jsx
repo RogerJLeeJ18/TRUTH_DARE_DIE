@@ -6,11 +6,12 @@ class GameRoom extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      socket: '',
       userInfo: {},
       messageHistory: [],
       truth: '',
       alive: true,
+      currentUsersTurnDisplay: '',
+      currentUsersTurn: false,
     };
     // bind function to send messages and truth answer to component
     this.userSendVideo = this.userSendVideo.bind(this);
@@ -21,6 +22,21 @@ class GameRoom extends React.Component {
   componentDidMount() {
     this.props.socket.on('sentMessage', (message) => {
       this.setState({ messageHistory: [...this.state.messageHistory, message] });
+    });
+    this.props.socket.on('this-user-turn', (message) => {
+      this.setState({ 
+        currentUsersTurnDisplay: message, 
+        currentUsersTurn: !this.state.currentUsersTurn,
+      }, () => {
+        console.log(message, 'message from this-user-turn');
+      });
+    });
+    this.props.socket.on('user-turn', (message) => {
+      this.setState({
+        currentUsersTurnDisplay: message,
+      }, () => {
+        console.log(message, 'message from this-user-turn');
+      });
     });
   }
   userSendMessage(event) {
@@ -96,16 +112,16 @@ class GameRoom extends React.Component {
       <div>{username}
         {this.props.admin ? (
           <div>
-          <button
-            type="submit"
-            name="start"
-            onClick={(e) => {
-              this.userStartGame(e);
-              e.preventDefault();
-            }}
-          >START
+            <button
+              type="submit"
+              name="start"
+              onClick={(e) => {
+                this.userStartGame(e);
+                e.preventDefault();
+              }}
+            >START
         </button>
-        </div>
+          </div>
         ) : (<div />)
         }
         <form onSubmit={(e) => {

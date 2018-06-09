@@ -160,16 +160,21 @@ io.on('connection', (socket) => {
       console.log(socket.username, 'username');
     });
     // request to get the random socket id
-    // console.log(roomSockets);
     socket.broadcast.emit('join', room);
   });
   app.post('/room', (req, res) => {
     const reqRoom = req.body.room;
-    const roomArray = Object.keys(io.sockets.adapter.rooms[reqRoom].sockets);
-    const randomSocket = Math.floor(Math.random() * (roomArray.length));
-    const response = roomArray[randomSocket];
-    console.log(response, 'random socket');
-    console.log(io.sockets.sockets);
+    const socketIdArray = Object.keys(io.sockets.adapter.rooms[reqRoom].sockets);
+    const randomSocket = Math.floor(Math.random() * (socketIdArray.length));
+    const response = socketIdArray[randomSocket];
+    console.log(io.sockets.adapter.rooms[reqRoom].sockets, 'connected sockets');
+    // console.log(io.sockets.sockets);
+    io.sockets.sockets[response].emit('this-user-turn', 'It is your turn!');
+    socketIdArray.map((socketId) => {
+      if (socketId !== response) {
+        io.sockets.sockets[socketId].emit('user-turn', `${io.sockets.sockets[response].username}'s turn!`);
+      }
+    });
     res.send(response);
   });
   socket.on('disconnect', () => {
