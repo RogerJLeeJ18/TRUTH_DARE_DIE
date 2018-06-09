@@ -132,11 +132,6 @@ app.get('/end', (req, res) => {
   });
 });
 
-app.post('/votes', (req, res) => {
-  console.log(req.files, 'this is the req.body');
-  res.status(200).send('test');
-});
-
 const players = [];
 io.on('connection', (socket) => {
   console.log('a user connected');
@@ -156,26 +151,46 @@ io.on('connection', (socket) => {
     socket.join(room);
     socket.on('send-username', (username) => {
       socket.username = username;
+      socket.hasGone = false;
+      socket.alive = true;
       players.push(socket.username);
       console.log(socket.username, 'username');
     });
     // request to get the random socket id
     socket.broadcast.emit('join', room);
   });
+  const userVotes = { pass: 0, fail: 0 };
+  app.post('/votes', (req, res) => {
+    const userVote = req.body.vote;
+    userVotes[userVote] += 1;
+    console.log(userVotes);
+    res.status(200).send('Your vote is in!');
+  });
   app.post('/room', (req, res) => {
     const reqRoom = req.body.room;
     const socketIdArray = Object.keys(io.sockets.adapter.rooms[reqRoom].sockets);
     const randomSocket = Math.floor(Math.random() * (socketIdArray.length));
     const response = socketIdArray[randomSocket];
-    console.log(io.sockets.adapter.rooms[reqRoom].sockets, 'connected sockets');
-    // console.log(io.sockets.sockets);
-    io.sockets.sockets[response].emit('this-user-turn', 'It is your turn!');
-    socketIdArray.map((socketId) => {
-      if (socketId !== response) {
-        io.sockets.sockets[socketId].emit('user-turn', `${io.sockets.sockets[response].username}'s turn!`);
-      }
-    });
-    res.send(response);
+    const currentUser = io.sockets.sockets[response];
+    const game = () => {
+      currentUser.emit('this-user-turn', 'It is your turn!');
+      currentUser.hasGone = true;
+      socketIdArray.forEach((socketId) => {
+        if (socketId !== response && socketId.alive) {
+          io.sockets.sockets[socketId].emit('user-turn', `${io.sockets.sockets[response].username}'s turn!`);
+        }
+      });
+      // setInterval(() => {
+
+      // }, 10000);
+      res.send(response);
+    };
+    game();
+    // if (socketIdArray.length > 3) {
+    //   setInterval(game, 10000);
+    // } else {
+    //   socket.emit('game-end');
+    // }
   });
   socket.on('disconnect', () => {
     console.log('user has disconnected');

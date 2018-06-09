@@ -26,16 +26,19 @@ class GameRoom extends React.Component {
     this.props.socket.on('this-user-turn', (message) => {
       this.setState({ 
         currentUsersTurnDisplay: message, 
-        currentUsersTurn: !this.state.currentUsersTurn,
+        currentUsersTurn: true,
       }, () => {
         console.log(message, 'message from this-user-turn');
+        console.log(this.state);
       });
     });
     this.props.socket.on('user-turn', (message) => {
       this.setState({
         currentUsersTurnDisplay: message,
+        currentUsersTurn: false,
       }, () => {
         console.log(message, 'message from this-user-turn');
+        console.log(this.state);
       });
     });
   }
