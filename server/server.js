@@ -50,9 +50,11 @@ app.post('/users', (req, res) => {
       console.log(err);
     }
     dataSave.save(data, hash, (response) => {
+      console.log(data);
       if (typeof response === 'string') {
         res.send(response);
       } else {
+        console.log(response);
         const info = {
           username: response.username,
           save_tokens: response.save_tokens,
@@ -163,6 +165,7 @@ io.on('connection', (socket) => {
       response = roomArray[randomSocket];
       res.send(roomArray[randomSocket]);
     });
+    // console.log(roomSockets);
     socket.broadcast.emit('join', room);
     socket.broadcast.emit('join', response);
   });
