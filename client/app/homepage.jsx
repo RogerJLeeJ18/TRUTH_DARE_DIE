@@ -137,6 +137,7 @@ class HomePage extends React.Component {
       roomName: '',
       roomCreated: false,
       socket: io.connect('http://127.0.0.1:3000', { reconnection: false }),
+      admin: false,
     };
     this.socketHandle = this.makeRoom.bind(this);
   }
@@ -144,10 +145,14 @@ class HomePage extends React.Component {
     const roomName = event.target.socket.value;
     axios.post('/start', {
       room: roomName,
+      username: this.props.userInfo.username,
     }).then((result) => {
-      this.setState({ roomName, roomCreated: !this.state.roomCreated }, () => {
-        console.log(`${this.state.roomName} has been created`, result);
-      });
+      this.setState(
+        { roomName, roomCreated: !this.state.roomCreated, admin: !this.state.admin },
+        () => {
+          console.log(`${this.state.roomName} has been created`, result);
+        },
+      );
     }).catch((error) => {
       console.log(error);
     });
@@ -157,15 +162,23 @@ class HomePage extends React.Component {
   }
   joinRoom(event) {
     const roomName = event.target.join.value;
-    axios.get(`/rooms/${roomName}`).then((result) => {
-      this.setState({ roomName, roomCreated: !this.state.roomCreated }, () => {
-        console.log(`you have joined ${this.state.roomName}`, result);
-      });
+    axios.get(`/rooms/${roomName}`).then(({ data }) => {
+      if (data.admin === this.props.userInfo.username){
+        this.setState({ roomName, roomCreated: !this.state.roomCreated, admin: !this.state.admin }, () => {
+          console.log(this.state.admin);
+          console.log(`you have joined ${this.state.roomName}`, data);
+        });
+      } else {
+        this.setState({ roomName, roomCreated: !this.state.roomCreated }, () => {
+          console.log(`you have joined ${this.state.roomName}`, data);
+        });
+      }
     }).catch((error) => {
       console.log(error, 'unable to join');
     });
     event.preventDefault();
     this.state.socket.emit('join', roomName);
+    this.state.socket.emit('send-username', this.props.userInfo.username);
   }
   render() {
     const element = (
@@ -204,8 +217,8 @@ class HomePage extends React.Component {
         </CreateForm>
         <Div>
           <Form onSubmit={(e) => {
-          e.preventDefault();
-          this.joinRoom(e);
+            e.preventDefault();
+            this.joinRoom(e);
           }}
           >
             <Div className="socketJoinRoom">
@@ -222,7 +235,7 @@ class HomePage extends React.Component {
         </Div>
       </div>
     );
-    const gameRoom = (<GameRoom roomname={this.state.roomName} socket={this.state.socket} userInfo={this.props.userInfo} />);
+    const gameRoom = (<GameRoom roomname={this.state.roomName} socket={this.state.socket} admin={this.state.admin} userInfo={this.props.userInfo} />);
     const { roomCreated } = this.state;
     return (
       <div>

@@ -15,7 +15,6 @@ class GameRoom extends React.Component {
     // bind function to send messages and truth answer to component
     this.userSendVideo = this.userSendVideo.bind(this);
     this.userSendMessage = this.userSendMessage.bind(this);
-    this.userSendTruth = this.userSendTruth.bind(this);
     this.userSelectDare = this.userSelectDare.bind(this);
     this.userSelectTruth = this.userSelectTruth.bind(this);
   }
@@ -23,13 +22,6 @@ class GameRoom extends React.Component {
     this.props.socket.on('sentMessage', (message) => {
       this.setState({ messageHistory: [...this.state.messageHistory, message] });
     });
-  }
-  userSendTruth(event) {
-    const truth = event.target.truth.value;
-    this.setState({ truth }, () => {
-      this.props.socket.emit('sendTruth', this.state.truth);
-    });
-    event.preventDefault();
   }
   userSendMessage(event) {
     const message = `${this.props.userInfo.username}: ${event.target.sendMessage.value}`;
@@ -91,11 +83,31 @@ class GameRoom extends React.Component {
       });
     e.preventDefault();
   }
+  userStartGame(e) {
+    axios.post('/room', {
+      room: this.props.roomname
+    })
+    e.preventDefault();
+  }
   render() {
     const { username } = this.props.userInfo;
     const messageList = this.state.messageHistory.map(message => <li key={message}>{message}</li>);
     return (
-      <div>
+      <div>{username}
+        {this.props.admin ? (
+          <div>
+          <button
+            type="submit"
+            name="start"
+            onClick={(e) => {
+              this.userStartGame(e);
+              e.preventDefault();
+            }}
+          >START
+        </button>
+        </div>
+        ) : (<div />)
+        }
         <form onSubmit={(e) => {
           this.userSendMessage(e);
           e.preventDefault();
@@ -108,23 +120,12 @@ class GameRoom extends React.Component {
           <input type="submit" value="Send" />
         </form>
         <div className="chatroom">{messageList}</div>
-        <form onSubmit={(e) => {
-          this.userSendTruth(e);
-          e.preventDefault();
-        }}
-        >
-          <label htmlFor="truth">
-            <input type="text" name="truth" />
-          </label>
-          <input type="submit" name="Send Truth" />
-        </form>
-
         <iframe
           src="https://tokbox.com/embed/embed/ot-embed.js?embedId=8c5d069b-b5fb-458e-81fe-b2a7dcd20555&room=DEFAULT_ROOM&iframe=true"
           width="800px"
           height="640px"
           allow="microphone; camera"
-         />
+        />
 
         <div>
           <button

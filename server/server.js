@@ -89,7 +89,7 @@ app.get('/rooms/:id', (req, res) => {
     if (err || room === null) {
       res.status(404).send('Room not available');
     } else {
-      res.status(200).send(`${room} available`);
+      res.status(200).send(room);
     }
   });
 });
@@ -137,6 +137,7 @@ app.post('/votes', (req, res) => {
   res.status(200).send('test');
 });
 
+const players = [];
 io.on('connection', (socket) => {
   console.log('a user connected');
   socket.on('create', (room) => {
@@ -153,21 +154,23 @@ io.on('connection', (socket) => {
   });
   socket.on('join', (room) => {
     socket.join(room);
-    let response;
-    // request to get the random socket id
-    app.get('/room', (req, res) => {
-      const reqRoom = req.query.room;
-      const roomArray = Object.keys(io.sockets.adapter.rooms[reqRoom].sockets);
-      // const room = roomSockets(reqRoom);
-      console.log(roomArray);
-      const randomSocket = Math.floor(Math.random() * (roomArray.length - 1));
-      console.log(randomSocket);
-      response = roomArray[randomSocket];
-      res.send(roomArray[randomSocket]);
+    socket.on('send-username', (username) => {
+      socket.username = username;
+      players.push(socket.username);
+      console.log(socket.username, 'username');
     });
+    // request to get the random socket id
     // console.log(roomSockets);
     socket.broadcast.emit('join', room);
-    socket.broadcast.emit('join', response);
+  });
+  app.post('/room', (req, res) => {
+    const reqRoom = req.body.room;
+    const roomArray = Object.keys(io.sockets.adapter.rooms[reqRoom].sockets);
+    const randomSocket = Math.floor(Math.random() * (roomArray.length));
+    const response = roomArray[randomSocket];
+    console.log(response, 'random socket');
+    console.log(io.sockets.sockets);
+    res.send(response);
   });
   socket.on('disconnect', () => {
     console.log('user has disconnected');
