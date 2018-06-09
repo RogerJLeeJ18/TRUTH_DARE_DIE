@@ -1,7 +1,5 @@
 import React from 'react';
-import { render } from 'react-dom';
 import axios from 'axios';
-import io from 'socket.io-client';
 import { WebcamCapture } from './recorder.jsx';
 
 class GameRoom extends React.Component {
@@ -75,6 +73,24 @@ class GameRoom extends React.Component {
         console.log(err);
       });
   }
+  userSelectPass(e) {
+    axios.post('/votes', { vote: 'pass' })
+      .then((result) => {
+        console.log(result);
+      }).catch((err) => {
+        console.log(err);
+      });
+    e.preventDefault();
+  }
+  userSelectFail(e) {
+    axios.post('/votes', { vote: 'fail' })
+      .then((result) => {
+        console.log(result);
+      }).catch((err) => {
+        console.log(err);
+      });
+    e.preventDefault();
+  }
   render() {
     const { username } = this.props.userInfo;
     const messageList = this.state.messageHistory.map(message => <li key={message}>{message}</li>);
@@ -102,7 +118,14 @@ class GameRoom extends React.Component {
           </label>
           <input type="submit" name="Send Truth" />
         </form>
-        <WebcamCapture userSendVideo={this.userSendVideo} />
+
+        <iframe
+          src="https://tokbox.com/embed/embed/ot-embed.js?embedId=8c5d069b-b5fb-458e-81fe-b2a7dcd20555&room=DEFAULT_ROOM&iframe=true"
+          width="800px"
+          height="640px"
+          allow="microphone; camera"
+         />
+
         <div>
           <button
             type="submit"
@@ -120,6 +143,23 @@ class GameRoom extends React.Component {
               this.userSelectDare(e);
             }}
           >DARE
+          </button>
+          <button
+            type="submit"
+            name="pass"
+            onClick={(e) => {
+              this.userSelectPass(e);
+            }}
+          >PASS
+          </button>
+          or
+          <button
+            type="submit"
+            name="fail"
+            onClick={(e) => {
+              this.userSelectFail(e);
+            }}
+          >FAIL
           </button>
           {this.state.truth ? this.state.truth : this.state.dare}
         </div>
