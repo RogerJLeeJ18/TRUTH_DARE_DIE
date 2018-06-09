@@ -1,12 +1,12 @@
 # Project Name
 
-> Pithy project description
+> Truth or Dare from Anywhere!! Play Truth or Dare with your friends over the internet.
 
 ## Team
 
-  - __Product Owner__: teamMember
-  - __Scrum Master__: teamMember
-  - __Development Team Members__: teamMember, teamMember
+  - __Product Owner__: Taylor Shephard
+  - __Scrum Master__: Andy
+  - __Development Team Members__: Andy, Taylor, Elijah
 
 ## Table of Contents
 
@@ -20,7 +20,7 @@
 
 ## Usage
 
-> Some usage instructions
+> Play Truth or Dare with your friends.
 
 ## Requirements
 
