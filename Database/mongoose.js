@@ -29,6 +29,7 @@ const User = mongoose.model('User', UserSchema);
 const RoomSchema = new Schema({
   room: String,
   status: String,
+  admin: String,
 });
 
 const Room = mongoose.model('Room', RoomSchema);
@@ -163,6 +164,7 @@ const createRoom = (roomName, callback) => {
       const newRoom = new Room({
         room: roomName.room,
         status: 'waiting',
+        admin: roomName.username,
       });
       newRoom.save((error) => {
         if (error) {

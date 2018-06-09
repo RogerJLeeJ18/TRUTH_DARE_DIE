@@ -6,7 +6,7 @@ const path = require('path');
 const socketIO = require('socket.io');
 const bcrypt = require('bcrypt');
 const cookieSession = require('cookie-session');
-// const formidable = require('express-formidable');
+
 
 const app = express();
 const server = http.Server(app);
@@ -14,7 +14,6 @@ const io = socketIO.listen(server);
 
 app.use(express.static(path.join(__dirname, '/../database')));
 app.use(express.static(path.join(__dirname, '/../dist')));
-// app.use(formidable());
 
 app.get('/', (req, res) => {
   res.sendStatus(201);
@@ -90,7 +89,7 @@ app.get('/rooms/:id', (req, res) => {
     if (err || room === null) {
       res.status(404).send('Room not available');
     } else {
-      res.status(200).send(`${room} available`);
+      res.status(200).send(room);
     }
   });
 });
@@ -133,11 +132,7 @@ app.get('/end', (req, res) => {
   });
 });
 
-app.post('/votes', (req, res) => {
-  console.log(req.files, 'this is the req.body');
-  res.status(200).send('test');
-});
-
+const players = [];
 io.on('connection', (socket) => {
   console.log('a user connected');
   socket.on('create', (room) => {
@@ -154,21 +149,48 @@ io.on('connection', (socket) => {
   });
   socket.on('join', (room) => {
     socket.join(room);
-    // request to get the random socket id
-    let response;
-    app.get('/room', (req, res) => {
-      const reqRoom = req.query.room;
-      const roomArray = Object.keys(io.sockets.adapter.rooms[reqRoom].sockets);
-      // const room = roomSockets(reqRoom);
-      console.log(roomArray);
-      const randomSocket = Math.floor(Math.random() * (roomArray.length - 1));
-      console.log(randomSocket);
-      response = roomArray[randomSocket];
-      res.send(roomArray[randomSocket]);
+    socket.on('send-username', (username) => {
+      socket.username = username;
+      socket.hasGone = false;
+      socket.alive = true;
+      players.push(socket.username);
+      console.log(socket.username, 'username');
     });
-    // console.log(roomSockets);
+    // request to get the random socket id
     socket.broadcast.emit('join', room);
-    socket.broadcast.emit('join', response);
+  });
+  const userVotes = { pass: 0, fail: 0 };
+  app.post('/votes', (req, res) => {
+    const userVote = req.body.vote;
+    userVotes[userVote] += 1;
+    console.log(userVotes);
+    res.status(200).send('Your vote is in!');
+  });
+  app.post('/room', (req, res) => {
+    const reqRoom = req.body.room;
+    const socketIdArray = Object.keys(io.sockets.adapter.rooms[reqRoom].sockets);
+    const randomSocket = Math.floor(Math.random() * (socketIdArray.length));
+    const response = socketIdArray[randomSocket];
+    const currentUser = io.sockets.sockets[response];
+    const game = () => {
+      currentUser.emit('this-user-turn', 'It is your turn!');
+      currentUser.hasGone = true;
+      socketIdArray.forEach((socketId) => {
+        if (socketId !== response && socketId.alive) {
+          io.sockets.sockets[socketId].emit('user-turn', `${io.sockets.sockets[response].username}'s turn!`);
+        }
+      });
+      // setInterval(() => {
+
+      // }, 10000);
+      res.send(response);
+    };
+    game();
+    // if (socketIdArray.length > 3) {
+    //   setInterval(game, 10000);
+    // } else {
+    //   socket.emit('game-end');
+    // }
   });
   socket.on('disconnect', () => {
     console.log('user has disconnected');
