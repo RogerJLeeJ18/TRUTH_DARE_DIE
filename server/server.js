@@ -51,9 +51,11 @@ app.post('/users', (req, res) => {
       console.log(err);
     }
     dataSave.save(data, hash, (response) => {
+      console.log(data);
       if (typeof response === 'string') {
         res.send(response);
       } else {
+        console.log(response);
         const info = {
           username: response.username,
           save_tokens: response.save_tokens,
