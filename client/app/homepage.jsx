@@ -130,7 +130,6 @@ const TopBar = styled.ul`
   width: 100%;
 `;
 
-
 class HomePage extends React.Component {
   constructor(props) {
     super(props);
