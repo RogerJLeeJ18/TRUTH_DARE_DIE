@@ -128,7 +128,7 @@ app.get('/end', (req, res) => {
     } else {
       res.status(200).send('The game has ended!');
     }
-  })
+  });
 });
 
 app.post('/votes', (req, res) => {
@@ -152,7 +152,20 @@ io.on('connection', (socket) => {
   });
   socket.on('join', (room) => {
     socket.join(room);
+    // request to get the random socket id
+    app.get('/room', (req, res) => {
+      const reqRoom = req.query.room;
+      const roomArray = Object.keys(io.sockets.adapter.rooms[reqRoom].sockets);
+      // const room = roomSockets(reqRoom);
+      console.log(roomArray);
+      const randomSocket = Math.floor(Math.random() * (roomArray.length - 1));
+      console.log(randomSocket);
+      response = roomArray[randomSocket];
+      res.send(roomArray[randomSocket]);
+    });
+    console.log(roomSockets);
     socket.broadcast.emit('join', room);
+    socket.broadcast.emit('join', response);
   });
   socket.on('disconnect', () => {
     console.log('user has disconnected');
@@ -160,6 +173,8 @@ io.on('connection', (socket) => {
   });
 });
 
+
 server.listen(3000, () => {
   console.log('listening on port 3000');
 });
+

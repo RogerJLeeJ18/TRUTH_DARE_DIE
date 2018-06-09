@@ -123,6 +123,30 @@ const findRooms = (data, callback) => {
   });
 };
 
+//function that will create a new room
+const createRoom = (roomName, callback) => {
+  findRooms(roomName.room, (err, response) => {
+    if (err) {
+      callback(err);
+    } else if (response !== null && response.room === roomName.room) {
+      callback('Room already Exists!');
+    } else {
+      const newRoom = new Room({
+        room: roomName.room,
+        status: 'waiting',
+      });
+      newRoom.save((error) => {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Room Created');
+          callback('Room Created');
+        }
+      });
+    }
+  });
+};
+
 const generator = () => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 
 // function that will return a random number to use for getTruth and getDares functions
@@ -152,52 +176,6 @@ const getDare = (id, callback) => {
   });
 };
 
-// function that will create a new room
-const createRoom = (roomName, callback) => {
-  findRooms(roomName.room, (err, response) => {
-    if (err) {
-      callback(err);
-    } else if (response !== null && response.room === roomName.room) {
-      callback('Room already Exists!');
-    } else {
-      const newRoom = new Room({
-        room: roomName.room,
-        status: 'waiting',
-      });
-      newRoom.save((error) => {
-        if (error) {
-          console.log(error);
-        } else {
-          console.log('Room Created');
-          callback('Room Created');
-        }
-      });
-    }
-  });
-};
-
-const updateRoom = (room, callback) => {
-  Room.updateOne({ room: room.room }, {
-    status: 'start',
-  }, (err, resp) => {
-    if (err) {
-      callback(err, null);
-    } else {
-      callback(null, 'Updated and ready!');
-    }
-  });
-};
-
-const endRoom = (room, callback) => {
-  Room.deleteOne({ room: room.room }, (err) => {
-    if (err) {
-      callback('Room not found.', null);
-    } else {
-      callback(null, 'Game has finished');
-    }
-  });
-};
-
 module.exports.save = save;
 module.exports.getUser = getUser;
 module.exports.createRoom = createRoom;
@@ -206,5 +184,3 @@ module.exports.randomID = randomID;
 module.exports.getTruth = getTruth;
 module.exports.getDare = getDare;
 module.exports.findRooms = findRooms;
-module.exports.updateRoom = updateRoom;
-module.exports.endRoom = endRoom;

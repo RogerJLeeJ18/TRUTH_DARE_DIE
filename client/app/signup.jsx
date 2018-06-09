@@ -71,9 +71,9 @@ function SignUp(props) {
           <Form
             onSubmit={(e) => {
               e.preventDefault();
-              props.login(e);
+              props.signUpHandle(e);
             }}
-            classame="form"
+            classname="form"
           >
             <Div>
               <Label htmlFor="username">Username:
