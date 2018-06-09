@@ -151,6 +151,7 @@ io.on('connection', (socket) => {
   });
   socket.on('join', (room) => {
     socket.join(room);
+    let response;
     // request to get the random socket id
     app.get('/room', (req, res) => {
       const reqRoom = req.query.room;
@@ -162,7 +163,6 @@ io.on('connection', (socket) => {
       response = roomArray[randomSocket];
       res.send(roomArray[randomSocket]);
     });
-    console.log(roomSockets);
     socket.broadcast.emit('join', room);
     socket.broadcast.emit('join', response);
   });
