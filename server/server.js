@@ -6,7 +6,7 @@ const path = require('path');
 const socketIO = require('socket.io');
 const bcrypt = require('bcrypt');
 const cookieSession = require('cookie-session');
-const formidable = require('express-formidable');
+// const formidable = require('express-formidable');
 
 const app = express();
 const server = http.Server(app);
@@ -14,7 +14,7 @@ const io = socketIO.listen(server);
 
 app.use(express.static(path.join(__dirname, '/../database')));
 app.use(express.static(path.join(__dirname, '/../dist')));
-app.use(formidable());
+// app.use(formidable());
 
 app.get('/', (req, res) => {
   res.sendStatus(201);
@@ -62,7 +62,7 @@ app.post('/users', (req, res) => {
           death_tokens: response.death_tokens,
           win_tokens: response.win_tokens,
         };
-        res.send(info);
+        res.status(201).send(info);
       }
     });
   });
@@ -133,11 +133,9 @@ app.get('/end', (req, res) => {
   });
 });
 
-let roomSockets;
-let response;
-
-app.post('/video', (req, res) => {
+app.post('/votes', (req, res) => {
   console.log(req.files, 'this is the req.body');
+  res.status(200).send('test');
 });
 
 io.on('connection', (socket) => {
