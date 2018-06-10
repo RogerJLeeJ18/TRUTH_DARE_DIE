@@ -238,9 +238,8 @@ class GameRoom extends React.Component {
       </div>);
     return (
       <div>
-        <Title>Welcome to {this.props.roomname}</Title>
         <TopBar className="userInfo">
-          <User>Stay Alive {username}</User>
+          <User>Welcome to {this.props.roomname}, {username}</User>
           <Saves>Saves: {this.props.userInfo.save_tokens}</Saves>
           <Deaths>Deaths: {this.props.userInfo.death_tokens}</Deaths>
           <Wins>Wins: {this.props.userInfo.win_tokens}</Wins>
@@ -271,15 +270,13 @@ class GameRoom extends React.Component {
             <Input type="text" name="sendMessage" />
             <Input type="submit" value="Send" />
           </form>
-          <Message className="chatroom">{messageList}</Message>
-        </Section>
-        <Section2>
+          <div className="chatroom">{messageList}</div>
           <iframe title="webChat" src="https://tokbox.com/embed/embed/ot-embed.js?embedId=8c5d069b-b5fb-458e-81fe-b2a7dcd20555&room=DEFAULT_ROOM&iframe=true" width="800" height="640" allow="microphone; camera" />
           <div>
             {this.state.currentUsersTurn ? (truthOrDare) : (passOrFail)}
             {this.state.truth ? this.state.truth : this.state.dare}
           </div>
-        </Section2>
+        </Section>
       </div>
     );
   }

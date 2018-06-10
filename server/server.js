@@ -3,14 +3,20 @@ const bodyParser = require('body-parser');
 const dataSave = require('../Database/mongoose');
 const http = require('http');
 const https = require('https');
+const fs = require('fs');
 const path = require('path');
 const socketIO = require('socket.io');
 const bcrypt = require('bcrypt');
 const cookieSession = require('cookie-session');
 
+const privateKey = fs.readFileSync('/etc/letsencrypt/live/test.tdd.life/privkey.pem', 'utf8');
+const certificate = fs.readFileSync('/etc/letsencrypt/live/test.tdd.life/fullchain.pem', 'utf8');
+const credentials = { key: privateKey, cert: certificate };
 
 const app = express();
 const server = http.Server(app);
+const httpsServer = https.Server(credentials, app);
+
 const io = socketIO.listen(server);
 
 app.use(express.static(path.join(__dirname, '/../database')));
@@ -208,9 +214,13 @@ io.on('connection', (socket) => {
   });
 });
 
-const role = 'production';
-const PORT = process.env.ENV_ROLE === role ? 80 : 3000;
+const PORT = 80;
+const httpsPORT = 3000;
 
 server.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);
+});
+
+httpsServer.listen(httpsPORT, () => {
+  console.log(`lisening on port ${httpsPORT}`);
 });

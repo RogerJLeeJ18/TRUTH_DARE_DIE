@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import io from 'socket.io-client';
+import PropTypes from 'prop-types';
 import { GameRoom } from './gameroom.jsx';
 import styled from 'styled-components';
 
@@ -137,7 +138,7 @@ class HomePage extends React.Component {
       roomName: '',
       roomCreated: false,
       socket: io.connect('http://127.0.0.1:3000', { reconnection: false }),
-      admin: false,
+      admin: false
     };
     this.socketHandle = this.makeRoom.bind(this);
   }
@@ -145,13 +146,13 @@ class HomePage extends React.Component {
     const roomName = event.target.socket.value;
     axios.post('/start', {
       room: roomName,
-      username: this.props.userInfo.username,
+      username: this.props.userInfo.username
     }).then((result) => {
       this.setState(
         { roomName, roomCreated: !this.state.roomCreated, admin: !this.state.admin },
         () => {
           console.log(`${this.state.roomName} has been created`, result);
-        },
+        }
       );
     }).catch((error) => {
       console.log(error);
@@ -164,7 +165,11 @@ class HomePage extends React.Component {
     const roomName = event.target.join.value;
     axios.get(`/rooms/${roomName}`).then(({ data }) => {
       if (data.admin === this.props.userInfo.username) {
-        this.setState({ roomName, roomCreated: !this.state.roomCreated, admin: !this.state.admin }, () => {
+        this.setState({
+          roomName,
+          roomCreated: !this.state.roomCreated,
+          admin: !this.state.admin
+        }, () => {
           console.log(this.state.admin);
           console.log(`you have joined ${this.state.roomName}`, data);
         });
@@ -235,7 +240,13 @@ class HomePage extends React.Component {
         </Div>
       </div>
     );
-    const gameRoom = (<GameRoom roomname={this.state.roomName} socket={this.state.socket} admin={this.state.admin} userInfo={this.props.userInfo} />);
+    const gameRoom = (
+      <GameRoom
+        roomname={this.state.roomName}
+        socket={this.state.socket}
+        admin={this.state.admin}
+        userInfo={this.props.userInfo}
+      />);
     const { roomCreated } = this.state;
     return (
       <div>
