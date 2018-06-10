@@ -164,7 +164,6 @@ io.on('connection', (socket) => {
     const userVote = req.body.vote;
     userVotes.count += 1;
     userVotes[userVote] += 1;
-    console.log(userVotes);
     res.status(200).send('Your vote is in!');
   });
 
@@ -173,7 +172,8 @@ io.on('connection', (socket) => {
     const socketIdArray = Object.keys(io.sockets.adapter.rooms[reqRoom].sockets);
     const randomSocket = Math.floor(Math.random() * (socketIdArray.length));
     const response = socketIdArray[randomSocket];
-    const currentUser = io.sockets.sockets[response];
+    const userSocket = io.sockets.sockets;
+    const currentUser = userSocket[response];
     const game = () => {
       currentUser.emit('this-user-turn', 'It is your turn!');
       currentUser.hasGone = true;
@@ -200,8 +200,10 @@ io.on('connection', (socket) => {
   });
 });
 
+const role = 'production';
+const PORT = process.env.ENV_ROLE === role ? 80 : 3000;
 
-server.listen(3000, () => {
+server.listen(PORT, () => {
   console.log('listening on port 3000');
 });
 
