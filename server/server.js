@@ -170,7 +170,6 @@ io.on('connection', (socket) => {
 
   app.post('/room', (req, res) => {
     const reqRoom = req.body.room;
-    console.log(userVotes, 'the votes are in');
     const socketIdArray = Object.keys(io.sockets.adapter.rooms[reqRoom].sockets);
     const randomSocket = Math.floor(Math.random() * (socketIdArray.length));
     const response = socketIdArray[randomSocket];
