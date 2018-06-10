@@ -135,8 +135,8 @@ class GameRoom extends React.Component {
       this.setState({ messageHistory: [...this.state.messageHistory, message] });
     });
     this.props.socket.on('this-user-turn', (message) => {
-      this.setState({ 
-        currentUsersTurnDisplay: message, 
+      this.setState({
+        currentUsersTurnDisplay: message,
         currentUsersTurn: true,
       }, () => {
         console.log(message, 'message from this-user-turn');
@@ -170,21 +170,23 @@ class GameRoom extends React.Component {
       event.preventDefault();
     }
   }
-  userSelectTruth(event) {
+  userSelectTruth(e) {
     axios.get('/truths').then(({ data }) => {
       this.setState({ truth: data });
     }).catch((error) => {
       console.log(error);
     });
     this.props.socket.emit('truth');
+    e.preventDefault();
   }
-  userSelectDare(event) {
+  userSelectDare(e) {
     axios.get('/dares').then(({ data }) => {
       this.setState({ truth: data });
     }).catch((error) => {
       console.log(error);
     });
     this.props.socket.emit('dare');
+    e.preventDefault();
   }
   userSendVideo(video) {
     console.log(video.get('file'));
@@ -215,24 +217,36 @@ class GameRoom extends React.Component {
   }
   userStartGame(e) {
     axios.post('/room', {
-      room: this.props.roomname
-    })
+      room: this.props.roomname,
+    });
     e.preventDefault();
   }
   render() {
     const { username } = this.props.userInfo;
     const messageList = this.state.messageHistory.map(message => <li key={message}>{message}</li>);
+    const truthOrDare = (
+      <div>
+        <button type="submit" name="truth" onClick={(e) => { this.userSelectTruth(e); }}>TRUTH</button>
+        or
+        <button type="submit" name="dare" onClick={(e) => { this.userSelectDare(e); }}>DARE</button>
+      </div>);
+    const passOrFail = (
+      <div>
+        <button type="submit" name="pass" onClick={(e) => { this.userSelectPass(e); }}>PASS</button>
+        or
+        <button type="submit" name="fail" onClick={(e) => { this.userSelectFail(e); }}>FAIL</button>
+      </div>);
     return (
       <div>
         <TopBar className="userInfo">
-          <User>Welcome to {this.props.roomname}, {this.props.userInfo.username}</User>
+          <User>Welcome to {this.props.roomname}, {username}</User>
           <Saves>Saves: {this.props.userInfo.save_tokens}</Saves>
           <Deaths>Deaths: {this.props.userInfo.death_tokens}</Deaths>
           <Wins>Wins: {this.props.userInfo.win_tokens}</Wins>
         </TopBar>
         <Chat htmlFor="chatRoom">
           Chats
-          </Chat>
+        </Chat>
         {this.props.admin ? (
           <div>
             <Button
@@ -243,112 +257,26 @@ class GameRoom extends React.Component {
                 e.preventDefault();
               }}
             >START
-        </Button>
+            </Button>
           </div>
         ) : (<div />)
         }
         <Section>
-        <form onSubmit={(e) => {
-          this.userSendMessage(e);
-          e.preventDefault();
-        }}
-        >
-          <Input type="text" name="sendMessage" />
-          <Input type="submit" value="Send" />
-        </form>
-<<<<<<< HEAD
-        <Message className="chatroom">{messageList}</Message>
-        </Section>
-        <Section2>
+          <form onSubmit={(e) => {
+            this.userSendMessage(e);
+            e.preventDefault();
+          }}
+          >
+            <Input type="text" name="sendMessage" />
+            <Input type="submit" value="Send" />
+          </form>
+          <div className="chatroom">{messageList}</div>
+          <iframe title="webChat" src="https://tokbox.com/embed/embed/ot-embed.js?embedId=8c5d069b-b5fb-458e-81fe-b2a7dcd20555&room=DEFAULT_ROOM&iframe=true" width="800" height="640" allow="microphone; camera" />
           <div>
-            <div>
-              <button
-                type="submit"
-                name="truth"
-                onClick={(e) => {
-                  this.userSelectTruth(e);
-                }}
-              >TRUTH
-          </button>
-              <span>or</span>
-              <button
-                type="submit"
-                name="dare"
-                onClick={(e) => {
-                  this.userSelectDare(e);
-                }}
-              >DARE
-          </button>
-            </div>
-            <div>
-              <button
-                type="submit"
-                name="pass"
-                onClick={(e) => {
-                  this.userSelectPass(e);
-                }}
-              >PASS
-          </button>
-              or
-          <button
-                type="submit"
-                name="fail"
-                onClick={(e) => {
-                  this.userSelectFail(e);
-                }}
-              >FAIL
-          </button>
-              {this.state.truth ? this.state.truth : this.state.dare}
-            </div>
+            {this.state.currentUsersTurn ? (truthOrDare) : (passOrFail)}
+            {this.state.truth ? this.state.truth : this.state.dare}
           </div>
-        <iframe
-          src="https://tokbox.com/embed/embed/ot-embed.js?embedId=8c5d069b-b5fb-458e-81fe-b2a7dcd20555&room=DEFAULT_ROOM&iframe=true"
-          width="800px"
-          height="640px"
-          allow="microphone; camera"
-        />
-        </Section2>
-=======
-        <div className="chatroom">{messageList}</div>
-        <iframe title="webChat" src="https://tokbox.com/embed/embed/ot-embed.js?embedId=8c5d069b-b5fb-458e-81fe-b2a7dcd20555&room=DEFAULT_ROOM&iframe=true" width="800" height="640" allow="microphone; camera" />
-        <div>
-          <button
-            type="submit"
-            name="truth"
-            onClick={(e) => {
-              this.userSelectTruth(e);
-            }}
-          >TRUTH
-          </button>
-          or
-          <button
-            type="submit"
-            name="dare"
-            onClick={(e) => {
-              this.userSelectDare(e);
-            }}
-          >DARE
-          </button>
-          <button
-            type="submit"
-            name="pass"
-            onClick={(e) => {
-              this.userSelectPass(e);
-            }}
-          >PASS
-          </button>
-          or
-          <button
-            type="submit"
-            name="fail"
-            onClick={(e) => {
-              this.userSelectFail(e);
-            }}
-          >FAIL
-          </button>
-          {this.state.truth ? this.state.truth : this.state.dare}
-        </div>
->>>>>>> 46f4c5c7e711aa7e930331531b6a9016e0eaef0b
+        </Section>
       </div>
     );
   }
