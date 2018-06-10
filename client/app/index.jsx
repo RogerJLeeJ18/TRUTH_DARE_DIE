@@ -71,8 +71,7 @@ class App extends React.Component {
       return (
         <div>
           {isLoggedIn ? (
-            <LoserPage />
-            // <HomePage userInfo={userInfo} />
+            <HomePage userInfo={userInfo} />
           ) : (
             <Login login={this.login} signUpButton={this.signUpButton} />
             )}
