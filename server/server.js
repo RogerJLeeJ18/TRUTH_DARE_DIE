@@ -164,7 +164,14 @@ io.on('connection', (socket) => {
     const userVote = req.body.vote;
     userVotes.count += 1;
     userVotes[userVote] += 1;
-    res.status(200).send('Your vote is in!');
+    console.log(userVotes);
+    setTimeout(() => {
+      if (userVotes.pass > userVotes.fail) {
+        res.status(200).send('You live on for another round!');
+      } else {
+        res.status(200).send('You have been eliminated!');
+      }
+    }, 10000);
   });
 
   app.post('/room', (req, res) => {
