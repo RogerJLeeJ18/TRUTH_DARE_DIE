@@ -13,5 +13,12 @@ module.exports = {
     },
     rules: {
         'no-console': 'off',
+        "comma-dangle": ["error", {
+            "arrays": "never",
+            "objects": "never",
+            "imports": "never",
+            "exports": "never",
+            "functions": "ignore"
+        }]
     }
 };
