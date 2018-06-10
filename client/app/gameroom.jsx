@@ -256,6 +256,7 @@ class GameRoom extends React.Component {
           <Input type="text" name="sendMessage" />
           <Input type="submit" value="Send" />
         </form>
+<<<<<<< HEAD
         <Message className="chatroom">{messageList}</Message>
         </Section>
         <Section2>
@@ -307,6 +308,47 @@ class GameRoom extends React.Component {
           allow="microphone; camera"
         />
         </Section2>
+=======
+        <div className="chatroom">{messageList}</div>
+        <iframe title="webChat" src="https://tokbox.com/embed/embed/ot-embed.js?embedId=8c5d069b-b5fb-458e-81fe-b2a7dcd20555&room=DEFAULT_ROOM&iframe=true" width="800" height="640" allow="microphone; camera" />
+        <div>
+          <button
+            type="submit"
+            name="truth"
+            onClick={(e) => {
+              this.userSelectTruth(e);
+            }}
+          >TRUTH
+          </button>
+          or
+          <button
+            type="submit"
+            name="dare"
+            onClick={(e) => {
+              this.userSelectDare(e);
+            }}
+          >DARE
+          </button>
+          <button
+            type="submit"
+            name="pass"
+            onClick={(e) => {
+              this.userSelectPass(e);
+            }}
+          >PASS
+          </button>
+          or
+          <button
+            type="submit"
+            name="fail"
+            onClick={(e) => {
+              this.userSelectFail(e);
+            }}
+          >FAIL
+          </button>
+          {this.state.truth ? this.state.truth : this.state.dare}
+        </div>
+>>>>>>> 46f4c5c7e711aa7e930331531b6a9016e0eaef0b
       </div>
     );
   }
