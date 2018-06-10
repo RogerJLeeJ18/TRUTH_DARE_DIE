@@ -139,13 +139,7 @@ class GameRoom extends React.Component {
           <input type="submit" value="Send" />
         </form>
         <div className="chatroom">{messageList}</div>
-        <iframe
-          src="https://tokbox.com/embed/embed/ot-embed.js?embedId=8c5d069b-b5fb-458e-81fe-b2a7dcd20555&room=DEFAULT_ROOM&iframe=true"
-          width="800px"
-          height="640px"
-          allow="microphone; camera"
-        />
-
+        <iframe title="webChat" src="https://tokbox.com/embed/embed/ot-embed.js?embedId=8c5d069b-b5fb-458e-81fe-b2a7dcd20555&room=DEFAULT_ROOM&iframe=true" width="800" height="640" allow="microphone; camera" />
         <div>
           <button
             type="submit"
