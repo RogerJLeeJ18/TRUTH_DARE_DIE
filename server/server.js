@@ -163,7 +163,6 @@ io.on('connection', (socket) => {
   app.post('/votes', (req, res) => {
     const userVote = req.body.vote;
     userVotes[userVote] += 1;
-    console.log(userVotes);
     res.status(200).send('Your vote is in!');
   });
   app.post('/room', (req, res) => {
@@ -171,12 +170,13 @@ io.on('connection', (socket) => {
     const socketIdArray = Object.keys(io.sockets.adapter.rooms[reqRoom].sockets);
     const randomSocket = Math.floor(Math.random() * (socketIdArray.length));
     const response = socketIdArray[randomSocket];
-    const currentUser = io.sockets.sockets[response];
+    const userSocket = io.sockets.sockets;
+    const currentUser = userSocket[response];
     const game = () => {
       currentUser.emit('this-user-turn', 'It is your turn!');
       currentUser.hasGone = true;
       socketIdArray.forEach((socketId) => {
-        if (socketId !== response && socketId.alive) {
+        if (socketId !== response && userSocket[socketId].alive === true) {
           io.sockets.sockets[socketId].emit('user-turn', `${io.sockets.sockets[response].username}'s turn!`);
         }
       });
