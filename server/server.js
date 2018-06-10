@@ -9,13 +9,13 @@ const socketIO = require('socket.io');
 const bcrypt = require('bcrypt');
 const cookieSession = require('cookie-session');
 
-const privateKey = fs.readFileSync('/etc/letsencrypt/live/test.tdd.life/privkey.pem', 'utf8');
-const certificate = fs.readFileSync('/etc/letsencrypt/live/test.tdd.life/fullchain.pem', 'utf8');
-const credentials = { key: privateKey, cert: certificate };
+// const privateKey = fs.readFileSync('/etc/letsencrypt/live/test.tdd.life/privkey.pem', 'utf8');
+// const certificate = fs.readFileSync('/etc/letsencrypt/live/test.tdd.life/fullchain.pem', 'utf8');
+// const credentials = { key: privateKey, cert: certificate };
 
 const app = express();
 const server = http.Server(app);
-const httpsServer = https.Server(credentials, app);
+// const httpsServer = https.Server(credentials, app);
 
 const io = socketIO.listen(server);
 
@@ -196,17 +196,14 @@ io.on('connection', (socket) => {
           io.sockets.sockets[socketId].emit('user-turn', `${io.sockets.sockets[response].username}'s turn!`);
         }
       });
-      // setInterval(() => {
-
-      // }, 10000);
-      res.send(response);
+      // res.send(response);
     };
-    game();
     // if (socketIdArray.length > 3) {
-    //   setInterval(game, 10000);
+    //   setInterval(game(), 15000);
     // } else {
     //   socket.emit('game-end');
     // }
+    setInterval(game, 10000);
   });
   socket.on('disconnect', () => {
     console.log('user has disconnected');
@@ -214,13 +211,13 @@ io.on('connection', (socket) => {
   });
 });
 
-const PORT = 80;
+const PORT = 3000;
 const httpsPORT = 3000;
 
 server.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);
 });
 
-httpsServer.listen(httpsPORT, () => {
-  console.log(`lisening on port ${httpsPORT}`);
-});
+// httpsServer.listen(httpsPORT, () => {
+//   console.log(`lisening on port ${httpsPORT}`);
+// });

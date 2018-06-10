@@ -17,7 +17,7 @@ const Div = styled.div`
 `;
 
 const Chat = styled.h1`
-  font-size: 26px
+  font-size: 26px;
 `;
 
 const User = styled.li`
@@ -226,15 +226,15 @@ class GameRoom extends React.Component {
     const messageList = this.state.messageHistory.map(message => <li key={message}>{message}</li>);
     const truthOrDare = (
       <div>
-        <button type="submit" name="truth" onClick={(e) => { this.userSelectTruth(e); }}>TRUTH</button>
+        <Button type="submit" name="truth" onClick={(e) => { this.userSelectTruth(e); }}>TRUTH</Button>
         or
-        <button type="submit" name="dare" onClick={(e) => { this.userSelectDare(e); }}>DARE</button>
+        <Button type="submit" name="dare" onClick={(e) => { this.userSelectDare(e); }}>DARE</Button>
       </div>);
     const passOrFail = (
       <div>
-        <button type="submit" name="pass" onClick={(e) => { this.userSelectPass(e); }}>PASS</button>
+        <Button type="submit" name="pass" onClick={(e) => { this.userSelectPass(e); }}>PASS</Button>
         or
-        <button type="submit" name="fail" onClick={(e) => { this.userSelectFail(e); }}>FAIL</button>
+        <Button type="submit" name="fail" onClick={(e) => { this.userSelectFail(e); }}>FAIL</Button>
       </div>);
     return (
       <div>
@@ -245,9 +245,6 @@ class GameRoom extends React.Component {
           <Deaths>Deaths: {this.props.userInfo.death_tokens}</Deaths>
           <Wins>Wins: {this.props.userInfo.win_tokens}</Wins>
         </TopBar>
-        <Chat htmlFor="chatRoom">
-          Chats
-        </Chat>
         {this.props.admin ? (
           <div>
             <Button
@@ -262,6 +259,9 @@ class GameRoom extends React.Component {
           </div>
         ) : (<div />)
         }
+        <Chat htmlFor="chatRoom">
+          Chats
+        </Chat>
         <Section>
           <form onSubmit={(e) => {
             this.userSendMessage(e);
