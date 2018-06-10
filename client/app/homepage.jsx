@@ -163,7 +163,7 @@ class HomePage extends React.Component {
   joinRoom(event) {
     const roomName = event.target.join.value;
     axios.get(`/rooms/${roomName}`).then(({ data }) => {
-      if (data.admin === this.props.userInfo.username){
+      if (data.admin === this.props.userInfo.username) {
         this.setState({ roomName, roomCreated: !this.state.roomCreated, admin: !this.state.admin }, () => {
           console.log(this.state.admin);
           console.log(`you have joined ${this.state.roomName}`, data);
