@@ -159,12 +159,14 @@ io.on('connection', (socket) => {
     // request to get the random socket id
     socket.broadcast.emit('join', room);
   });
-  const userVotes = { pass: 0, fail: 0 };
+  const userVotes = { pass: 0, fail: 0, count: 0 };
   app.post('/votes', (req, res) => {
     const userVote = req.body.vote;
+    userVotes.count += 1;
     userVotes[userVote] += 1;
     res.status(200).send('Your vote is in!');
   });
+
   app.post('/room', (req, res) => {
     const reqRoom = req.body.room;
     const socketIdArray = Object.keys(io.sockets.adapter.rooms[reqRoom].sockets);
@@ -176,7 +178,7 @@ io.on('connection', (socket) => {
       currentUser.emit('this-user-turn', 'It is your turn!');
       currentUser.hasGone = true;
       socketIdArray.forEach((socketId) => {
-        if (socketId !== response && userSocket[socketId].alive === true) {
+        if (socketId !== response) {
           io.sockets.sockets[socketId].emit('user-turn', `${io.sockets.sockets[response].username}'s turn!`);
         }
       });
