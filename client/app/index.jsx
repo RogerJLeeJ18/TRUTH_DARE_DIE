@@ -4,6 +4,9 @@ import axios from 'axios';
 import { Login } from './login.jsx';
 import { HomePage } from './homepage.jsx';
 import { SignUp } from './signup.jsx';
+import {LoserPage} from './loserpage.jsx';
+import { WinnerPage } from './winnerpage.jsx';
+
 
 
 class App extends React.Component {
@@ -68,7 +71,8 @@ class App extends React.Component {
       return (
         <div>
           {isLoggedIn ? (
-            <HomePage userInfo={userInfo} />
+            <WinnerPage />
+            // <HomePage userInfo={userInfo} />
           ) : (
             <Login login={this.login} signUpButton={this.signUpButton} />
             )}
