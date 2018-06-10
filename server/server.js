@@ -200,8 +200,10 @@ io.on('connection', (socket) => {
   });
 });
 
+const role = 'production';
+const PORT = process.env.ENV_ROLE === role ? 80 : 3000;
 
-server.listen(3000, () => {
+server.listen(PORT, () => {
   console.log('listening on port 3000');
 });
 
