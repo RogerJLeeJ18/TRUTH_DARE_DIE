@@ -109,21 +109,23 @@ class WebcamCapture extends React.Component {
           onResume={this.handleResume}
           onError={this.handleError}
           render={({
-            start, stop, pause, resume
+            start, stop, pause, resume,
           }) =>
-            (<div>
-              <p>Granted: {granted.toString()}</p>
-              <p>Rejected Reason: {rejectedReason}</p>
-              <p>Recording: {recording.toString()}</p>
-              <p>Paused: {paused.toString()}</p>
-              <button onClick={start}>Start</button>
-              <button onClick={stop}>Stop</button>
-              <button onClick={pause}>Pause</button>
-              <button onClick={resume}>Resume</button>
+            (
+              <div>
+                <p>Granted: {granted.toString()}</p>
+                <p>Rejected Reason: {rejectedReason}</p>
+                <p>Recording: {recording.toString()}</p>
+                <p>Paused: {paused.toString()}</p>
+                <button onClick={start}>Start</button>
+                <button onClick={stop}>Stop</button>
+                <button onClick={pause}>Pause</button>
+                <button onClick={resume}>Resume</button>
 
-              <p>Streaming test</p>
-              <video autoPlay></video>
-            </div>)
+                <p>Streaming test</p>
+                <video autoPlay />
+              </div>
+            )
           }
         />
       </div>
