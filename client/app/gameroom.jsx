@@ -1,6 +1,5 @@
 import React from 'react';
 import axios from 'axios';
-import { WebcamCapture } from './recorder.jsx';
 import styled from 'styled-components';
 
 const Title = styled.h1`
@@ -122,7 +121,7 @@ class GameRoom extends React.Component {
       truth: '',
       alive: true,
       currentUsersTurnDisplay: '',
-      currentUsersTurn: false,
+      currentUsersTurn: false
     };
     // bind function to send messages and truth answer to component
     this.userSendVideo = this.userSendVideo.bind(this);
@@ -137,7 +136,7 @@ class GameRoom extends React.Component {
     this.props.socket.on('this-user-turn', (message) => {
       this.setState({
         currentUsersTurnDisplay: message,
-        currentUsersTurn: true,
+        currentUsersTurn: true
       }, () => {
         console.log(message, 'message from this-user-turn');
         console.log(this.state);
@@ -146,7 +145,7 @@ class GameRoom extends React.Component {
     this.props.socket.on('user-turn', (message) => {
       this.setState({
         currentUsersTurnDisplay: message,
-        currentUsersTurn: false,
+        currentUsersTurn: false
       }, () => {
         console.log(message, 'message from this-user-turn');
         console.log(this.state);
@@ -217,7 +216,7 @@ class GameRoom extends React.Component {
   }
   userStartGame(e) {
     axios.post('/room', {
-      room: this.props.roomname,
+      room: this.props.roomname
     });
     e.preventDefault();
   }
@@ -271,7 +270,14 @@ class GameRoom extends React.Component {
             <Input type="submit" value="Send" />
           </form>
           <div className="chatroom">{messageList}</div>
-          <iframe title="webChat" src="https://tokbox.com/embed/embed/ot-embed.js?embedId=8c5d069b-b5fb-458e-81fe-b2a7dcd20555&room=DEFAULT_ROOM&iframe=true" width="800" height="640" allow="microphone; camera" />
+
+          <iframe
+            title="webcam"
+            src="https://tokbox.com/embed/embed/ot-embed.js?embedId=8c5d069b-b5fb-458e-81fe-b2a7dcd20555&room=DEFAULT_ROOM&iframe=true"
+            width="800"
+            height="640"
+            allow="microphone; camera"
+          />
           <div>
             {this.state.currentUsersTurn ? (truthOrDare) : (passOrFail)}
             {this.state.truth ? this.state.truth : this.state.dare}
