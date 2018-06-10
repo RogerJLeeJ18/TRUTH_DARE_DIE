@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const dataSave = require('../Database/mongoose');
 const http = require('http');
+const https = require('https');
 const path = require('path');
 const socketIO = require('socket.io');
 const bcrypt = require('bcrypt');
@@ -159,19 +160,34 @@ io.on('connection', (socket) => {
     // request to get the random socket id
     socket.broadcast.emit('join', room);
   });
-  const userVotes = { pass: 0, fail: 0 };
+
+  const userVotes = { pass: 0, fail: 0, count: 0 };
   app.post('/votes', (req, res) => {
     const userVote = req.body.vote;
+    userVotes.count += 1;
     userVotes[userVote] += 1;
+<<<<<<< HEAD
+    res.send('Your Vote Is In');
+=======
     console.log(userVotes);
-    res.status(200).send('Your vote is in!');
+    setTimeout(() => {
+      if (userVotes.pass > userVotes.fail) {
+        res.status(200).send('You live on for another round!');
+      } else {
+        res.status(200).send('You have been eliminated!');
+      }
+    }, 10000);
+>>>>>>> bd812c190403ed97e88163261c3951e1f2a444e6
   });
+
+
   app.post('/room', (req, res) => {
     const reqRoom = req.body.room;
     const socketIdArray = Object.keys(io.sockets.adapter.rooms[reqRoom].sockets);
     const randomSocket = Math.floor(Math.random() * (socketIdArray.length));
     const response = socketIdArray[randomSocket];
-    const currentUser = io.sockets.sockets[response];
+    const userSocket = io.sockets.sockets;
+    const currentUser = userSocket[response];
     const game = () => {
       currentUser.emit('this-user-turn', 'It is your turn!');
       currentUser.hasGone = true;
@@ -198,8 +214,10 @@ io.on('connection', (socket) => {
   });
 });
 
+const role = 'production';
+const PORT = process.env.ENV_ROLE === role ? 80 : 3000;
 
-server.listen(3000, () => {
-  console.log('listening on port 3000');
+server.listen(PORT, () => {
+  console.log(`listening on port ${PORT}`);
 });
 
