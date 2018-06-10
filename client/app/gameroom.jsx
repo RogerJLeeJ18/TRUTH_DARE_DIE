@@ -1,6 +1,5 @@
 import React from 'react';
 import axios from 'axios';
-import { WebcamCapture } from './recorder.jsx';
 
 class GameRoom extends React.Component {
   constructor(props) {
@@ -24,8 +23,8 @@ class GameRoom extends React.Component {
       this.setState({ messageHistory: [...this.state.messageHistory, message] });
     });
     this.props.socket.on('this-user-turn', (message) => {
-      this.setState({ 
-        currentUsersTurnDisplay: message, 
+      this.setState({
+        currentUsersTurnDisplay: message,
         currentUsersTurn: true,
       }, () => {
         console.log(message, 'message from this-user-turn');
@@ -104,13 +103,25 @@ class GameRoom extends React.Component {
   }
   userStartGame(e) {
     axios.post('/room', {
-      room: this.props.roomname
-    })
+      room: this.props.roomname,
+    });
     e.preventDefault();
   }
   render() {
     const { username } = this.props.userInfo;
     const messageList = this.state.messageHistory.map(message => <li key={message}>{message}</li>);
+    const truthOrDare = (
+      <div>
+        <button type="submit" name="truth" onClick={(e) => { this.userSelectTruth(e); }}>TRUTH</button>
+        or
+        <button type="submit" name="dare" onClick={(e) => { this.userSelectDare(e); }}>DARE</button>
+      </div>);
+    const passOrFail = (
+      <div>
+        <button type="submit" name="pass" onClick={(e) => { this.userSelectPass(e); }}>PASS</button>
+        or
+        <button type="submit" name="fail" onClick={(e) => { this.userSelectFail(e); }}>FAIL</button>
+      </div>);
     return (
       <div>{username}
         {this.props.admin ? (
@@ -123,7 +134,7 @@ class GameRoom extends React.Component {
                 e.preventDefault();
               }}
             >START
-        </button>
+            </button>
           </div>
         ) : (<div />)
         }
@@ -141,40 +152,7 @@ class GameRoom extends React.Component {
         <div className="chatroom">{messageList}</div>
         <iframe title="webChat" src="https://tokbox.com/embed/embed/ot-embed.js?embedId=8c5d069b-b5fb-458e-81fe-b2a7dcd20555&room=DEFAULT_ROOM&iframe=true" width="800" height="640" allow="microphone; camera" />
         <div>
-          <button
-            type="submit"
-            name="truth"
-            onClick={(e) => {
-              this.userSelectTruth(e);
-            }}
-          >TRUTH
-          </button>
-          or
-          <button
-            type="submit"
-            name="dare"
-            onClick={(e) => {
-              this.userSelectDare(e);
-            }}
-          >DARE
-          </button>
-          <button
-            type="submit"
-            name="pass"
-            onClick={(e) => {
-              this.userSelectPass(e);
-            }}
-          >PASS
-          </button>
-          or
-          <button
-            type="submit"
-            name="fail"
-            onClick={(e) => {
-              this.userSelectFail(e);
-            }}
-          >FAIL
-          </button>
+          {this.state.currentUsersTurn ? (truthOrDare) : (passOrFail)}
           {this.state.truth ? this.state.truth : this.state.dare}
         </div>
       </div>
