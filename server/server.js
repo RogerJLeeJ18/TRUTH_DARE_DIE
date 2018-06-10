@@ -176,7 +176,7 @@ io.on('connection', (socket) => {
       currentUser.emit('this-user-turn', 'It is your turn!');
       currentUser.hasGone = true;
       socketIdArray.forEach((socketId) => {
-        if (socketId !== response && socketId.alive) {
+        if (socketId !== response) {
           io.sockets.sockets[socketId].emit('user-turn', `${io.sockets.sockets[response].username}'s turn!`);
         }
       });
