@@ -159,15 +159,18 @@ io.on('connection', (socket) => {
     // request to get the random socket id
     socket.broadcast.emit('join', room);
   });
-  const userVotes = { pass: 0, fail: 0 };
+  const userVotes = { pass: 0, fail: 0, count: 0 };
   app.post('/votes', (req, res) => {
     const userVote = req.body.vote;
+    userVotes.count += 1;
     userVotes[userVote] += 1;
     console.log(userVotes);
     res.status(200).send('Your vote is in!');
   });
+
   app.post('/room', (req, res) => {
     const reqRoom = req.body.room;
+    console.log(userVotes, 'the votes are in');
     const socketIdArray = Object.keys(io.sockets.adapter.rooms[reqRoom].sockets);
     const randomSocket = Math.floor(Math.random() * (socketIdArray.length));
     const response = socketIdArray[randomSocket];
