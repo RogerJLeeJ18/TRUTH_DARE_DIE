@@ -181,6 +181,9 @@ io.on('connection', (socket) => {
   app.post('/room', (req, res) => {
     const reqRoom = req.body.room;
     const socketIdArray = Object.keys(io.sockets.adapter.rooms[reqRoom].sockets);
+    if (socketIdArray.length < 4) {
+      socket.emit('finished', 'You won!');
+    }
     const randomSocket = Math.floor(Math.random() * (socketIdArray.length));
     const response = socketIdArray[randomSocket];
     const userSocket = io.sockets.sockets;
@@ -221,16 +224,6 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('user has disconnected');
     socket.disconnect(true);
-  });
-
-  socket.on('died', () => {
-    const users = Object.keys(io.sockets.adapter.rooms[curentRoom].sockets);
-    users.splice(0, 1);
-    console.log(users.length, 'This is the length before');
-    if (users.length < 4) {
-      console.log(users.length, 'This is the length after');
-      socket.emit('finished', 'You won!');
-    }
   });
 });
 
