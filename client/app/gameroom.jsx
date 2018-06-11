@@ -252,7 +252,6 @@ class GameRoom extends React.Component {
           <User>Stay Alive {username}</User>
           {this.state.currentUsersTurnDisplay}
           {this.state.afterTurnMessage}
-          <Saves>Saves: {this.props.userInfo.save_tokens}</Saves>
           <Deaths>Deaths: {this.props.userInfo.death_tokens}</Deaths>
           <Wins>Wins: {this.props.userInfo.win_tokens}</Wins>
         </TopBar>

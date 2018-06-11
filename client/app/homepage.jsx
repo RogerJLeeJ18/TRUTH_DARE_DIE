@@ -189,7 +189,6 @@ class HomePage extends React.Component {
       <div className="container">
         <TopBar className="userInfo">
           <User>Hello, {this.props.userInfo.username}</User>
-          <Saves>Saves: {this.props.userInfo.save_tokens}</Saves>
           <Deaths>Deaths: {this.props.userInfo.death_tokens}</Deaths>
           <Wins>Wins: {this.props.userInfo.win_tokens}</Wins>
         </TopBar>
