@@ -195,7 +195,7 @@ class GameRoom extends React.Component {
   }
   userSelectPass(e) {
     this.setState({ hasVoted: true }, () => {
-      axios.post('/votes', { vote: 'pass' })
+      axios.post('/votes', { vote: 'pass', username: this.props.userInfo.username })
         .then((result) => {
           console.log(result);
         }).catch((err) => {
@@ -206,7 +206,7 @@ class GameRoom extends React.Component {
   }
   userSelectFail(e) {
     this.setState({ hasVoted: true }, () => {
-      axios.post('/votes', { vote: 'fail' })
+      axios.post('/votes', { vote: 'fail', username: this.props.userInfo.username })
         .then((result) => {
           console.log(result);
         }).catch((err) => {

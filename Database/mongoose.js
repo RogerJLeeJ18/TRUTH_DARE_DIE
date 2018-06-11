@@ -18,9 +18,9 @@ const UserSchema = new Schema({
   password: String,
   avatar: String,
   email: String,
-  save_tokens: Number,
-  death_tokens: Number,
-  win_tokens: Number,
+  save_tokens: { type: Number, default: 0 },
+  death_tokens: { type: Number, default: 0 },
+  win_tokens: { type: Number, default: 0 }
 });
 
 const User = mongoose.model('User', UserSchema);
@@ -29,7 +29,7 @@ const User = mongoose.model('User', UserSchema);
 const RoomSchema = new Schema({
   room: String,
   status: String,
-  admin: String,
+  admin: String
 });
 
 const Room = mongoose.model('Room', RoomSchema);
@@ -39,7 +39,7 @@ const Room = mongoose.model('Room', RoomSchema);
 const TruthSchema = new Schema({
   category: String,
   truth_id: Number,
-  truth: String,
+  truth: String
 });
 
 const Truth = mongoose.model('Truth', TruthSchema);
@@ -49,7 +49,7 @@ const Truth = mongoose.model('Truth', TruthSchema);
 const DareSchema = new Schema({
   category: String,
   dare: String,
-  dare_id: Number,
+  dare_id: Number
 });
 
 const Dare = mongoose.model('Dare', DareSchema);
@@ -73,7 +73,7 @@ const save = (user, hash, callback) => {
         email: user.email,
         save_tokens: 0,
         death_tokens: 0,
-        win_tokens: 0,
+        win_tokens: 0
       });
       newUser.save((error, userInfo) => {
         if (error) {
@@ -105,7 +105,7 @@ const getUser = (request, callback) => {
             username: user.username,
             save_tokens: user.save_tokens,
             death_tokens: user.death_tokens,
-            win_tokens: user.win_tokens,
+            win_tokens: user.win_tokens
           });
         }
       });
@@ -164,7 +164,7 @@ const createRoom = (roomName, callback) => {
       const newRoom = new Room({
         room: roomName.room,
         status: 'waiting',
-        admin: roomName.username,
+        admin: roomName.username
       });
       newRoom.save((error) => {
         if (error) {
@@ -200,6 +200,15 @@ const endRoom = (room, callback) => {
   });
 };
 
+const addDeath = (reqUsername, callback) => {
+  User.findOneAndUpdate({ username: reqUsername }, { $inc: { death_tokens: 1 } }, { new: true }, (err, response) => {
+    if (err) {
+      callback(err);
+    } else {
+      callback(response);
+    }
+  });
+};
 
 module.exports.save = save;
 module.exports.getUser = getUser;
@@ -211,3 +220,4 @@ module.exports.getDare = getDare;
 module.exports.findRooms = findRooms;
 module.exports.endRoom = endRoom;
 module.exports.updateRoom = updateRoom;
+module.exports.addDeath = addDeath;
