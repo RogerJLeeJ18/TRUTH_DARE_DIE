@@ -198,6 +198,7 @@ io.on('connection', (socket) => {
     setTimeout(() => {
       if (userVotes.pass > userVotes.fail) {
         res.status(200).send(`${truthOrDare.username} lives on for another round!`);
+        socket.emit('alive', 'Lived for another round!');
       } else {
         console.log(truthOrDare.id);
         res.status(200).send(`${truthOrDare.username} has been eliminated!`);
