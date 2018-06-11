@@ -26,7 +26,7 @@ const Form = styled.form`
 const CreateForm = styled.form`
   margin-left: 6%;
   width: 400px;
-  padding-left: 14%;
+  padding-left: 5%;
   padding-right: 5%
   padding-bottom: 3%;
   padding-top: 2%
@@ -79,7 +79,7 @@ const Choice = styled.label`
 
 const User = styled.li`
   color: white;
-  font-size: 22px;
+  font-size: 30px;
   list-style-type: none;
   float: left;
   display: block;
@@ -89,7 +89,7 @@ const User = styled.li`
 
 const Deaths = styled.li`
   color: red;
-  font-size: 22px;
+  font-size: 30px;
   list-style-type: none;
   float: right;
   display: block;
@@ -99,7 +99,7 @@ const Deaths = styled.li`
 `;
 
 const Saves = styled.li`
-  font-size: 22px;
+  font-size: 30px;
   list-style-type: none;
   float: right;
   display: block;
@@ -109,7 +109,7 @@ const Saves = styled.li`
 `;
 
 const Wins = styled.li`
-  font-size: 22px;
+  font-size: 30px;
   list-style-type: none;
   float: right;
   display: block;
