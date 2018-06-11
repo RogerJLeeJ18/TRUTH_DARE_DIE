@@ -2,20 +2,19 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const dataSave = require('../Database/mongoose');
 const http = require('http');
-const https = require('https');
 const fs = require('fs');
 const path = require('path');
 const socketIO = require('socket.io');
 const bcrypt = require('bcrypt');
 const cookieSession = require('cookie-session');
 
-const privateKey = fs.readFileSync('/etc/letsencrypt/live/test.tdd.life/privkey.pem', 'utf8');
-const certificate = fs.readFileSync('/etc/letsencrypt/live/test.tdd.life/fullchain.pem', 'utf8');
-const credentials = { key: privateKey, cert: certificate };
+// const privateKey = fs.readFileSync(`${__dirname}/rtc-video-room-key.pem`, 'utf8');
+// const certificate = fs.readFileSync(`${__dirname}/rtc-video-room-cert.pem`, 'utf8');
+// const credentials = { key: privateKey, cert: certificate };
 
 const app = express();
-const server = http.Server(app);
-const httpsServer = https.Server(credentials, app);
+const server = http.createServer(app);
+// const httpsServer = https.createServer(credentials, app);
 
 const io = socketIO.listen(server);
 
@@ -31,7 +30,7 @@ app.use(bodyParser.json());
 app.use(cookieSession({
   name: 'session',
   secret: 'TDD',
-  maxAge: 24 * 60 * 60 * 1000,
+  maxAge: 24 * 60 * 60 * 1000
 
 }));
 
@@ -66,7 +65,7 @@ app.post('/users', (req, res) => {
           username: response.username,
           save_tokens: response.save_tokens,
           death_tokens: response.death_tokens,
-          win_tokens: response.win_tokens,
+          win_tokens: response.win_tokens
         };
         res.status(201).send(info);
       }
@@ -214,13 +213,9 @@ io.on('connection', (socket) => {
   });
 });
 
-const PORT = 80;
-const httpsPORT = 3000;
+const PORT = process.env.PORT || 5000;
+
 
 server.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);
-});
-
-httpsServer.listen(httpsPORT, () => {
-  console.log(`lisening on port ${httpsPORT}`);
 });
