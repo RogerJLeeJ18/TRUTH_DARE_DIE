@@ -11,6 +11,7 @@ const cookieSession = require('cookie-session');
 const app = express();
 const server = http.Server(app);
 const io = socketIO.listen(server);
+console.log(io);
 
 app.use(express.static(path.join(__dirname, '/../database')));
 app.use(express.static(path.join(__dirname, '/../dist')));
@@ -140,7 +141,7 @@ io.on('connection', (socket) => {
     socket.broadcast.join(room);
   });
   socket.on('start', () => {
-    socket.emit('gameStart', 'The game has started');
+    socket.broadcast.emit('gameStart', 'The game has started');
   });
   socket.on('sendTruth', (truth) => {
     socket.broadcast.emit('sendTruth', truth);
@@ -210,7 +211,7 @@ io.on('connection', (socket) => {
   });
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 433;
 
 
 server.listen(PORT, () => {
