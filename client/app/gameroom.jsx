@@ -1,6 +1,5 @@
 import React from 'react';
 import axios from 'axios';
-import { WebcamCapture } from './recorder.jsx';
 import styled from 'styled-components';
 import { LoserPage } from './loserpage.jsx';
 
@@ -158,6 +157,9 @@ class GameRoom extends React.Component {
     this.props.socket.on('failure', (message) => {
       this.setState({ alive: false });
     });
+    this.props.socket.on('gameStart', (message) => {
+      this.setState({ hasVoted: false, truth: message });
+    });
   }
   userSendMessage(event) {
     const message = `${this.props.userInfo.username}: ${event.target.sendMessage.value}`;
@@ -217,9 +219,11 @@ class GameRoom extends React.Component {
     e.preventDefault();
   }
   userStartGame(e) {
+    this.setState({ truth: '', hasVoted: false });
     axios.post('/room', {
       room: this.props.roomname
     });
+    this.props.socket.emit('start');
     e.preventDefault();
   }
   render() {
@@ -232,7 +236,7 @@ class GameRoom extends React.Component {
       </div>);
     let passOrFail;
     if (this.state.hasVoted) {
-      passOrFail = (<span>Your vote has been cast!</span>);
+      passOrFail = (<div>Your vote has been cast!</div>);
     } else {
       passOrFail = (
         <div>
@@ -279,8 +283,8 @@ class GameRoom extends React.Component {
         </Section>
         <Section>
           <div>
-            {this.state.currentUsersTurn ? (truthOrDare) : (passOrFail)}
             {this.state.truth ? this.state.truth : this.state.dare}
+            {this.state.currentUsersTurn ? (truthOrDare) : (passOrFail)}
           </div>
           <iframe title="webChat" src="https://tokbox.com/embed/embed/ot-embed.js?embedId=8c5d069b-b5fb-458e-81fe-b2a7dcd20555&room=DEFAULT_ROOM&iframe=true" width="800" height="640" allow="microphone; camera" />
         </Section>
