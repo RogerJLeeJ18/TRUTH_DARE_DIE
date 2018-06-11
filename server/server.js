@@ -8,7 +8,6 @@ const socketIO = require('socket.io');
 const bcrypt = require('bcrypt');
 const cookieSession = require('cookie-session');
 
-
 const app = express();
 const server = http.Server(app);
 const io = socketIO.listen(server);
