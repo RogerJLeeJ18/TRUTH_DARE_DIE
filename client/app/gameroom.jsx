@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { WebcamCapture } from './recorder.jsx';
 import styled from 'styled-components';
+import { LoserPage } from './loserpage.jsx';
 
 const Title = styled.h1`
   font-family: Nosifer;
@@ -121,10 +122,10 @@ class GameRoom extends React.Component {
       truth: '',
       alive: true,
       currentUsersTurnDisplay: '',
-      currentUsersTurn: false
+      currentUsersTurn: false,
+      hasVoted: false
     };
     // bind function to send messages and truth answer to component
-    this.userSendVideo = this.userSendVideo.bind(this);
     this.userSendMessage = this.userSendMessage.bind(this);
     this.userSelectDare = this.userSelectDare.bind(this);
     this.userSelectTruth = this.userSelectTruth.bind(this);
@@ -150,6 +151,12 @@ class GameRoom extends React.Component {
         console.log(message, 'message from this-user-turn');
         console.log(this.state);
       });
+    });
+    this.props.socket.on('alive', (message) => {
+      this.setState({ hasVoted: false });
+    });
+    this.props.socket.on('failure', (message) => {
+      this.setState({ alive: false });
     });
   }
   userSendMessage(event) {
@@ -187,31 +194,26 @@ class GameRoom extends React.Component {
     this.props.socket.emit('dare');
     e.preventDefault();
   }
-  userSendVideo(video) {
-    console.log(video.get('file'));
-    axios.post('/video', video)
-      .then((result) => {
-        console.log(result);
-      }).catch((err) => {
-        console.log(err);
-      });
-  }
   userSelectPass(e) {
-    axios.post('/votes', { vote: 'pass' })
-      .then((result) => {
-        console.log(result);
-      }).catch((err) => {
-        console.log(err);
-      });
+    this.setState({ hasVoted: true }, () => {
+      axios.post('/votes', { vote: 'pass' })
+        .then((result) => {
+          console.log(result);
+        }).catch((err) => {
+          console.log(err);
+        });
+    });
     e.preventDefault();
   }
   userSelectFail(e) {
-    axios.post('/votes', { vote: 'fail' })
-      .then((result) => {
-        console.log(result);
-      }).catch((err) => {
-        console.log(err);
-      });
+    this.setState({ hasVoted: true }, () => {
+      axios.post('/votes', { vote: 'fail' })
+        .then((result) => {
+          console.log(result);
+        }).catch((err) => {
+          console.log(err);
+        });
+    });
     e.preventDefault();
   }
   userStartGame(e) {
@@ -228,12 +230,17 @@ class GameRoom extends React.Component {
         <Button type="submit" name="truth" onClick={(e) => { this.userSelectTruth(e); }}>TRUTH</Button>
         <Button type="submit" name="dare" onClick={(e) => { this.userSelectDare(e); }}>DARE</Button>
       </div>);
-    const passOrFail = (
-      <div>
-        <Button type="submit" name="pass" onClick={(e) => { this.userSelectPass(e); }}>PASS</Button>
-        <Button type="submit" name="fail" onClick={(e) => { this.userSelectFail(e); }}>FAIL</Button>
-      </div>);
-    return (
+    let passOrFail;
+    if (this.state.hasVoted) {
+      passOrFail = (<span>Your vote has been cast!</span>);
+    } else {
+      passOrFail = (
+        <div>
+          <Button type="submit" name="pass" onClick={(e) => { this.userSelectPass(e); }}>PASS</Button>
+          <Button type="submit" name="fail" onClick={(e) => { this.userSelectFail(e); }}>FAIL</Button>
+        </div>);
+    }
+    const aliveRoom = (
       <div>
         <TopBar className="userInfo">
           <User>
@@ -262,9 +269,9 @@ class GameRoom extends React.Component {
           Chats
         </Chat>
         <Section onSubmit={(e) => {
-            this.userSendMessage(e);
-            e.preventDefault();
-          }}
+          this.userSendMessage(e);
+          e.preventDefault();
+        }}
         >
           <Input type="text" name="sendMessage" />
           <Input type="submit" value="Send" />
@@ -277,6 +284,10 @@ class GameRoom extends React.Component {
           </div>
           <iframe title="webChat" src="https://tokbox.com/embed/embed/ot-embed.js?embedId=8c5d069b-b5fb-458e-81fe-b2a7dcd20555&room=DEFAULT_ROOM&iframe=true" width="800" height="640" allow="microphone; camera" />
         </Section>
+      </div>);
+    return (
+      <div>
+        {this.state.alive ? (aliveRoom) : (<LoserPage />)}
       </div>
     );
   }
