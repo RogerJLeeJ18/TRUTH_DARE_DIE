@@ -10,15 +10,14 @@ const Title = styled.h1`
   margin-top: 4%
 `;
 
-// const Div = styled.div`
-//   margin-top: 5%;
-//   margin-bottom: 1em;
-//   float: right;
-// `;
+const Div = styled.div`
+  font-size: 16px;
+`;
 
 const Chat = styled.h1`
   font-size: 26px;
   padding-left: 6%
+  font-family: Gothic;
 `;
 
 const User = styled.li`
@@ -198,7 +197,7 @@ class GameRoom extends React.Component {
   }
   userSelectPass(e) {
     this.setState({ hasVoted: true }, () => {
-      axios.post('/votes', { vote: 'pass' })
+      axios.post('/votes', { vote: 'pass', username: this.props.userInfo.username })
         .then((result) => {
           console.log(result);
         }).catch((err) => {
@@ -209,7 +208,7 @@ class GameRoom extends React.Component {
   }
   userSelectFail(e) {
     this.setState({ hasVoted: true }, () => {
-      axios.post('/votes', { vote: 'fail' })
+      axios.post('/votes', { vote: 'fail', username: this.props.userInfo.username })
         .then((result) => {
           console.log(result);
         }).catch((err) => {
@@ -247,22 +246,6 @@ class GameRoom extends React.Component {
     const aliveRoom = (
       <div>
         <TopBar className="userInfo">
-          <User>
-            {this.props.admin ? (
-              <div>
-                <Button
-                  type="submit"
-                  name="start"
-                  onClick={(e) => {
-                    this.userStartGame(e);
-                    e.preventDefault();
-                  }}
-                >START
-                </Button>
-              </div>
-            ) : (<div />)
-            }
-          </User>
           <User>Stay Alive {username}</User>
           <Saves>Saves: {this.props.userInfo.save_tokens}</Saves>
           <Deaths>Deaths: {this.props.userInfo.death_tokens}</Deaths>
@@ -283,6 +266,22 @@ class GameRoom extends React.Component {
         </Section>
         <Section>
           <div>
+<<<<<<< HEAD
+            {this.props.admin ? (
+              <Button
+                type="submit"
+                name="start"
+                onClick={(e) => {
+                    this.userStartGame(e);
+                    e.preventDefault();
+                  }}
+              >START
+              </Button>
+            ) : (<div />)
+            }
+            {this.state.currentUsersTurn ? (truthOrDare) : (passOrFail)}
+=======
+>>>>>>> c12bc7d480f6ca8fe91d771a572cb22a7cb1ea39
             {this.state.truth ? this.state.truth : this.state.dare}
             {this.state.currentUsersTurn ? (truthOrDare) : (passOrFail)}
           </div>
