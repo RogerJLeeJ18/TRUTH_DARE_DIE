@@ -202,19 +202,11 @@ class HomePage extends React.Component {
             <Div>
               <Label>Make A Room</Label>
             </Div>
-            <Choice htmlFor="public">Public
-              <input type="checkbox" />
-            </Choice>
-            <br />
-            <Choice htmlFor="private">Private
-              <input type="checkbox" />
-            </Choice>
           </Div>
           <Div className="socketMakeRoom">
             <Div>
               <Input type="text" placeholder="Make a room here" name="socket" />
-              <Button>Create
-              </Button>
+              <Button>Create</Button>
             </Div>
           </Div>
         </CreateForm>
