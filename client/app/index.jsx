@@ -15,7 +15,7 @@ class App extends React.Component {
       private: false,
       userInfo: {},
       signUp: false,
-      socket: io.connect('http://localhost', { secure: true })
+      socket: io.connect('https://test.tdd.life', { secure: true })
     };
     this.login = this.login.bind(this);
     this.signUpButton = this.signUpButton.bind(this);
@@ -26,7 +26,7 @@ class App extends React.Component {
     const password = event.target.password.value;
     axios.post('/users', {
       username,
-      password,
+      password
     }).then((result) => {
       this.setState({ isLoggedIn: !this.state.isLoggedIn, signUp: !this.state.signUp }, () => {
         console.log('login successful', result);
@@ -38,7 +38,7 @@ class App extends React.Component {
   }
   signUpButton(event) {
     this.setState({
-      signUp: !this.state.signUp,
+      signUp: !this.state.signUp
     }, () => {
       console.log(this.state.signUp);
     });
@@ -49,7 +49,11 @@ class App extends React.Component {
     axios.get('/users', {
       params: {
         username,
+<<<<<<< HEAD
         password,
+=======
+        password
+>>>>>>> f1ba730fbd46191cb95ccdce8e51db7fd2a51490
       }
     }).then(({ data }) => {
       this.setState({ isLoggedIn: !this.state.isLoggedIn, userInfo: data }, () => {
@@ -71,7 +75,7 @@ class App extends React.Component {
           {isLoggedIn ? (
             <HomePage userInfo={userInfo} socket={this.state.socket} />
           ) : (
-              <Login login={this.login} signUpButton={this.signUpButton} />
+            <Login login={this.login} signUpButton={this.signUpButton} />
             )}
         </div>
       );
