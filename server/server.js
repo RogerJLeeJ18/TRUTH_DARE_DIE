@@ -8,8 +8,8 @@ const bcrypt = require('bcrypt');
 const cookieSession = require('cookie-session');
 const fs = require('fs');
 
-const key = fs.readFileSync(`${__dirname}/rtc-video-room-key.pem`);
-const cert = fs.readFileSync(`${__dirname}/rtc-video-room-cert.pem`);
+const key = fs.readFileSync(`${__dirname}/rtc-video-room-key.pem`, 'utf8');
+const cert = fs.readFileSync(`${__dirname}/rtc-video-room-cert.pem`, 'utf8');
 // need to see if https works with sockets
 const options = { key, cert };
 
