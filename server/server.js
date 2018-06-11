@@ -177,7 +177,7 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('join', room);
   });
   let truthOrDare;
-  let curentRoom;
+  let currentRoom;
   app.post('/room', (req, res) => {
     const reqRoom = req.body.room;
     const socketIdArray = Object.keys(io.sockets.adapter.rooms[reqRoom].sockets);
@@ -186,7 +186,7 @@ io.on('connection', (socket) => {
     const userSocket = io.sockets.sockets;
     const currentUser = userSocket[response];
     truthOrDare = currentUser;
-    curentRoom = reqRoom;
+    currentRoom = reqRoom;
     const game = () => {
       userVotes = { pass: 0, fail: 0, count: 0 };
       currentUser.emit('this-user-turn', 'It is your turn!');
@@ -224,7 +224,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('died', () => {
-    const users = Object.keys(io.sockets.adapter.rooms[curentRoom].sockets);
+    const users = Object.keys(io.sockets.adapter.rooms[currentRoom].sockets);
     users.splice(0, 1);
     console.log(users.length, 'This is the length before');
     if (users.length < 4) {
