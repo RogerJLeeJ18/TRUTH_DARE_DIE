@@ -50,7 +50,7 @@ class App extends React.Component {
       params: {
         username,
         password,
-      },
+      }
     }).then(({ data }) => {
       this.setState({ isLoggedIn: !this.state.isLoggedIn, userInfo: data }, () => {
         console.log(this.state.userInfo);

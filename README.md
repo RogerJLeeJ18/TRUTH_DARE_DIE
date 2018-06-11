@@ -87,12 +87,13 @@ Server:
 
       -socket.on sendMessage will listen for when a message is sent and emit a message
 
-      - socket.on 'join' will listen for when a user joins a room and inside of it will add a username, hasGone, and alive property to the socket and push the username into the players array at the top of io.on, which will be an array of all of the users in that room. then it will emit the room. socket.on 'join' also includes a post request to '/room' that will  make an array of sockets ids in the room and pick a random socket. It also has a game function that emit's who's turn it is. There is also a post request to '/votes' that counts the votes sent from the user and checks if a user was voted out or not. It will take a user out of the users array if the user fails.
+      - socket.on 'join' will listen for when a user joins a room and inside of it will add a username, hasGone, and alive property to the socket and push the username into the players array at the top of io.on, which will be an array of all of the users in that room. then it will emit the room. socket.on 'join' also includes a post request to '/room' that will  make an array of sockets ids in the room and pick a random socket. It also has a game function that will emit who's turn it is. There is also a post request to '/votes' that counts the votes sent from the user and checks if a user was voted out or not. It will take a user out of the users array if the user fails.
 
       -socket.on 'disconnect' listens for when a user leaves the app
 
 Client: 
   
+
 
 
 ### Installing Dependencies
