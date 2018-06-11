@@ -153,7 +153,8 @@ class GameRoom extends React.Component {
     });
     this.props.socket.on('failure', (message) => {
       this.setState({ alive: false }, () => {
-        this.props.socket.emit('died');
+        this.props.socket.emit('died', `${this.props.userInfo.username} has died!`);
+        console.log(message);
       });
     });
     this.props.socket.on('gameStart', (message) => {
@@ -255,7 +256,6 @@ class GameRoom extends React.Component {
           <User>Stay Alive {username}</User>
           {this.state.currentUsersTurnDisplay}
           {this.state.afterTurnMessage}
-          <Saves>Saves: {this.props.userInfo.save_tokens}</Saves>
           <Deaths>Deaths: {this.props.userInfo.death_tokens}</Deaths>
           <Wins>Wins: {this.props.userInfo.win_tokens}</Wins>
         </TopBar>
