@@ -182,9 +182,11 @@ io.on('connection', (socket) => {
   app.post('/room', (req, res) => {
     const reqRoom = req.body.room;
     const socketIdArray = Object.keys(io.sockets.adapter.rooms[reqRoom].sockets);
-    if (socketIdArray.length < 4) {
-      socket.emit('finished', 'You won!');
-    }
+    setInterval(() => {
+      if (socketIdArray.length < 4) {
+        socket.emit('finished', 'You won!');
+      }
+    }, 5000);
     const randomSocket = Math.floor(Math.random() * (socketIdArray.length));
     const response = socketIdArray[randomSocket];
     const userSocket = io.sockets.sockets;
