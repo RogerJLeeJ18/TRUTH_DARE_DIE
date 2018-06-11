@@ -4,10 +4,7 @@ import axios from 'axios';
 import { Login } from './login.jsx';
 import { HomePage } from './homepage.jsx';
 import { SignUp } from './signup.jsx';
-import { LoserPage } from './loserpage.jsx';
-import { WinnerPage } from './winnerpage.jsx';
-
-
+import io from 'socket.io-client';
 
 class App extends React.Component {
   constructor(props) {
@@ -18,6 +15,7 @@ class App extends React.Component {
       private: false,
       userInfo: {},
       signUp: false,
+      socket: io.connect('http://localhost:80')
     };
     this.login = this.login.bind(this);
     this.signUpButton = this.signUpButton.bind(this);
@@ -71,7 +69,7 @@ class App extends React.Component {
       return (
         <div>
           {isLoggedIn ? (
-            <HomePage userInfo={userInfo} />
+            <HomePage userInfo={userInfo} socket={this.state.socket} />
           ) : (
               <Login login={this.login} signUpButton={this.signUpButton} />
             )}
