@@ -23,7 +23,7 @@ const Chat = styled.h1`
 
 const User = styled.li`
   color: white;
-  font-size: 22px;
+  font-size: 30px;
   list-style-type: none;
   float: left;
   display: block;
@@ -33,7 +33,7 @@ const User = styled.li`
 
 const Deaths = styled.li`
   color: red;
-  font-size: 22px;
+  font-size: 30px;
   list-style-type: none;
   float: right;
   display: block;
@@ -43,7 +43,7 @@ const Deaths = styled.li`
 `;
 
 const Saves = styled.li`
-  font-size: 22px;
+  font-size: 30px;
   list-style-type: none;
   float: right;
   display: block;
@@ -53,7 +53,7 @@ const Saves = styled.li`
 `;
 
 const Wins = styled.li`
-  font-size: 22px;
+  font-size: 30px;
   list-style-type: none;
   float: right;
   display: block;
@@ -236,6 +236,22 @@ class GameRoom extends React.Component {
     return (
       <div>
         <TopBar className="userInfo">
+          <User>
+            {this.props.admin ? (
+              <div>
+                <Button
+                  type="submit"
+                  name="start"
+                  onClick={(e) => {
+                    this.userStartGame(e);
+                    e.preventDefault();
+                  }}
+                >START
+                </Button>
+              </div>
+            ) : (<div />)
+            }
+          </User>
           <User>Stay Alive {username}</User>
           <Saves>Saves: {this.props.userInfo.save_tokens}</Saves>
           <Deaths>Deaths: {this.props.userInfo.death_tokens}</Deaths>
@@ -256,20 +272,6 @@ class GameRoom extends React.Component {
         </Section>
         <Section>
           <div>
-          {this.props.admin ? (
-            <div>
-              <Button
-                type="submit"
-                name="start"
-                onClick={(e) => {
-                  this.userStartGame(e);
-                  e.preventDefault();
-                }}
-              >START
-                </Button>
-            </div>
-          ) : (<div />)
-          }
             {this.state.currentUsersTurn ? (truthOrDare) : (passOrFail)}
             {this.state.truth ? this.state.truth : this.state.dare}
           </div>
