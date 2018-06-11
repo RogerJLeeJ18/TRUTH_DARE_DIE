@@ -81,7 +81,8 @@ const Section2 = styled.form`
 
 const Message = styled.div`
   list-style-type: none;
-  font-size: 22px
+  font-size: 22px;
+  padding-left: 4px;
 `;
 
 const Input = styled.input`
