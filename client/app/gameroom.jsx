@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
+import { LoserPage } from './loserpage.jsx';
 
 const Title = styled.h1`
   font-family: Nosifer;
@@ -151,6 +152,11 @@ class GameRoom extends React.Component {
         console.log(this.state);
       });
     });
+    this.props.socket.on('failure', (message) => {
+      this.setState({ alive: false }, () => {
+        console.log('You Died!');
+      });
+    });
   }
   userSendMessage(event) {
     const message = `${this.props.userInfo.username}: ${event.target.sendMessage.value}`;
@@ -235,7 +241,7 @@ class GameRoom extends React.Component {
         or
         <button type="submit" name="fail" onClick={(e) => { this.userSelectFail(e); }}>FAIL</button>
       </div>);
-    return (
+    const aliveRoom = (
       <div>
         <TopBar className="userInfo">
           <User>Welcome to {this.props.roomname}, {username}</User>
@@ -283,6 +289,10 @@ class GameRoom extends React.Component {
             {this.state.truth ? this.state.truth : this.state.dare}
           </div>
         </Section>
+      </div>);
+    return (
+      <div>
+        {this.state.alive ? (aliveRoom) : (<LoserPage />)}
       </div>
     );
   }

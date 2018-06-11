@@ -12,7 +12,7 @@ const Message = styled.h1`
 function LoserPage() {
   return (
     <div>
-    <Message>HA HA You're Dead</Message>
+      <Message>HA HA You're Dead</Message>
     </div>
   );
 }
