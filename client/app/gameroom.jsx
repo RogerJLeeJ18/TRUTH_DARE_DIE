@@ -82,20 +82,20 @@ const Section2 = styled.form`
 const Message = styled.div`
   list-style-type: none;
   font-size: 22px;
-  padding-left: 4px;
+  padding-left: 8px;
 `;
 
 const Input = styled.input`
-    padding:5px 15px; 
     border:1px solid black;
     width: 200px;
     padding-bottom: 8px;
     padding-top: 8px;
-    padding-right: 4px;
+    padding-right: 2px;
     height: 50%
     font-size: 20px;
     -webkit-border-radius: 5px;
-    border-radius: 5px; 
+    border-radius: 5px;
+    padding-left: 4px;
 `;
 
 const Button = styled.button`
