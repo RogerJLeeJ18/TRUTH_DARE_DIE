@@ -266,22 +266,6 @@ class GameRoom extends React.Component {
         </Section>
         <Section>
           <div>
-<<<<<<< HEAD
-            {this.props.admin ? (
-              <Button
-                type="submit"
-                name="start"
-                onClick={(e) => {
-                    this.userStartGame(e);
-                    e.preventDefault();
-                  }}
-              >START
-              </Button>
-            ) : (<div />)
-            }
-            {this.state.currentUsersTurn ? (truthOrDare) : (passOrFail)}
-=======
->>>>>>> c12bc7d480f6ca8fe91d771a572cb22a7cb1ea39
             {this.state.truth ? this.state.truth : this.state.dare}
             {this.state.currentUsersTurn ? (truthOrDare) : (passOrFail)}
           </div>

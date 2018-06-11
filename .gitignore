@@ -29,3 +29,7 @@ node_modules/
 bower_components/
 
 package-lock.json
+
+#keys
+server/rtc-video-room-cert.pem
+server/rtc-video-room-key.pem
