@@ -1,4 +1,4 @@
-# Project Name
+# Truth Dare or Die!!!!!
 
 > Truth or Dare from Anywhere!! Play Truth or Dare with your friends over the internet.
 
