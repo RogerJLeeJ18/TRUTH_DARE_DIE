@@ -82,7 +82,8 @@ const Section2 = styled.form`
 
 const Message = styled.div`
   list-style-type: none;
-  font-size: 22px
+  font-size: 22px;
+  padding-left: 8px;
 `;
 
 const Input = styled.input`
@@ -95,7 +96,8 @@ const Input = styled.input`
     height: 50%
     font-size: 20px;
     -webkit-border-radius: 5px;
-    border-radius: 5px; 
+    border-radius: 5px;
+    padding-left: 4px;
 `;
 
 const Button = styled.button`
@@ -145,18 +147,14 @@ class GameRoom extends React.Component {
       this.setState({
         currentUsersTurnDisplay: message,
         currentUsersTurn: false
-      }, () => {
-        console.log(this.state.currentUsersTurnDisplay);
       });
     });
     this.props.socket.on('alive', (message) => {
       this.setState({ hasVoted: false, afterTurnMessage: message });
     });
     this.props.socket.on('failure', (message) => {
-      this.setState({ alive: false }, () => {
-        this.props.socket.emit('died', `${this.props.userInfo.username} has died!`);
-        console.log(message);
-      });
+      this.setState({ alive: false });
+      this.props.socket.emit('died', `${this.props.userInfo.username} has died!`);
     });
     this.props.socket.on('gameStart', (message) => {
       this.setState({ hasVoted: false, truth: message });

@@ -177,16 +177,19 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('join', room);
   });
   let truthOrDare;
-  let users;
+  let currentRoom;
   app.post('/room', (req, res) => {
     const reqRoom = req.body.room;
     const socketIdArray = Object.keys(io.sockets.adapter.rooms[reqRoom].sockets);
+    if (socketIdArray.length < 4) {
+      socket.emit('finished', 'You won!');
+    }
     const randomSocket = Math.floor(Math.random() * (socketIdArray.length));
     const response = socketIdArray[randomSocket];
     const userSocket = io.sockets.sockets;
     const currentUser = userSocket[response];
     truthOrDare = currentUser;
-    users = socketIdArray;
+    currentRoom = reqRoom;
     const game = () => {
       userVotes = { pass: 0, fail: 0, count: 0 };
       currentUser.emit('this-user-turn', 'It is your turn!');
@@ -194,7 +197,7 @@ io.on('connection', (socket) => {
       currentUser.hasGone = true;
       socketIdArray.forEach((socketId) => {
         if (socketId !== response) {
-          io.sockets.sockets[socketId].emit('user-turn', `${io.sockets.sockets[response].username}'s turn!`);
+          io.sockets.sockets[socketId].emit('user-turn', `${currentUser.username}'s turn!`);
         }
       });
       // res.send(response);
@@ -221,15 +224,6 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('user has disconnected');
     socket.disconnect(true);
-  });
-
-  socket.on('died', () => {
-    users.splice(0, 1);
-    console.log(users.length, 'This is the length before');
-    if (users.length < 4) {
-      console.log(users.length, 'This is the length after');
-      socket.emit('finished', 'You won!');
-    }
   });
 });
 
