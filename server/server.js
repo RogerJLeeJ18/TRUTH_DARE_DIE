@@ -8,12 +8,13 @@ const bcrypt = require('bcrypt');
 const cookieSession = require('cookie-session');
 const fs = require('fs');
 
-const key = fs.readFileSync(`${__dirname}/rtc-video-room-key.pem`);
-const cert = fs.readFileSync(`${__dirname}/rtc-video-room-cert.pem`);
+const key = fs.readFileSync(`${__dirname}/rtc-video-room-key.pem`, 'utf8');
+const cert = fs.readFileSync(`${__dirname}/rtc-video-room-cert.pem`, 'utf8');
 // need to see if https works with sockets
 const options = { key, cert };
 
 const app = express();
+// using https instead of http
 const server = https.createServer(options, app);
 const io = socketIO.listen(server);
 
@@ -230,6 +231,6 @@ io.on('connection', (socket) => {
 const PORT = process.env.PORT || 5000;
 
 
-server.listen(PORT, 'localhost', () => {
+server.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);
 });
