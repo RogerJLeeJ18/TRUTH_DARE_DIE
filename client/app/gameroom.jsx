@@ -294,6 +294,7 @@ class GameRoom extends React.Component {
       </div>);
     return (
       <div>
+        {/* need to see if this works */}
         {this.state.winner ? (<WinnerPage />) : (this.state.alive ? (aliveRoom) : (<LoserPage />))}
       </div>
     );
