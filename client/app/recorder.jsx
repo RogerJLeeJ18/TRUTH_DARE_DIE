@@ -121,7 +121,6 @@ class WebcamCapture extends React.Component {
                 <button onClick={stop}>Stop</button>
                 <button onClick={pause}>Pause</button>
                 <button onClick={resume}>Resume</button>
-
                 <p>Streaming test</p>
                 <video autoPlay />
               </div>
