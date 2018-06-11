@@ -224,7 +224,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('died', () => {
-    users.splice(users.indexOf(truthOrDare.id), 1);
+    users.splice(0, 1);
     console.log(users.length, 'This is the length before');
     if (users.length < 4) {
       console.log(users.length, 'This is the length after');
