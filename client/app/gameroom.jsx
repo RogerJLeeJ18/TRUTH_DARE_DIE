@@ -5,13 +5,9 @@ import { LoserPage } from './loserpage.jsx';
 
 const Title = styled.h1`
   font-family: Nosifer;
-  font-size: 26px;
+  font-size: 28px;
   color: black;
   margin-top: 4%
-`;
-
-const Div = styled.div`
-  font-size: 16px;
 `;
 
 const Chat = styled.h1`
@@ -22,7 +18,7 @@ const Chat = styled.h1`
 
 const User = styled.li`
   color: white;
-  font-size: 30px;
+  font-size: 24px;
   list-style-type: none;
   float: left;
   display: block;
@@ -32,7 +28,7 @@ const User = styled.li`
 
 const Deaths = styled.li`
   color: red;
-  font-size: 30px;
+  font-size: 24px;
   list-style-type: none;
   float: right;
   display: block;
@@ -42,7 +38,7 @@ const Deaths = styled.li`
 `;
 
 const Saves = styled.li`
-  font-size: 30px;
+  font-size: 24px;
   list-style-type: none;
   float: right;
   display: block;
@@ -52,7 +48,7 @@ const Saves = styled.li`
 `;
 
 const Wins = styled.li`
-  font-size: 30px;
+  font-size: 24px;
   list-style-type: none;
   float: right;
   display: block;
@@ -76,8 +72,10 @@ const TopBar = styled.ul`
 
 const Section = styled.form`
   float: left;
-  padding-left: 6%;
-  padding-right: 6%
+`;
+
+const Section2 = styled.form`
+  float: right;
 `;
 
 const Message = styled.div`
@@ -264,7 +262,7 @@ class GameRoom extends React.Component {
           <Input type="submit" value="Send" />
           <Message className="chatroom">{messageList}</Message>
         </Section>
-        <Section>
+        <Section2>
           <div>
             {this.props.admin ? (
               <Button
@@ -282,7 +280,7 @@ class GameRoom extends React.Component {
             {this.state.truth ? this.state.truth : this.state.dare}
           </div>
           <iframe title="webChat" src="https://tokbox.com/embed/embed/ot-embed.js?embedId=8c5d069b-b5fb-458e-81fe-b2a7dcd20555&room=DEFAULT_ROOM&iframe=true" width="800" height="640" allow="microphone; camera" />
-        </Section>
+        </Section2>
       </div>);
     return (
       <div>
