@@ -139,7 +139,9 @@ io.on('connection', (socket) => {
     console.log('Joined');
     socket.broadcast.join(room);
   });
-
+  socket.on('start', () => {
+    socket.emit('gameStart', 'The game has started');
+  });
   socket.on('sendTruth', (truth) => {
     socket.broadcast.emit('sendTruth', truth);
   });
