@@ -209,13 +209,23 @@ io.on('connection', (socket) => {
     setTimeout(() => {
       if (userVotes.pass > userVotes.fail) {
         res.status(200).send(`${truthOrDare.username} lives on for another round!`);
-        socket.emit('alive', 'Lived for another round!');
+        socket.emit('alive', `${truthOrDare.username} Lives for another round!`);
       } else {
         console.log(truthOrDare.id);
         res.status(200).send(`${truthOrDare.username} has been eliminated!`);
         socket.to(truthOrDare.id).emit('failure', truthOrDare.username);
+<<<<<<< HEAD
         socket.emit('death', `${truthOrDare.username} has perished`);
         truthOrDare.disconnect();
+=======
+        socket.broadcast.emit('userDeath', `${truthOrDare.username} has been eliminated!`);
+        users.splice(users.indexOf(truthOrDare.id), 1);
+        console.log(users.length, 'This is the length before');
+        if (users.length < 4) {
+          console.log(users.length, 'This is the length after');
+          socket.emit('finished', 'You won!');
+        }
+>>>>>>> 4819b6e3fafca421c8c956573e556f96a8ea6930
       }
     }, 10000);
   });
