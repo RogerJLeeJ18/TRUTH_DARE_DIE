@@ -181,7 +181,6 @@ io.on('connection', (socket) => {
     truthOrDare = currentUser;
     users = socketIdArray;
     const game = () => {
-      userVotes = { pass: 0, fail: 0, count: 0 };
       currentUser.emit('this-user-turn', 'It is your turn!');
       currentUser.hasGone = true;
       socketIdArray.forEach((socketId) => {
