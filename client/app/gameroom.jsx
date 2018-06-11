@@ -73,6 +73,7 @@ const TopBar = styled.ul`
 
 const Section = styled.form`
   float: left;
+  padding-left: 4px
 `;
 
 const Section2 = styled.form`
@@ -85,12 +86,12 @@ const Message = styled.div`
 `;
 
 const Input = styled.input`
-    padding:5px 15px; 
     border:1px solid black;
     width: 200px;
+    padding-left: 4px;
     padding-bottom: 8px;
     padding-top: 8px;
-    padding-right: 4px;
+    padding-right: 2px;
     height: 50%
     font-size: 20px;
     -webkit-border-radius: 5px;
