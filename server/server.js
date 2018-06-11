@@ -13,18 +13,16 @@ const io = socketIO.listen(server);
 
 app.use(express.static(path.join(__dirname, '/../database')));
 app.use(express.static(path.join(__dirname, '/../dist')));
-
-app.get('/', (req, res) => {
-  res.sendStatus(201);
-});
-
 app.use(bodyParser.json());
-
 app.use(cookieSession({
   name: 'session',
   secret: 'TDD',
   maxAge: 24 * 60 * 60 * 1000
 }));
+
+app.get('/', (req, res) => {
+  res.sendStatus(201);
+});
 
 // get request for login
 app.get('/users', (req, res) => {
@@ -169,7 +167,6 @@ io.on('connection', (socket) => {
       players.push(socket.username);
       console.log(socket.username, 'username');
     });
-    // request to get the random socket id
     socket.broadcast.emit('join', room);
   });
   let truthOrDare;
@@ -192,18 +189,12 @@ io.on('connection', (socket) => {
           io.sockets.sockets[socketId].emit('user-turn', `${io.sockets.sockets[response].username}'s turn!`);
         }
       });
-      res.send(response);
+      // res.send(response);
     };
     game();
-    // if (socketIdArray.length > 3) {
-    //   setInterval(game, 10000);
-    // } else {
-    //   socket.emit('game-end');
-    // }
   });
   app.post('/votes', (req, res) => {
     const userVote = req.body.vote;
-    const username = req.body.username;
     userVotes.count += 1;
     userVotes[userVote] += 1;
     console.log(userVotes);
@@ -213,13 +204,6 @@ io.on('connection', (socket) => {
         socket.emit('alive', 'Lived for another round!');
       } else {
         console.log(truthOrDare.id);
-        dataSave.addDeath(username, (err, response) => {
-          if (err) {
-            console.log(err);
-          } else {
-            return response;
-          }
-        });
         res.status(200).send(`${truthOrDare.username} has been eliminated!`);
         socket.to(truthOrDare.id).emit('failure', truthOrDare.username);
         users.splice(users.indexOf(truthOrDare.id), 1);

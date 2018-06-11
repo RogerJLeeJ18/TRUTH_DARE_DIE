@@ -280,7 +280,6 @@ class GameRoom extends React.Component {
             }
             {this.state.currentUsersTurn ? (truthOrDare) : (passOrFail)}
             {this.state.truth ? this.state.truth : this.state.dare}
-            {this.state.currentUsersTurn ? (truthOrDare) : (passOrFail)}
           </div>
           <iframe title="webChat" src="https://tokbox.com/embed/embed/ot-embed.js?embedId=8c5d069b-b5fb-458e-81fe-b2a7dcd20555&room=DEFAULT_ROOM&iframe=true" width="800" height="640" allow="microphone; camera" />
         </Section>
