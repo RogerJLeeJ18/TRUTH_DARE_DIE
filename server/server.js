@@ -2,7 +2,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const dataSave = require('../Database/mongoose');
 const http = require('http');
-// const https = require('https');
 const path = require('path');
 const socketIO = require('socket.io');
 const bcrypt = require('bcrypt');
@@ -11,7 +10,6 @@ const cookieSession = require('cookie-session');
 const app = express();
 const server = http.Server(app);
 const io = socketIO.listen(server);
-console.log(io);
 
 app.use(express.static(path.join(__dirname, '/../database')));
 app.use(express.static(path.join(__dirname, '/../dist')));
@@ -232,7 +230,7 @@ io.on('connection', (socket) => {
   });
 });
 
-const PORT = process.env.PORT || 433;
+const PORT = process.env.PORT || 5000;
 
 
 server.listen(PORT, () => {
