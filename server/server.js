@@ -1,14 +1,21 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const dataSave = require('../Database/mongoose');
-const http = require('http');
+const https = require('https');
 const path = require('path');
 const socketIO = require('socket.io');
 const bcrypt = require('bcrypt');
 const cookieSession = require('cookie-session');
+const fs = require('fs');
+
+const key = fs.readFileSync(`${__dirname}/rtc-video-room-key.pem`, 'utf8');
+const cert = fs.readFileSync(`${__dirname}/rtc-video-room-cert.pem`, 'utf8');
+// need to see if https works with sockets
+const options = { key, cert };
 
 const app = express();
-const server = http.Server(app);
+// using https instead of http
+const server = https.createServer(options, app);
 const io = socketIO.listen(server);
 
 app.use(express.static(path.join(__dirname, '/../database')));
@@ -181,7 +188,9 @@ io.on('connection', (socket) => {
     truthOrDare = currentUser;
     users = socketIdArray;
     const game = () => {
+      userVotes = { pass: 0, fail: 0, count: 0 };
       currentUser.emit('this-user-turn', 'It is your turn!');
+      currentUser.emit('sentMessage', `${currentUser.username}'s turn`);
       currentUser.hasGone = true;
       socketIdArray.forEach((socketId) => {
         if (socketId !== response) {
@@ -200,23 +209,27 @@ io.on('connection', (socket) => {
     setTimeout(() => {
       if (userVotes.pass > userVotes.fail) {
         res.status(200).send(`${truthOrDare.username} lives on for another round!`);
-        socket.emit('alive', 'Lived for another round!');
+        socket.emit('alive', `${truthOrDare.username} Lives for another round!`);
       } else {
         console.log(truthOrDare.id);
         res.status(200).send(`${truthOrDare.username} has been eliminated!`);
         socket.to(truthOrDare.id).emit('failure', truthOrDare.username);
-        users.splice(users.indexOf(truthOrDare.id), 1);
-        console.log(users.length, 'This is the length before');
-        if (users.length < 4) {
-          console.log(users.length, 'This is the length after');
-          socket.emit('finished', 'You won!');
-        }
+        socket.broadcast.emit('userDeath', `${truthOrDare.username} has been eliminated!`);
       }
     }, 10000);
   });
   socket.on('disconnect', () => {
     console.log('user has disconnected');
     socket.disconnect(true);
+  });
+
+  socket.on('died', () => {
+    users.splice(users.indexOf(truthOrDare.id), 1);
+    console.log(users.length, 'This is the length before');
+    if (users.length < 4) {
+      console.log(users.length, 'This is the length after');
+      socket.emit('finished', 'You won!');
+    }
   });
 });
 

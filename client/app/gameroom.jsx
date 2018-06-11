@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 import { LoserPage } from './loserpage.jsx';
+import { WinnerPage } from './winnerpage.jsx';
 
 const Title = styled.h1`
   font-family: Nosifer;
@@ -119,7 +120,8 @@ class GameRoom extends React.Component {
       alive: true,
       currentUsersTurnDisplay: '',
       currentUsersTurn: false,
-      hasVoted: false
+      hasVoted: false,
+      afterTurnMessage: ''
     };
     // bind function to send messages and truth answer to component
     this.userSendMessage = this.userSendMessage.bind(this);
@@ -135,7 +137,6 @@ class GameRoom extends React.Component {
         currentUsersTurnDisplay: message,
         currentUsersTurn: true
       }, () => {
-        console.log(message, 'message from this-user-turn');
         console.log(this.state);
       });
     });
@@ -144,18 +145,26 @@ class GameRoom extends React.Component {
         currentUsersTurnDisplay: message,
         currentUsersTurn: false
       }, () => {
-        console.log(message, 'message from this-user-turn');
-        console.log(this.state);
+        console.log(this.state.currentUsersTurnDisplay);
       });
     });
     this.props.socket.on('alive', (message) => {
-      this.setState({ hasVoted: false });
+      this.setState({ hasVoted: false, afterTurnMessage: message });
     });
     this.props.socket.on('failure', (message) => {
-      this.setState({ alive: false });
+      this.setState({ alive: false }, () => {
+        this.props.socket.emit('died', `${this.props.userInfo.username} has died!`);
+        console.log(message);
+      });
     });
     this.props.socket.on('gameStart', (message) => {
       this.setState({ hasVoted: false, truth: message });
+    });
+    this.props.socket.on('death', (message) => {
+      this.setState({ hasVoted: false, afterTurnMessage: message });
+    });
+    this.props.socket.on('finished', (message) => {
+      this.setState({ hasVoted: false, winner: true });
     });
   }
   userSendMessage(event) {
@@ -245,6 +254,8 @@ class GameRoom extends React.Component {
       <div>
         <TopBar className="userInfo">
           <User>Stay Alive {username}</User>
+          {this.state.currentUsersTurnDisplay}
+          {this.state.afterTurnMessage}
           <Deaths>Deaths: {this.props.userInfo.death_tokens}</Deaths>
           <Wins>Wins: {this.props.userInfo.win_tokens}</Wins>
         </TopBar>
@@ -283,7 +294,8 @@ class GameRoom extends React.Component {
       </div>);
     return (
       <div>
-        {this.state.alive ? (aliveRoom) : (<LoserPage />)}
+        {/* need to see if this works */}
+        {this.state.winner ? (<WinnerPage />) : (this.state.alive ? (aliveRoom) : (<LoserPage />))}
       </div>
     );
   }
