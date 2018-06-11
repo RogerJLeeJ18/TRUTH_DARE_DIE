@@ -1,6 +1,5 @@
 import React from 'react';
 import axios from 'axios';
-import io from 'socket.io-client';
 import PropTypes from 'prop-types';
 import { GameRoom } from './gameroom.jsx';
 import styled from 'styled-components';
@@ -137,10 +136,10 @@ class HomePage extends React.Component {
     this.state = {
       roomName: '',
       roomCreated: false,
-      socket: io.connect('http://165.227.75.42:5000'),
       admin: false
     };
     this.socketHandle = this.makeRoom.bind(this);
+    this.joinRoom = this.joinRoom.bind(this);
   }
   makeRoom(event) {
     const roomName = event.target.socket.value;
@@ -158,7 +157,7 @@ class HomePage extends React.Component {
       console.log(error);
     });
     event.preventDefault();
-    this.state.socket.emit('create', roomName);
+    this.props.socket.emit('create', roomName);
     console.log(roomName, 'this worked');
   }
   joinRoom(event) {
@@ -182,8 +181,8 @@ class HomePage extends React.Component {
       console.log(error, 'unable to join');
     });
     event.preventDefault();
-    this.state.socket.emit('join', roomName);
-    this.state.socket.emit('send-username', this.props.userInfo.username);
+    this.props.socket.emit('join', roomName);
+    this.props.socket.emit('send-username', this.props.userInfo.username);
   }
   render() {
     const element = (
@@ -243,7 +242,7 @@ class HomePage extends React.Component {
     const gameRoom = (
       <GameRoom
         roomname={this.state.roomName}
-        socket={this.state.socket}
+        socket={this.props.socket}
         admin={this.state.admin}
         userInfo={this.props.userInfo}
       />);

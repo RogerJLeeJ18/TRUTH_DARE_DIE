@@ -170,6 +170,7 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('join', room);
   });
   let truthOrDare;
+  let users;
   app.post('/room', (req, res) => {
     const reqRoom = req.body.room;
     const socketIdArray = Object.keys(io.sockets.adapter.rooms[reqRoom].sockets);
@@ -178,6 +179,7 @@ io.on('connection', (socket) => {
     const userSocket = io.sockets.sockets;
     const currentUser = userSocket[response];
     truthOrDare = currentUser;
+    users = socketIdArray;
     const game = () => {
       userVotes = { pass: 0, fail: 0, count: 0 };
       currentUser.emit('this-user-turn', 'It is your turn!');
@@ -204,6 +206,12 @@ io.on('connection', (socket) => {
         console.log(truthOrDare.id);
         res.status(200).send(`${truthOrDare.username} has been eliminated!`);
         socket.to(truthOrDare.id).emit('failure', truthOrDare.username);
+        users.splice(users.indexOf(truthOrDare.id), 1);
+        console.log(users.length, 'This is the length before');
+        if (users.length < 4) {
+          console.log(users.length, 'This is the length after');
+          socket.emit('finished', 'You won!');
+        }
       }
     }, 10000);
   });
