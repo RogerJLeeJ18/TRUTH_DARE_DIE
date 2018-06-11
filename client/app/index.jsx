@@ -71,7 +71,7 @@ class App extends React.Component {
           {isLoggedIn ? (
             <HomePage userInfo={userInfo} socket={this.state.socket} />
           ) : (
-            <Login login={this.login} signUpButton={this.signUpButton} />
+              <Login login={this.login} signUpButton={this.signUpButton} />
             )}
         </div>
       );
