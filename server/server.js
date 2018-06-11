@@ -190,6 +190,7 @@ io.on('connection', (socket) => {
     const game = () => {
       userVotes = { pass: 0, fail: 0, count: 0 };
       currentUser.emit('this-user-turn', 'It is your turn!');
+      currentUser.emit('sentMessage', `${currentUser.username}'s turn`);
       currentUser.hasGone = true;
       socketIdArray.forEach((socketId) => {
         if (socketId !== response) {
@@ -213,6 +214,10 @@ io.on('connection', (socket) => {
         console.log(truthOrDare.id);
         res.status(200).send(`${truthOrDare.username} has been eliminated!`);
         socket.to(truthOrDare.id).emit('failure', truthOrDare.username);
+<<<<<<< HEAD
+        socket.emit('death', `${truthOrDare.username} has perished`);
+        truthOrDare.disconnect();
+=======
         socket.broadcast.emit('userDeath', `${truthOrDare.username} has been eliminated!`);
         users.splice(users.indexOf(truthOrDare.id), 1);
         console.log(users.length, 'This is the length before');
@@ -220,12 +225,22 @@ io.on('connection', (socket) => {
           console.log(users.length, 'This is the length after');
           socket.emit('finished', 'You won!');
         }
+>>>>>>> 4819b6e3fafca421c8c956573e556f96a8ea6930
       }
     }, 10000);
   });
   socket.on('disconnect', () => {
     console.log('user has disconnected');
     socket.disconnect(true);
+  });
+
+  socket.on('died', () => {
+    users.splice(users.indexOf(truthOrDare.id), 1);
+    console.log(users.length, 'This is the length before');
+    if (users.length < 4) {
+      console.log(users.length, 'This is the length after');
+      socket.emit('finished', 'You won!');
+    }
   });
 });
 
