@@ -78,7 +78,7 @@ const Choice = styled.label`
 
 const User = styled.li`
   color: white;
-  font-size: 30px;
+  font-size: 24px;
   list-style-type: none;
   float: left;
   display: block;
@@ -88,7 +88,7 @@ const User = styled.li`
 
 const Deaths = styled.li`
   color: red;
-  font-size: 30px;
+  font-size: 24px;
   list-style-type: none;
   float: right;
   display: block;
@@ -98,7 +98,7 @@ const Deaths = styled.li`
 `;
 
 const Saves = styled.li`
-  font-size: 30px;
+  font-size: 24px;
   list-style-type: none;
   float: right;
   display: block;
@@ -108,7 +108,7 @@ const Saves = styled.li`
 `;
 
 const Wins = styled.li`
-  font-size: 30px;
+  font-size: 24px;
   list-style-type: none;
   float: right;
   display: block;

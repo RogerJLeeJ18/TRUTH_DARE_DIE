@@ -24,27 +24,23 @@
 
 ## Requirements
 
-- Node 0.10.x
-- Redis 2.6.x
-- Postgresql 9.1.x
+- Node 10.3.x
+- Mongo
 - etc
 - etc
 
 ## Development
 
+
 ### Installing Dependencies
 
-From within the root directory:
-
-```sh
-sudo npm install -g bower
 npm install
 bower install
-```
+
 
 ### Roadmap
 
-View the project roadmap [here](LINK_TO_PROJECT_ISSUES)
+View the project roadmap [here](https://github.com/10-percent/immersion-2018-04-greenfield/issues)
 
 
 ## Contributing

@@ -55,7 +55,7 @@ const DareSchema = new Schema({
 const Dare = mongoose.model('Dare', DareSchema);
 
 
-// function for sign in
+// function for sign up
 // check if user already exists by email
 // if user doesn't exist, save to the database
 const save = (user, hash, callback) => {
@@ -124,7 +124,6 @@ const findRooms = (data, callback) => {
   });
 };
 
-const generator = () => Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 
 // function that will return a random number to use for getTruth and getDares functions
 const randomID = () => Math.floor((Math.random() * 5) + 1);
@@ -213,7 +212,6 @@ const addDeath = (reqUsername, callback) => {
 module.exports.save = save;
 module.exports.getUser = getUser;
 module.exports.createRoom = createRoom;
-module.exports.generator = generator;
 module.exports.randomID = randomID;
 module.exports.getTruth = getTruth;
 module.exports.getDare = getDare;
