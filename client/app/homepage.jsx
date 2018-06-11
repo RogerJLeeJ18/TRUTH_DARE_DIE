@@ -9,7 +9,7 @@ const Title = styled.h1`
   font-family: Nosifer;
   font-size: 50px;
   color: black;
-  margin-top: 5%
+  margin-top: 4%
   padding-left: 28%;
 `;
 
@@ -137,7 +137,7 @@ class HomePage extends React.Component {
     this.state = {
       roomName: '',
       roomCreated: false,
-      socket: io.connect('http://127.0.0.1:3000', { reconnection: false }),
+      socket: io.connect('localhost:5000', { reconnection: false }),
       admin: false
     };
     this.socketHandle = this.makeRoom.bind(this);

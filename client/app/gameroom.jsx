@@ -10,15 +10,14 @@ const Title = styled.h1`
   margin-top: 4%
 `;
 
-// const Div = styled.div`
-//   margin-top: 5%;
-//   margin-bottom: 1em;
-//   float: right;
-// `;
+const Div = styled.div`
+  font-size: 16px;
+`;
 
 const Chat = styled.h1`
   font-size: 26px;
   padding-left: 6%
+  font-family: Gothic;
 `;
 
 const User = styled.li`
@@ -236,22 +235,6 @@ class GameRoom extends React.Component {
     return (
       <div>
         <TopBar className="userInfo">
-          <User>
-            {this.props.admin ? (
-              <div>
-                <Button
-                  type="submit"
-                  name="start"
-                  onClick={(e) => {
-                    this.userStartGame(e);
-                    e.preventDefault();
-                  }}
-                >START
-                </Button>
-              </div>
-            ) : (<div />)
-            }
-          </User>
           <User>Stay Alive {username}</User>
           <Saves>Saves: {this.props.userInfo.save_tokens}</Saves>
           <Deaths>Deaths: {this.props.userInfo.death_tokens}</Deaths>
@@ -272,6 +255,18 @@ class GameRoom extends React.Component {
         </Section>
         <Section>
           <div>
+            {this.props.admin ? (
+              <Button
+                type="submit"
+                name="start"
+                onClick={(e) => {
+                    this.userStartGame(e);
+                    e.preventDefault();
+                  }}
+              >START
+              </Button>
+            ) : (<div />)
+            }
             {this.state.currentUsersTurn ? (truthOrDare) : (passOrFail)}
             {this.state.truth ? this.state.truth : this.state.dare}
           </div>
