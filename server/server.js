@@ -25,7 +25,7 @@ app.use(bodyParser.json());
 app.use(cookieSession({
   name: 'session',
   secret: 'TDD',
-  maxAge: 24 * 60 * 60 * 1000,
+  maxAge: 24 * 60 * 60 * 1000
 
 }));
 
@@ -60,7 +60,7 @@ app.post('/users', (req, res) => {
           username: response.username,
           save_tokens: response.save_tokens,
           death_tokens: response.death_tokens,
-          win_tokens: response.win_tokens,
+          win_tokens: response.win_tokens
         };
         res.status(201).send(info);
       }
@@ -211,10 +211,9 @@ io.on('connection', (socket) => {
   });
 });
 
-const role = 'production';
-const PORT = process.env.ENV_ROLE === role ? 80 : 3000;
+const PORT = process.env.PORT || 5000;
+
 
 server.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);
 });
-
