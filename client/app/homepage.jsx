@@ -10,7 +10,7 @@ const Title = styled.h1`
   font-size: 50px;
   color: black;
   margin-top: 5%
-  padding-left: 24%;
+  padding-left: 28%;
 `;
 
 const Form = styled.form`
@@ -26,7 +26,7 @@ const Form = styled.form`
 const CreateForm = styled.form`
   margin-left: 6%;
   width: 400px;
-  padding-left: 5%;
+  padding-left: 14%;
   padding-right: 5%
   padding-bottom: 3%;
   padding-top: 2%
