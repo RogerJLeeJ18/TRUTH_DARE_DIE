@@ -8,7 +8,6 @@ const socketIO = require('socket.io');
 const bcrypt = require('bcrypt');
 const cookieSession = require('cookie-session');
 
-
 const app = express();
 const server = http.Server(app);
 const io = socketIO.listen(server);
@@ -26,7 +25,6 @@ app.use(cookieSession({
   name: 'session',
   secret: 'TDD',
   maxAge: 24 * 60 * 60 * 1000
-
 }));
 
 // get request for login
@@ -177,9 +175,6 @@ io.on('connection', (socket) => {
           io.sockets.sockets[socketId].emit('user-turn', `${io.sockets.sockets[response].username}'s turn!`);
         }
       });
-      // setInterval(() => {
-
-      // }, 10000);
       res.send(response);
     };
     game();
@@ -198,6 +193,7 @@ io.on('connection', (socket) => {
     setTimeout(() => {
       if (userVotes.pass > userVotes.fail) {
         res.status(200).send(`${truthOrDare.username} lives on for another round!`);
+        socket.emit('alive', 'Lived for another round!');
       } else {
         console.log(truthOrDare.id);
         res.status(200).send(`${truthOrDare.username} has been eliminated!`);
