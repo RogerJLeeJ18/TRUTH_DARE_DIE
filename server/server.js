@@ -2,20 +2,15 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const dataSave = require('../Database/mongoose');
 const http = require('http');
-const fs = require('fs');
+// const https = require('https');
 const path = require('path');
 const socketIO = require('socket.io');
 const bcrypt = require('bcrypt');
 const cookieSession = require('cookie-session');
 
-// const privateKey = fs.readFileSync(`${__dirname}/rtc-video-room-key.pem`, 'utf8');
-// const certificate = fs.readFileSync(`${__dirname}/rtc-video-room-cert.pem`, 'utf8');
-// const credentials = { key: privateKey, cert: certificate };
 
 const app = express();
-const server = http.createServer(app);
-// const httpsServer = https.createServer(credentials, app);
-
+const server = http.Server(app);
 const io = socketIO.listen(server);
 
 app.use(express.static(path.join(__dirname, '/../database')));
@@ -165,21 +160,7 @@ io.on('connection', (socket) => {
     // request to get the random socket id
     socket.broadcast.emit('join', room);
   });
-  const userVotes = { pass: 0, fail: 0, count: 0 };
-  app.post('/votes', (req, res) => {
-    const userVote = req.body.vote;
-    userVotes.count += 1;
-    userVotes[userVote] += 1;
-    console.log(userVotes);
-    setTimeout(() => {
-      if (userVotes.pass > userVotes.fail) {
-        res.status(200).send('You live on for another round!');
-      } else {
-        res.status(200).send('You have been eliminated!');
-      }
-    }, 10000);
-  });
-
+  let truthOrDare;
   app.post('/room', (req, res) => {
     const reqRoom = req.body.room;
     const socketIdArray = Object.keys(io.sockets.adapter.rooms[reqRoom].sockets);
@@ -187,6 +168,7 @@ io.on('connection', (socket) => {
     const response = socketIdArray[randomSocket];
     const userSocket = io.sockets.sockets;
     const currentUser = userSocket[response];
+    truthOrDare = currentUser;
     const game = () => {
       currentUser.emit('this-user-turn', 'It is your turn!');
       currentUser.hasGone = true;
@@ -206,6 +188,22 @@ io.on('connection', (socket) => {
     // } else {
     //   socket.emit('game-end');
     // }
+  });
+  const userVotes = { pass: 0, fail: 0, count: 0 };
+  app.post('/votes', (req, res) => {
+    const userVote = req.body.vote;
+    userVotes.count += 1;
+    userVotes[userVote] += 1;
+    console.log(userVotes);
+    setTimeout(() => {
+      if (userVotes.pass > userVotes.fail) {
+        res.status(200).send(`${truthOrDare.username} lives on for another round!`);
+      } else {
+        console.log(truthOrDare.id);
+        res.status(200).send(`${truthOrDare.username} has been eliminated!`);
+        socket.to(truthOrDare.id).emit('failure', truthOrDare.username);
+      }
+    }, 10000);
   });
   socket.on('disconnect', () => {
     console.log('user has disconnected');
