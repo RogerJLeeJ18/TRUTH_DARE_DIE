@@ -1,28 +1,30 @@
 import React from 'react';
 import axios from 'axios';
+import { WebcamCapture } from './recorder.jsx';
 import styled from 'styled-components';
 import { LoserPage } from './loserpage.jsx';
 
 const Title = styled.h1`
   font-family: Nosifer;
   font-size: 26px;
-  color: maroon;
-  margin-top: 5%
+  color: black;
+  margin-top: 4%
 `;
 
-const Div = styled.div`
-  margin-top: 5%;
-  margin-bottom: 1em;
-  float: right;
-`;
+// const Div = styled.div`
+//   margin-top: 5%;
+//   margin-bottom: 1em;
+//   float: right;
+// `;
 
 const Chat = styled.h1`
-  font-size: 26px
+  font-size: 26px;
+  padding-left: 6%
 `;
 
 const User = styled.li`
   color: white;
-  font-size: 22px;
+  font-size: 30px;
   list-style-type: none;
   float: left;
   display: block;
@@ -32,7 +34,7 @@ const User = styled.li`
 
 const Deaths = styled.li`
   color: red;
-  font-size: 22px;
+  font-size: 30px;
   list-style-type: none;
   float: right;
   display: block;
@@ -42,7 +44,7 @@ const Deaths = styled.li`
 `;
 
 const Saves = styled.li`
-  font-size: 22px;
+  font-size: 30px;
   list-style-type: none;
   float: right;
   display: block;
@@ -52,7 +54,7 @@ const Saves = styled.li`
 `;
 
 const Wins = styled.li`
-  font-size: 22px;
+  font-size: 30px;
   list-style-type: none;
   float: right;
   display: block;
@@ -76,10 +78,8 @@ const TopBar = styled.ul`
 
 const Section = styled.form`
   float: left;
-`;
-
-const Section2 = styled.form`
-  float: right;
+  padding-left: 6%;
+  padding-right: 6%
 `;
 
 const Message = styled.div`
@@ -231,63 +231,57 @@ class GameRoom extends React.Component {
     const messageList = this.state.messageHistory.map(message => <li key={message}>{message}</li>);
     const truthOrDare = (
       <div>
-        <button type="submit" name="truth" onClick={(e) => { this.userSelectTruth(e); }}>TRUTH</button>
-        or
-        <button type="submit" name="dare" onClick={(e) => { this.userSelectDare(e); }}>DARE</button>
+        <Button type="submit" name="truth" onClick={(e) => { this.userSelectTruth(e); }}>TRUTH</Button>
+        <Button type="submit" name="dare" onClick={(e) => { this.userSelectDare(e); }}>DARE</Button>
       </div>);
     const passOrFail = (
       <div>
-        <button type="submit" name="pass" onClick={(e) => { this.userSelectPass(e); }}>PASS</button>
-        or
-        <button type="submit" name="fail" onClick={(e) => { this.userSelectFail(e); }}>FAIL</button>
+        <Button type="submit" name="pass" onClick={(e) => { this.userSelectPass(e); }}>PASS</Button>
+        <Button type="submit" name="fail" onClick={(e) => { this.userSelectFail(e); }}>FAIL</Button>
       </div>);
     const aliveRoom = (
       <div>
         <TopBar className="userInfo">
-          <User>Welcome to {this.props.roomname}, {username}</User>
+          <User>
+            {this.props.admin ? (
+              <div>
+                <Button
+                  type="submit"
+                  name="start"
+                  onClick={(e) => {
+                    this.userStartGame(e);
+                    e.preventDefault();
+                  }}
+                >START
+                </Button>
+              </div>
+            ) : (<div />)
+            }
+          </User>
+          <User>Stay Alive {username}</User>
           <Saves>Saves: {this.props.userInfo.save_tokens}</Saves>
           <Deaths>Deaths: {this.props.userInfo.death_tokens}</Deaths>
           <Wins>Wins: {this.props.userInfo.win_tokens}</Wins>
         </TopBar>
+        <Title>Welcome to {this.props.roomname}</Title>
         <Chat htmlFor="chatRoom">
           Chats
         </Chat>
-        {this.props.admin ? (
-          <div>
-            <Button
-              type="submit"
-              name="start"
-              onClick={(e) => {
-                this.userStartGame(e);
-                e.preventDefault();
-              }}
-            >START
-            </Button>
-          </div>
-        ) : (<div />)
-        }
-        <Section>
-          <form onSubmit={(e) => {
+        <Section onSubmit={(e) => {
             this.userSendMessage(e);
             e.preventDefault();
           }}
-          >
-            <Input type="text" name="sendMessage" />
-            <Input type="submit" value="Send" />
-          </form>
-          <div className="chatroom">{messageList}</div>
-
-          <iframe
-            title="webcam"
-            src="https://tokbox.com/embed/embed/ot-embed.js?embedId=8c5d069b-b5fb-458e-81fe-b2a7dcd20555&room=DEFAULT_ROOM&iframe=true"
-            width="800"
-            height="640"
-            allow="microphone; camera"
-          />
+        >
+          <Input type="text" name="sendMessage" />
+          <Input type="submit" value="Send" />
+          <Message className="chatroom">{messageList}</Message>
+        </Section>
+        <Section>
           <div>
             {this.state.currentUsersTurn ? (truthOrDare) : (passOrFail)}
             {this.state.truth ? this.state.truth : this.state.dare}
           </div>
+          <iframe title="webChat" src="https://tokbox.com/embed/embed/ot-embed.js?embedId=8c5d069b-b5fb-458e-81fe-b2a7dcd20555&room=DEFAULT_ROOM&iframe=true" width="800" height="640" allow="microphone; camera" />
         </Section>
       </div>);
     return (

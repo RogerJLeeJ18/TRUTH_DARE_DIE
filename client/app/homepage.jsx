@@ -10,7 +10,7 @@ const Title = styled.h1`
   font-size: 50px;
   color: black;
   margin-top: 5%
-  padding-left: 24%;
+  padding-left: 28%;
 `;
 
 const Form = styled.form`
@@ -79,7 +79,7 @@ const Choice = styled.label`
 
 const User = styled.li`
   color: white;
-  font-size: 22px;
+  font-size: 30px;
   list-style-type: none;
   float: left;
   display: block;
@@ -89,7 +89,7 @@ const User = styled.li`
 
 const Deaths = styled.li`
   color: red;
-  font-size: 22px;
+  font-size: 30px;
   list-style-type: none;
   float: right;
   display: block;
@@ -99,7 +99,7 @@ const Deaths = styled.li`
 `;
 
 const Saves = styled.li`
-  font-size: 22px;
+  font-size: 30px;
   list-style-type: none;
   float: right;
   display: block;
@@ -109,7 +109,7 @@ const Saves = styled.li`
 `;
 
 const Wins = styled.li`
-  font-size: 22px;
+  font-size: 30px;
   list-style-type: none;
   float: right;
   display: block;
@@ -137,7 +137,11 @@ class HomePage extends React.Component {
     this.state = {
       roomName: '',
       roomCreated: false,
+<<<<<<< HEAD
       socket: io.connect('http://localhost:5000', { reconnection: false }),
+=======
+      socket: io.connect('http://127.0.0.1:5000', { reconnection: false }),
+>>>>>>> de787aab230c2855ca6727af4da2be29090b2aa5
       admin: false
     };
     this.socketHandle = this.makeRoom.bind(this);
