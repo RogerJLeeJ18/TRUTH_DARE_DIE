@@ -10,7 +10,7 @@ const fs = require('fs');
 
 const key = fs.readFileSync('./rtc-video-room-key.pem');
 const cert = fs.readFileSync('./rtc-video-room-cert.pem');
-
+// need to see if https works with sockets
 const options = { key, cert };
 
 const app = express();
