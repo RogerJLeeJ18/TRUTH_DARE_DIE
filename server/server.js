@@ -121,6 +121,18 @@ app.get('/ready', (req, res) => {
   });
 });
 
+app.post('/grave', (req, res) => {
+  const username = req.body.username
+  dataSave.addDeath(username, (err, response) => {
+    if (err) {
+      console.error(err);
+      res.send(err);
+    } else {
+      res.send(response);
+    }
+  });
+});
+
 app.get('/end', (req, res) => {
   const roomName = req.headers;
   dataSave.endRoom(roomName, (err, response) => {
@@ -191,6 +203,7 @@ io.on('connection', (socket) => {
   });
   app.post('/votes', (req, res) => {
     const userVote = req.body.vote;
+    const username = req.body.username;
     userVotes.count += 1;
     userVotes[userVote] += 1;
     console.log(userVotes);
@@ -200,6 +213,14 @@ io.on('connection', (socket) => {
         socket.emit('alive', 'Lived for another round!');
       } else {
         console.log(truthOrDare.id);
+        dataSave.addDeath(username, (err, response) => {
+          if (err) {
+            console.error(err);
+            res.send(err);
+          } else {
+            res.send(response);
+          }
+        });
         res.status(200).send(`${truthOrDare.username} has been eliminated!`);
         socket.to(truthOrDare.id).emit('failure', truthOrDare.username);
       }
