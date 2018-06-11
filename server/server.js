@@ -175,9 +175,6 @@ io.on('connection', (socket) => {
           io.sockets.sockets[socketId].emit('user-turn', `${io.sockets.sockets[response].username}'s turn!`);
         }
       });
-      // setInterval(() => {
-
-      // }, 10000);
       res.send(response);
     };
     game();

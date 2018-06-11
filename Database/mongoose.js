@@ -180,7 +180,7 @@ const createRoom = (roomName, callback) => {
 
 const updateRoom = (room, callback) => {
   Room.updateOne({ room: room.room }, {
-    status: 'start',
+    status: 'start'
   }, (err, resp) => {
     if (err) {
       callback(err, null);
