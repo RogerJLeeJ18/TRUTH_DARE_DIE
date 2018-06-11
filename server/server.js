@@ -194,7 +194,7 @@ io.on('connection', (socket) => {
       currentUser.hasGone = true;
       socketIdArray.forEach((socketId) => {
         if (socketId !== response) {
-          io.sockets.sockets[socketId].emit('user-turn', `${io.sockets.sockets[response].username}'s turn!`);
+          io.sockets.sockets[socketId].emit('user-turn', `${currentUser.username}'s turn!`);
         }
       });
       // res.send(response);
