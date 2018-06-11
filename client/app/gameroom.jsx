@@ -153,7 +153,8 @@ class GameRoom extends React.Component {
     });
     this.props.socket.on('failure', (message) => {
       this.setState({ alive: false }, () => {
-        this.props.socket.emit('died');
+        this.props.socket.emit('died', `${this.props.userInfo.username} has died!`);
+        console.log(message);
       });
     });
     this.props.socket.on('gameStart', (message) => {
