@@ -14,6 +14,7 @@ const cert = fs.readFileSync(`${__dirname}/rtc-video-room-cert.pem`, 'utf8');
 const options = { key, cert };
 
 const app = express();
+// using https instead of http
 const server = https.createServer(options, app);
 const io = socketIO.listen(server);
 
