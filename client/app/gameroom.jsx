@@ -1,6 +1,5 @@
 import React from 'react';
 import axios from 'axios';
-import { WebcamCapture } from './recorder.jsx';
 import styled from 'styled-components';
 import { LoserPage } from './loserpage.jsx';
 
@@ -158,6 +157,9 @@ class GameRoom extends React.Component {
     this.props.socket.on('failure', (message) => {
       this.setState({ alive: false });
     });
+    this.props.socket.on('gameStart', (message) => {
+      this.setState({ hasVoted: false });
+    });
   }
   userSendMessage(event) {
     const message = `${this.props.userInfo.username}: ${event.target.sendMessage.value}`;
@@ -217,6 +219,7 @@ class GameRoom extends React.Component {
     e.preventDefault();
   }
   userStartGame(e) {
+    this.setState({ truth: '' });
     axios.post('/room', {
       room: this.props.roomname
     });
