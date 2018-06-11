@@ -137,7 +137,7 @@ class HomePage extends React.Component {
     this.state = {
       roomName: '',
       roomCreated: false,
-      socket: io.connect('http://localhost:5000', { reconnection: false, rejectUnauthorized: false }),
+      socket: io.connect('http://165.227.75.42:5000'),
       admin: false
     };
     this.socketHandle = this.makeRoom.bind(this);
