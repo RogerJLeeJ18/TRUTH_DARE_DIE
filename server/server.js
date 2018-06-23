@@ -16,7 +16,7 @@ const options = { key, cert };
 
 const app = express();
 // using https instead of http
-const server = https.createServer(options, app);
+const server = http.createServer(options, app);
 const io = socketIO.listen(server);
 
 app.use(express.static(path.join(__dirname, '/../database')));
