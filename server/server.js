@@ -36,7 +36,7 @@ app.get('/', (req, res) => {
 // get request for login
 app.get('/users', (req, res) => {
   const request = req.query;
-  console.log(request, 'this is the request');
+  console.log(request, 'we have a live connection');
   dataSave.getUser(request, (response) => {
     if (typeof response !== 'object') {
       res.status(404).send(response);
