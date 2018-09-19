@@ -15,7 +15,7 @@ class App extends React.Component {
       private: false,
       userInfo: {},
       signUp: false,
-      socket: io.connect('https://165.227.75.42:5000', { secure: true, rejectUnauthorized: false })
+      socket: io.connect('https://localhost:5000', { secure: true, rejectUnauthorized: false })
     };
     this.login = this.login.bind(this);
     this.signUpButton = this.signUpButton.bind(this);
