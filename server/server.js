@@ -8,6 +8,7 @@ const socketIO = require('socket.io');
 const bcrypt = require('bcrypt');
 const cookieSession = require('cookie-session');
 const fs = require('fs');
+var Twitter = require('twitter'); 
 
 const key = fs.readFileSync(`${__dirname}/rtc-video-room-key.pem`, 'utf8');
 const cert = fs.readFileSync(`${__dirname}/rtc-video-room-cert.pem`, 'utf8');
@@ -31,6 +32,24 @@ app.use(cookieSession({
 
 app.get('/', (req, res) => {
   res.sendStatus(201);
+});
+
+var client = new Twitter({
+  consumer_key: 'da6iqwOsjV4gm5xN3azy6o1Pv',
+  consumer_secret: 'zhyU5SUolhha4EFxOSpnWG2jq0q7L230TEgSnEYMoPva9KXgaX',
+  access_token_key: '953671599273672704-j7VsESkBRvCI7UQuV0gzM3Ghmyhva37',
+  access_token_secret: '4q0NL04kBh2CPGAXh7T6bSHROiJL6iwBnaO96tpb5wP3i'
+});
+
+var params = { screen_name: 'nodejs' };
+
+// get tweet from user
+app.get('/tweet', (req, res) => {
+  client.get('statuses/user_timeline', params, function (error, tweets, response) {
+    if (!error) {
+    res.status(201).send(tweets[0].text);
+    }
+  });
 });
 
 // get request for login
