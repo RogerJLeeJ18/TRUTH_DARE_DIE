@@ -217,7 +217,7 @@ io.on('connection', (socket) => {
     userVotes[userVote] += 1;
     console.log(userVotes, "user votes in /votes handler");
     setTimeout(() => {
-      if (userVotes.pass > userVotes.fail) {
+      if (userVotes.pass >= userVotes.fail) {
         res.status(200).send(`${truthOrDare.username} lives on for another round!`);
         socket.emit('alive', `${truthOrDare.username} Lives for another round!`);
       } else {
