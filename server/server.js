@@ -19,6 +19,7 @@ const app = express();
 const server = http.createServer(options, app);
 const io = socketIO.listen(server);
 
+
 app.use(express.static(path.join(__dirname, '/../database')));
 app.use(express.static(path.join(__dirname, '/../dist')));
 app.use(bodyParser.json());
@@ -188,7 +189,10 @@ io.on('connection', (socket) => {
       }
     }, 5000);
     const randomSocket = Math.floor(Math.random() * (socketIdArray.length));
+    console.log(socketIdArray, "socket array")
     const response = socketIdArray[randomSocket];
+    console.log(response, " response")
+    console.log(io.sockets, " io sockets")
     const userSocket = io.sockets.sockets;
     const currentUser = userSocket[response];
     truthOrDare = currentUser;
@@ -211,7 +215,7 @@ io.on('connection', (socket) => {
     const userVote = req.body.vote;
     userVotes.count += 1;
     userVotes[userVote] += 1;
-    console.log(userVotes);
+    console.log(userVotes, "user votes in /votes handler");
     setTimeout(() => {
       if (userVotes.pass > userVotes.fail) {
         res.status(200).send(`${truthOrDare.username} lives on for another round!`);
