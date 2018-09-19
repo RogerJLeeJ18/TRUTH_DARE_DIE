@@ -288,7 +288,17 @@ class GameRoom extends React.Component {
             {this.state.currentUsersTurn ? (truthOrDare) : (passOrFail)}
             {this.state.truth ? this.state.truth : this.state.dare}
           </div>
-
+          <div>
+            <Button 
+              type="submit"
+            
+              onClick={(e) => {
+                console.log(e, " is e in tweet");
+                e.preventDefault();
+              }}
+            >I TWEETED
+              </Button>
+          </div>
           <iframe title="webChat" src="https://tokbox.com/embed/embed/ot-embed.js?embedId=91f9a6c8-1c02-486f-bb04-c24e6d922ebb&room=killroom1&iframe=true" width="800" height="640" allow="microphone; camera" />
         </Section2>
       </div>);
