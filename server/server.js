@@ -8,6 +8,7 @@ const socketIO = require('socket.io');
 const bcrypt = require('bcrypt');
 const cookieSession = require('cookie-session');
 const fs = require('fs');
+var DiscoveryV1 = require('watson-developer-cloud/discovery/v1');
 var Twitter = require('twitter'); 
 const { CONSUMER_SECRET }  = require('../config.js');
 const  { TOKEN_SECRET } = require('../config.js');
@@ -36,6 +37,20 @@ app.use(cookieSession({
 app.get('/', (req, res) => {
   res.sendStatus(201);
 });
+
+var discovery = new DiscoveryV1({
+  username: 'f61125d1-0591-4a3f-a6eb-f83ea000f11f',
+  password: 'JPt1KjjuarZ1',
+  version_date: '2017-11-07'
+});
+
+var file = fs.readFileSync('/Users/josephdelahoussaye/Desktop/Immersion/TRUTH_DARE_DIE/test-doc1.html');
+
+discovery.addDocument({ environment_id: '1c012708-9b11-4f78-b6a5-d2b1d9aea9ee', collection_id: 'b439a6dc-5f36-4ac6-83c9-4e6fe67f8ebd', file: file },
+  function (error, data) {
+    console.log(JSON.stringify(data, null, 2));
+  }
+);
 
 var client = new Twitter({
   consumer_key: 'a4Gh4PKbKDEQGPlwF4swKwtBl',
