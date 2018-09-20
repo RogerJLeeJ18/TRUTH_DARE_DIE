@@ -4,6 +4,7 @@ import axios from 'axios';
 import styled from 'styled-components';
 import { LoserPage } from './loserpage.jsx';
 import { WinnerPage } from './winnerpage.jsx';
+import { HomePage } from './homepage.jsx';
 
 const Title = styled.h1`
   font-family: Nosifer;
@@ -125,13 +126,15 @@ class GameRoom extends React.Component {
       currentUsersTurnDisplay: '',
       currentUsersTurn: false,
       hasVoted: false,
-      afterTurnMessage: ''
+      afterTurnMessage: '',
+      backToHome: false,
     };
     // bind function to send messages and truth answer to component
     this.userSendMessage = this.userSendMessage.bind(this);
     this.userSelectDare = this.userSelectDare.bind(this);
     this.userSelectTruth = this.userSelectTruth.bind(this);
   }
+
   componentDidMount() {
     this.props.socket.on('sentMessage', (message) => {
       this.setState({ messageHistory: [...this.state.messageHistory, message] });
@@ -192,6 +195,7 @@ class GameRoom extends React.Component {
       event.preventDefault();
     }
   }
+
   userSelectTruth(e) {
     axios.get('/truths').then(({ data }) => {
       this.setState({ truth: data });
@@ -201,6 +205,7 @@ class GameRoom extends React.Component {
     this.props.socket.emit('truth');
     e.preventDefault();
   }
+
   userSelectDare(e) {
     axios.get('/dares').then(({ data }) => {
       this.setState({ truth: data });
@@ -210,6 +215,7 @@ class GameRoom extends React.Component {
     this.props.socket.emit('dare');
     e.preventDefault();
   }
+
   userSelectPass(e) {
     this.setState({ hasVoted: true }, () => {
       axios.post('/votes', { vote: 'pass', username: this.props.userInfo.username })
@@ -221,6 +227,7 @@ class GameRoom extends React.Component {
     });
     e.preventDefault();
   }
+
   getTweets() {
     // console.log(this.props.userInfo, " twitter handle")
     axios.post('/tweet', { twitter: this.props.userInfo.twitter})
@@ -230,6 +237,7 @@ class GameRoom extends React.Component {
       console.log(err, "in get tweets req")
     })
   }
+
   userSelectFail(e) {
     this.setState({ hasVoted: true }, () => {
       axios.post('/votes', { vote: 'fail', username: this.props.userInfo.username })
@@ -241,6 +249,7 @@ class GameRoom extends React.Component {
     });
     e.preventDefault();
   }
+
   userStartGame(e) {
     this.setState({ truth: '', hasVoted: false });
     axios.post('/room', {
@@ -248,6 +257,12 @@ class GameRoom extends React.Component {
     });
     this.props.socket.emit('start');
     e.preventDefault();
+  }
+
+  leaveRoom() {
+    this.setState({
+      backToHome: true,
+    })
   }
   render() {
     const { username } = this.props.userInfo;
@@ -282,6 +297,13 @@ class GameRoom extends React.Component {
           <Deaths>Deaths: {this.props.userInfo.death_tokens}</Deaths>
           <Wins>Wins: {this.props.userInfo.win_tokens}</Wins>
         </TopBar>
+        <div>
+          <Input type="submit" value="Leave Room" style={
+              { position: "absolute", width: "200px", height: "50px", right: 10 }
+            } 
+            onClick={(e) => this.leaveRoom(e)}
+          />
+        </div>
         <Title>Welcome to {this.props.roomname}</Title>
         <Chat htmlFor="chatRoom">
           Chats
@@ -327,17 +349,32 @@ class GameRoom extends React.Component {
           <iframe title="webChat" src="https://tokbox.com/embed/embed/ot-embed.js?embedId=91f9a6c8-1c02-486f-bb04-c24e6d922ebb&room=killroom1&iframe=true" width="800" height="640" allow="microphone; camera" />
         </Section2>
       </div>);
-    return (
-      // from render return a div that displays 
+    if (this.state.backToHome) {
+      return (<HomePage socket={this.props.socket} userInfo={this.props.userInfo} />)
+    } else {
+      return (
+        // from render return a div that displays 
         // a winner's page if the users has won
         // if the user is still alive, but has not won the aliveRoom template should be rendered,
         // if the user is not a winner and is also not alive the loser page is rendered for the user
-      <div>
-        {/* need to see if this works */}
-        {'Change has been made'}
-        {/* {this.state.winner ? (<WinnerPage />) : (this.state.alive ? (aliveRoom) : (<LoserPage />))} */}
-      </div>
-    );
+        <div>
+          {/* need to see if this works */}
+          {/* {'Change has been made'} */}
+          {this.state.winner ? (<WinnerPage />) : (this.state.alive ? (aliveRoom) : (<LoserPage />))}
+        </div>
+      );
+    }
+    // return (
+    //   // from render return a div that displays 
+    //     // a winner's page if the users has won
+    //     // if the user is still alive, but has not won the aliveRoom template should be rendered,
+    //     // if the user is not a winner and is also not alive the loser page is rendered for the user
+    //   <div>
+    //     {/* need to see if this works */}
+    //     {/* {'Change has been made'} */}
+    //     {this.state.winner ? (<WinnerPage />) : (this.state.alive ? (aliveRoom) : (<LoserPage />))}
+    //   </div>
+    // );
   }
 }
 
