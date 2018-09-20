@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+// 'mongodb://admin:admin1@ds243728.mlab.com:43728/truthdaredie'
+mongoose.connect('mongodb://localhost/test');
 
-mongoose.connect('mongodb://admin:admin1@ds243728.mlab.com:43728/truthdaredie');
-//
 const db = mongoose.connection;
 db.once('open', () => {
   console.log('connected to db');
@@ -24,17 +24,13 @@ const UserSchema = new Schema({
   win_tokens: { type: Number, default: 0 }
 });
 
-const User = mongoose.model('User', UserSchema);
-
 // room schema
 const RoomSchema = new Schema({
   room: String,
   status: String,
-  admin: String
+  admin: String,
+  rating: String
 });
-
-const Room = mongoose.model('Room', RoomSchema);
-
 
 // Truths schema
 const TruthSchema = new Schema({
@@ -43,9 +39,6 @@ const TruthSchema = new Schema({
   truth: String
 });
 
-const Truth = mongoose.model('Truth', TruthSchema);
-
-
 // Dares Schema
 const DareSchema = new Schema({
   category: String,
@@ -53,14 +46,17 @@ const DareSchema = new Schema({
   dare_id: Number
 });
 
+const User = mongoose.model('User', UserSchema);
+const Room = mongoose.model('Room', RoomSchema);
+const Truth = mongoose.model('Truth', TruthSchema);
 const Dare = mongoose.model('Dare', DareSchema);
 
 
 // function for sign up
-// check if user already exists by email
-// if user doesn't exist, save to the database
 const save = (user, hash, callback) => {
+  // check the database to see if user exists via username
   User.findOne({ username: user.username }, (err, data) => {
+    // if user does exist pass a statement to the callback letting them know the user already exists
     if (err) {
       callback(err);
     } else if (!err && data) {
@@ -77,10 +73,12 @@ const save = (user, hash, callback) => {
         death_tokens: 0,
         win_tokens: 0
       });
+      // if user doesn't exist, save the user to the database
       newUser.save((error, userInfo) => {
         if (error) {
           console.error(error);
         } else {
+          // perform the callback on the newUser's info
           console.log('user saved');
           callback(userInfo);
         }

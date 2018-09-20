@@ -1,8 +1,9 @@
 import React from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
-import { GameRoom } from './gameroom.jsx';
 import styled from 'styled-components';
+import { GameRoom } from './gameroom.jsx';
+import { Dropdown } from './dropdown.jsx';
 
 const Title = styled.h1`
   font-family: Nosifer;
@@ -136,11 +137,12 @@ class HomePage extends React.Component {
     this.state = {
       roomName: '',
       roomCreated: false,
-      admin: false
+      admin: false,
     };
     this.socketHandle = this.makeRoom.bind(this);
     this.joinRoom = this.joinRoom.bind(this);
   }
+
   makeRoom(event) {
     const roomName = event.target.socket.value;
     axios.post('/start', {
@@ -160,6 +162,7 @@ class HomePage extends React.Component {
     this.props.socket.emit('create', roomName);
     console.log(roomName, 'this worked');
   }
+
   joinRoom(event) {
     const roomName = event.target.join.value;
     axios.get(`/rooms/${roomName}`).then(({ data }) => {

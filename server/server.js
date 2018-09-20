@@ -107,7 +107,8 @@ app.post('/users', (req, res) => {
 // post request to add a room to db
 app.post('/start', (req, res) => {
   const request = req.body;
-  // console.log(request);
+  console.log(req.body);
+  // takes the username and the room name from the req
   dataSave.createRoom(request, (response) => {
     if (!response) {
       // console.log(response);
