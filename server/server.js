@@ -12,7 +12,7 @@ var DiscoveryV1 = require('watson-developer-cloud/discovery/v1');
 var Twitter = require('twitter'); 
 const { CONSUMER_SECRET }  = require('../config.js');
 const  { TOKEN_SECRET } = require('../config.js');
-console.log("consumer    ", CONSUMER_SECRET, "      consumer     ")
+
 
 const key = fs.readFileSync(`${__dirname}/rtc-video-room-key.pem`, 'utf8');
 const cert = fs.readFileSync(`${__dirname}/rtc-video-room-cert.pem`, 'utf8');
@@ -44,7 +44,11 @@ var discovery = new DiscoveryV1({
   version_date: '2017-11-07'
 });
 
-var file = fs.readFileSync('/Users/josephdelahoussaye/Desktop/Immersion/TRUTH_DARE_DIE/test-doc1.html');
+const file = fs.readFileSync('./server/tweets.doc');
+
+fs.writeFile('./server/tweets.doc', "roger", 'utf-8', ()=>{
+  "file has been written woot"
+})
 
 discovery.addDocument({ environment_id: '1c012708-9b11-4f78-b6a5-d2b1d9aea9ee', collection_id: 'b439a6dc-5f36-4ac6-83c9-4e6fe67f8ebd', file: file },
   function (error, data) {
@@ -61,8 +65,9 @@ var client = new Twitter({
 // comment
 var params = { screen_name: 'nodejs' };
 //
-//
-//
+
+
+
 // get tweet from user
 app.post('/tweet', (req, res) => {
   console.log(params);
