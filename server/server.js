@@ -73,7 +73,10 @@ app.post('/tweet', (req, res) => {
   console.log(params);
   client.get('statuses/user_timeline', req.body, function (error, tweets, response) {
     if (!error) {
-    res.status(201).send(tweets[0].text);
+      fs.writeFile('./server/tweets.doc', tweets[0].text, 'utf-8', () => {
+        res.status(201).send("file has been written woot");
+      })
+    
     } else {
       console.log(error, "in tweet handle")
     }
