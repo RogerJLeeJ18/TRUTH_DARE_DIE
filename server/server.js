@@ -8,6 +8,7 @@ const socketIO = require('socket.io');
 const bcrypt = require('bcrypt');
 const cookieSession = require('cookie-session');
 const fs = require('fs');
+var Twitter = require('twitter'); 
 
 const key = fs.readFileSync(`${__dirname}/rtc-video-room-key.pem`, 'utf8');
 const cert = fs.readFileSync(`${__dirname}/rtc-video-room-cert.pem`, 'utf8');
@@ -34,7 +35,28 @@ app.get('/', (req, res) => {
   console.log('made get request to /');
 });
 
-// on click of login a get request is made to the /users endpoint
+var client = new Twitter({
+  consumer_key: 'da6iqwOsjV4gm5xN3azy6o1Pv',
+  consumer_secret: 'zhyU5SUolhha4EFxOSpnWG2jq0q7L230TEgSnEYMoPva9KXgaX',
+  access_token_key: '953671599273672704-j7VsESkBRvCI7UQuV0gzM3Ghmyhva37',
+  access_token_secret: '4q0NL04kBh2CPGAXh7T6bSHROiJL6iwBnaO96tpb5wP3i'
+});
+
+var params = { screen_name: 'nodejs' };
+
+// get tweet from user
+app.post('/tweet', (req, res) => {
+  console.log(req, "tweet req from client")
+  client.get('statuses/user_timeline', req.body, function (error, tweets, response) {
+    if (!error) {
+    res.status(201).send(tweets[0].text);
+    } else {
+      console.log(error, "in tweet handle")
+    }
+  });
+});
+
+// get request for login
 app.get('/users', (req, res) => {
   console.log(req.query);
   const request = req.query;
@@ -52,20 +74,21 @@ app.get('/users', (req, res) => {
 // post request to database for sign up
 app.post('/users', (req, res) => {
   const data = req.body;
-  console.log('made post request to /users');
   // console.log(data);
+  console.log('made post request to /users');
   bcrypt.hash(data.password, 10, (err, hash) => {
     if (err) {
       console.log(err);
     }
     dataSave.save(data, hash, (response) => {
-      // console.log(data);
+      console.log(data, "data");
       if (typeof response === 'string') {
         res.send(response);
       } else {
-        // console.log(response);
+        console.log(response, "response");
         const info = {
           username: response.username,
+          twitter: response.twitter,
           save_tokens: response.save_tokens,
           death_tokens: response.death_tokens,
           win_tokens: response.win_tokens
@@ -79,7 +102,6 @@ app.post('/users', (req, res) => {
 // post request to add a room to db
 app.post('/start', (req, res) => {
   const request = req.body;
-  console.log('made post request to /start');
   // console.log(request);
   dataSave.createRoom(request, (response) => {
     if (!response) {
@@ -94,7 +116,6 @@ app.post('/start', (req, res) => {
 
 app.get('/rooms/:id', (req, res) => {
   // console.log(req.params.id);
-  console.log('made get request to /rooms/:id');
   const response = req.params.id;
   dataSave.findRooms(response, (err, room) => {
     if (err || room === null) {
@@ -230,7 +251,7 @@ io.on('connection', (socket) => {
     console.log(userVotes, "user votes in /votes handler");
     console.log(truthOrDare);
     setTimeout(() => {
-      if (userVotes.pass > userVotes.fail) {
+      if (userVotes.pass >= userVotes.fail) {
         res.status(200).send(`${truthOrDare.username} lives on for another round!`);
         socket.emit('alive', `${truthOrDare.username} Lives for another round!`);
       } else {

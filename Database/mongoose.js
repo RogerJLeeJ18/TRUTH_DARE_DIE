@@ -16,6 +16,7 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema({
   username: String,
   password: String,
+  twitter: String,
   avatar: String,
   email: String,
   save_tokens: { type: Number, default: 0 },
@@ -69,6 +70,7 @@ const save = (user, hash, callback) => {
       const newUser = new User({
         username: user.username,
         password: hash,
+        twitter: user.twitter,
         avatar: user.image_url,
         email: user.email,
         save_tokens: 0,
@@ -103,6 +105,7 @@ const getUser = (request, callback) => {
         } else {
           callback({
             username: user.username,
+            twitter: user.twitter,
             save_tokens: user.save_tokens,
             death_tokens: user.death_tokens,
             win_tokens: user.win_tokens

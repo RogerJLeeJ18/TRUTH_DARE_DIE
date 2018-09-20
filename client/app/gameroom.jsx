@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
@@ -220,6 +221,15 @@ class GameRoom extends React.Component {
     });
     e.preventDefault();
   }
+  getTweets() {
+    // console.log(this.props.userInfo, " twitter handle")
+    axios.post('/tweet', { twitter: this.props.userInfo.twitter})
+    .then((result) => {
+      console.log(result, " resolve in get tweets")
+    }).catch((err)=>{
+      console.log(err, "in get tweets req")
+    })
+  }
   userSelectFail(e) {
     this.setState({ hasVoted: true }, () => {
       axios.post('/votes', { vote: 'fail', username: this.props.userInfo.username })
@@ -302,7 +312,18 @@ class GameRoom extends React.Component {
             {this.state.currentUsersTurn ? (truthOrDare) : (passOrFail)}
             {this.state.truth ? this.state.truth : this.state.dare}
           </div>
-
+          <div>
+            <Button 
+              type="submit"
+            
+              onClick={(e) => {
+                // console.log(e, " is e in tweet");
+                this.getTweets();
+                e.preventDefault();
+              }}
+            >I TWEETED
+              </Button>
+          </div>
           <iframe title="webChat" src="https://tokbox.com/embed/embed/ot-embed.js?embedId=91f9a6c8-1c02-486f-bb04-c24e6d922ebb&room=killroom1&iframe=true" width="800" height="640" allow="microphone; camera" />
         </Section2>
       </div>);
