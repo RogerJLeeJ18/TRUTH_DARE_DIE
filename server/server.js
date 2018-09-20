@@ -38,13 +38,14 @@ app.get('/', (req, res) => {
 });
 
 var client = new Twitter({
-  consumer_key: '4TvuZMieI21PmPa8cLDhhKDzw',
+  consumer_key: 'a4Gh4PKbKDEQGPlwF4swKwtBl',
   consumer_secret: `${CONSUMER_SECRET}`,
-  access_token_key: '953671599273672704-WMP4nT4kmzkA903iwttpH7eJbgF1fv5',
+  access_token_key: '953671599273672704-UDDcr6KlemZnIWsLzsvi4L0rNGRRNNo',
   access_token_secret: `${TOKEN_SECRET}`
 });
 // comment
 var params = { screen_name: 'nodejs' };
+//
 //
 //
 // get tweet from user
