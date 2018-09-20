@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
 mongoose.connect('mongodb://admin:admin1@ds243728.mlab.com:43728/truthdaredie');
-
+//
 const db = mongoose.connection;
 db.once('open', () => {
   console.log('connected to db');
