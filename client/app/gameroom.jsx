@@ -166,13 +166,21 @@ class GameRoom extends React.Component {
       this.setState({ hasVoted: false, winner: true });
     });
   }
+
+  // make a function for a user to send message
   userSendMessage(event) {
+    // make a message variable that takes the user's username and their typed message
     const message = `${this.props.userInfo.username}: ${event.target.sendMessage.value}`;
+    // if the message history array's length is > or = 15
     if (this.state.messageHistory.length >= 15) {
       const messages = this.state.messageHistory;
+      // delete the first message in the messages array
       messages.splice(0, 1);
+      // push the user's message into the messages array
       messages.push(message);
+      // set the state of messages to the new edited messages array
       this.setState({ messageHistory: messages }, () => {
+        // trigger a function that sends a message to the server using the socket 
         this.props.socket.emit('sendMessage', message);
       });
       event.preventDefault();
@@ -239,9 +247,14 @@ class GameRoom extends React.Component {
         <Button type="submit" name="truth" onClick={(e) => { this.userSelectTruth(e); }}>TRUTH</Button>
         <Button type="submit" name="dare" onClick={(e) => { this.userSelectDare(e); }}>DARE</Button>
       </div>);
+
+    // Define a pass or fail div
     let passOrFail;
+    // if a user has casted a vote the hasVoted property on the state should be true
     if (this.state.hasVoted) {
+      // the pass or fail div should contain text telling a voter has casted their vote
       passOrFail = (<div>Your vote has been cast!</div>);
+    // otherwise the pass or fail div should contain a pass button and a fail button for a user to cast their vote
     } else {
       passOrFail = (
         <div>
@@ -249,6 +262,7 @@ class GameRoom extends React.Component {
           <Button type="submit" name="fail" onClick={(e) => { this.userSelectFail(e); }}>FAIL</Button>
         </div>);
     }
+    // const aliveRoom 
     const aliveRoom = (
       <div>
         <TopBar className="userInfo">
@@ -293,9 +307,14 @@ class GameRoom extends React.Component {
         </Section2>
       </div>);
     return (
+      // from render return a div that displays 
+        // a winner's page if the users has won
+        // if the user is still alive, but has not won the aliveRoom template should be rendered,
+        // if the user is not a winner and is also not alive the loser page is rendered for the user
       <div>
         {/* need to see if this works */}
-        {this.state.winner ? (<WinnerPage />) : (this.state.alive ? (aliveRoom) : (<LoserPage />))}
+        {'Change has been made'}
+        {/* {this.state.winner ? (<WinnerPage />) : (this.state.alive ? (aliveRoom) : (<LoserPage />))} */}
       </div>
     );
   }
