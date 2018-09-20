@@ -46,7 +46,7 @@ var params = { screen_name: 'nodejs' };
 // get tweet from user
 app.post('/tweet', (req, res) => {
   console.log(req, "tweet req from client")
-  client.get('statuses/user_timeline', params, function (error, tweets, response) {
+  client.get('statuses/user_timeline', req.body, function (error, tweets, response) {
     if (!error) {
     res.status(201).send(tweets[0].text);
     } else {
