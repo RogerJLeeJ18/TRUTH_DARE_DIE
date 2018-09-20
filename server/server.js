@@ -9,6 +9,8 @@ const bcrypt = require('bcrypt');
 const cookieSession = require('cookie-session');
 const fs = require('fs');
 var Twitter = require('twitter'); 
+const CONSUMER_KEY = require('../config.js');
+
 
 const key = fs.readFileSync(`${__dirname}/rtc-video-room-key.pem`, 'utf8');
 const cert = fs.readFileSync(`${__dirname}/rtc-video-room-cert.pem`, 'utf8');
