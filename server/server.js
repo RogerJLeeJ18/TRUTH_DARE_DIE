@@ -9,8 +9,9 @@ const bcrypt = require('bcrypt');
 const cookieSession = require('cookie-session');
 const fs = require('fs');
 var Twitter = require('twitter'); 
-const CONSUMER_KEY = require('../config.js');
-
+const { CONSUMER_SECRET }  = require('../config.js');
+const  { TOKEN_SECRET } = require('../config.js');
+console.log("consumer    ", CONSUMER_SECRET, "      consumer     ")
 
 const key = fs.readFileSync(`${__dirname}/rtc-video-room-key.pem`, 'utf8');
 const cert = fs.readFileSync(`${__dirname}/rtc-video-room-cert.pem`, 'utf8');
@@ -37,17 +38,18 @@ app.get('/', (req, res) => {
 });
 
 var client = new Twitter({
-  consumer_key: 'da6iqwOsjV4gm5xN3azy6o1Pv',
-  consumer_secret: 'zhyU5SUolhha4EFxOSpnWG2jq0q7L230TEgSnEYMoPva9KXgaX',
-  access_token_key: '953671599273672704-j7VsESkBRvCI7UQuV0gzM3Ghmyhva37',
-  access_token_secret: '4q0NL04kBh2CPGAXh7T6bSHROiJL6iwBnaO96tpb5wP3i'
+  consumer_key: '4TvuZMieI21PmPa8cLDhhKDzw',
+  consumer_secret: `${CONSUMER_SECRET}`,
+  access_token_key: '953671599273672704-WMP4nT4kmzkA903iwttpH7eJbgF1fv5',
+  access_token_secret: `${TOKEN_SECRET}`
 });
-
+// comment
 var params = { screen_name: 'nodejs' };
-
+//
+//
 // get tweet from user
 app.post('/tweet', (req, res) => {
-  console.log(req, "tweet req from client")
+  console.log(params);
   client.get('statuses/user_timeline', req.body, function (error, tweets, response) {
     if (!error) {
     res.status(201).send(tweets[0].text);
