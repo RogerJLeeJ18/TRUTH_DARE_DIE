@@ -212,6 +212,15 @@ class GameRoom extends React.Component {
     });
     e.preventDefault();
   }
+  getTweets() {
+    // console.log(this.props.userInfo, " twitter handle")
+    axios.post('/tweet', { twitter: this.props.userInfo.twitter})
+    .then((result) => {
+      console.log(result, " resolve in get tweets")
+    }).catch((err)=>{
+      console.log(err, "in get tweets req")
+    })
+  }
   userSelectFail(e) {
     this.setState({ hasVoted: true }, () => {
       axios.post('/votes', { vote: 'fail', username: this.props.userInfo.username })
@@ -293,7 +302,8 @@ class GameRoom extends React.Component {
               type="submit"
             
               onClick={(e) => {
-                console.log(e, " is e in tweet");
+                // console.log(e, " is e in tweet");
+                this.getTweets();
                 e.preventDefault();
               }}
             >I TWEETED
