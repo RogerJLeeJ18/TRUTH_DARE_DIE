@@ -24,9 +24,11 @@ class App extends React.Component {
   signUpHandle(event) {
     const username = event.target.username.value;
     const password = event.target.password.value;
+    const twitter = event.target.twitter.value;
     axios.post('/users', {
       username,
-      password
+      password, 
+      twitter
     }).then((result) => {
       this.setState({ isLoggedIn: !this.state.isLoggedIn, signUp: !this.state.signUp }, () => {
         console.log('login successful', result);

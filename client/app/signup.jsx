@@ -86,6 +86,11 @@ function SignUp(props) {
               </Label>
             </Div>
             <Div>
+              <Label htmlFor="twitter">Twitter Handle:
+                <Input type="twitter" name="twitter" placeholder="@twitter_handle" />
+              </Label>
+            </Div>
+            <Div>
               <Button type="submit" >Submit</Button>
             </Div>
             <Div>
