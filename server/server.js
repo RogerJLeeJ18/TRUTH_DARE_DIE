@@ -43,19 +43,13 @@ var discovery = new DiscoveryV1({
   password: 'JPt1KjjuarZ1',
   version_date: '2017-11-07'
 });
-
+// console.log(discovery)
 const file = fs.readFileSync('./server/tweets.html');
 
-discovery.addDocument({ environment_id: '1c012708-9b11-4f78-b6a5-d2b1d9aea9ee', collection_id: 'b439a6dc-5f36-4ac6-83c9-4e6fe67f8ebd', file: file },
-  function (error, data) {
-    console.log(JSON.stringify(data, null, 2), " data from add doc response");
-  }
-);
-
-discovery.query({ environment_id: '1c012708-9b11-4f78-b6a5-d2b1d9aea9ee', collection_id: 'b439a6dc-5f36-4ac6-83c9-4e6fe67f8ebd', query: 'text:fear' }, 
-function (error, data) {
-  console.log("query response start ", JSON.stringify(data, null, 2), "query response end");
-});
+// discovery.query({ environment_id: '1c012708-9b11-4f78-b6a5-d2b1d9aea9ee', collection_id: 'b439a6dc-5f36-4ac6-83c9-4e6fe67f8ebd', query: 'text:fear' }, 
+// function (error, data) {
+//   console.log("query response start ", JSON.stringify(data, null, 2), "query response end");
+// });
 
 var client = new Twitter({
   consumer_key: 'a4Gh4PKbKDEQGPlwF4swKwtBl',
@@ -64,30 +58,36 @@ var client = new Twitter({
   access_token_secret: `${TOKEN_SECRET}`
 });
 
-
-
-app.post('/tweet', (req, res) => {
-  console.log(req.body, "req.body")
-  var params = { screen_name: req.body.twitter };
-  client.get('statuses/user_timeline', params, function (error, tweets, response) {
+app.post('/tweet', ({ body }, res) => {
+  console.log({ body });
+  const params = { screen_name: body.twitter };
+  client.get('statuses/user_timeline', params, (error, tweets, response) => {
     // console.log(tweets[0].text, "tweets")
-    var html = [
+    const html = [
       `<div>${params.screen_name}</div>`,
       `<div>${tweets[0].text}</div>`
     ].join('');
-    console.log(tweets[0].text)
+    console.log(tweets[0].text);
     if (!error) {
       fs.writeFile('./server/tweets.html', html, 'utf-8', () => {
-        // discovery.addDocument({ environment_id: '1c012708-9b11-4f78-b6a5-d2b1d9aea9ee', collection_id: 'b439a6dc-5f36-4ac6-83c9-4e6fe67f8ebd', file: file },
-          // function (error, data) {
-            // console.log(JSON.stringify(data, null, 2), " status of doc load");
-          // }
-        // );
-        res.status(201).send("file has been written woot");
-      })
-
+        discovery.addDocument(
+          {
+            environment_id: '1c012708-9b11-4f78-b6a5-d2b1d9aea9ee',
+            collection_id: 'b439a6dc-5f36-4ac6-83c9-4e6fe67f8ebd',
+            file
+          },
+          (err, data) => {
+            if (err) {
+              console.error({ err });
+            } else {
+              console.log(JSON.stringify(data, null, 2), ' data from add doc response');
+              res.status(201).send('file has been written woot');
+            }
+          }
+        );
+      });
     } else {
-      console.log(error, "in tweet handle")
+      console.log({ error });
     }
   });
 });
@@ -134,11 +134,11 @@ app.post('/users', (req, res) => {
       console.log(err);
     }
     dataSave.save(data, hash, (response) => {
-      console.log(data, "data");
+      console.log(data, 'data');
       if (typeof response === 'string') {
         res.send(response);
       } else {
-        console.log(response, "response");
+        console.log(response, 'response');
         const info = {
           username: response.username,
           twitter: response.twitter,
@@ -295,7 +295,7 @@ io.on('connection', (socket) => {
     const userVote = req.body.vote;
     userVotes.count += 1;
     userVotes[userVote] += 1;
-    console.log(userVotes, "user votes in /votes handler");
+    console.log(userVotes, 'user votes in /votes handler');
     setTimeout(() => {
       if (userVotes.pass >= userVotes.fail) {
         res.status(200).send(`${truthOrDare.username} lives on for another round!`);
