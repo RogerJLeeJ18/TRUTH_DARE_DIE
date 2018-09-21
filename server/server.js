@@ -43,10 +43,8 @@ var discovery = new DiscoveryV1({
   password: 'JPt1KjjuarZ1',
   version_date: '2017-11-07'
 });
-// console.log(discovery)
+
 const file = fs.readFileSync('./server/tweets.html');
-
-
 
 var client = new Twitter({
   consumer_key: 'a4Gh4PKbKDEQGPlwF4swKwtBl',
@@ -58,15 +56,22 @@ var client = new Twitter({
 app.post('/tweet', ({ body }, res) => {
   let handle = false;
   let hash = false;
-  console.log({ body });
+  if (body.twitter === undefined) {
+    res.send({ response: 'I never submitted my Twitter handle! Off with my head!' });
+  }
   const params = { screen_name: body.twitter };
   client.get('statuses/user_timeline', params, (error, tweets, response) => {
-    // console.log(tweets[0].text, "tweets")
-    const html = [
-      `<title> ${tweets[0].text} </title>`,
-      `<div> ${params.screen_name} </div>`
-    ].join('');
-    console.log(tweets[0].text);
+    let html = '<div></div>';
+    if (tweets.length === 0) {
+      res.send({ response: 'I never tweeted! Off with my head!' })
+    } else {
+      html = [
+        `<title> ${tweets[0].text} </title>`,
+        `<div> ${params.screen_name} </div>`
+      ].join('');
+    }
+    
+    // console.log(tweets[0].text);
     if (!error) {
       fs.writeFile('./server/tweets.html', html, 'utf-8', () => {
         discovery.addDocument(
@@ -82,21 +87,25 @@ app.post('/tweet', ({ body }, res) => {
               discovery.query({ environment_id: '1c012708-9b11-4f78-b6a5-d2b1d9aea9ee',
                 collection_id: 'b439a6dc-5f36-4ac6-83c9-4e6fe67f8ebd', query: `text:${params.screen_name}` },
               (error, data) => {
-                const tweetArray = data.results[0].text.replace(/\n/g, " ").split(" ");
-                tweetArray.forEach((word)=>{
-                  if (`@${word}` == params.screen_name) {
-                    handle = true;
-                  } else if (word == '#truthdareordie') {
-                    hash = true;
-                  }
-                });
-                let response;
-                if (hash === true && handle === true){
-                  response = "My tweet confirmed!"
+                if (data.results.length === 0) {
+                  console.log('no result')
                 } else {
-                  response = "No Tweet! Off with my head!"
+                  const tweetArray = data.results[0].text.replace(/\n/g, " ").split(" ");
+                  tweetArray.forEach((word) => {
+                    if (`@${word}` == params.screen_name) {
+                      handle = true;
+                    } else if (word == '#truthdareordie') {
+                      hash = true;
+                    }
+                  });
+                  let response;
+                  if (hash === true && handle === true) {
+                    response = 'My tweet has been confirmed!'
+                  } else {
+                    response = 'No Tweet! Off with my head!'
+                  }
+                  res.status(201).send({hash, handle, response});
                 }
-                res.status(201).send({hash, handle, response});
               });
             }
           }
@@ -107,26 +116,6 @@ app.post('/tweet', ({ body }, res) => {
     }
   });
 });
-
-// var html = [
-//   '<div> A line</div>',
-//   '<div> Add more lines</div>',
-//   '<div> To the array as you need.</div>'
-// ].join('');
-
-// // get tweet from user
-// app.post('/tweet', (req, res) => {
-//   client.get('statuses/user_timeline', req.body, function (error, tweets, response) {
-//     if (!error) {
-//       fs.writeFile('./server/tweets.html', html, 'utf-8', () => {
-//         res.status(201).send("file has been written woot");
-//       })
-    
-//     } else {
-//       console.log(error, "in tweet handle")
-//     }
-//   });
-// });
 
 // get request for login
 app.get('/users', (req, res) => {
