@@ -1,0 +1,1 @@
+var string = "when i was 7 i had a nightmare about evil clowns";
