@@ -8,10 +8,11 @@ const socketIO = require('socket.io');
 const bcrypt = require('bcrypt');
 const cookieSession = require('cookie-session');
 const fs = require('fs');
+var DiscoveryV1 = require('watson-developer-cloud/discovery/v1');
 var Twitter = require('twitter'); 
 const { CONSUMER_SECRET }  = require('../config.js');
 const  { TOKEN_SECRET } = require('../config.js');
-console.log("consumer    ", CONSUMER_SECRET, "      consumer     ")
+
 
 const key = fs.readFileSync(`${__dirname}/rtc-video-room-key.pem`, 'utf8');
 const cert = fs.readFileSync(`${__dirname}/rtc-video-room-cert.pem`, 'utf8');
@@ -38,25 +39,81 @@ app.get('/', (req, res) => {
   console.log('made get request to /');
 });
 
+var discovery = new DiscoveryV1({
+  username: 'f61125d1-0591-4a3f-a6eb-f83ea000f11f',
+  password: 'JPt1KjjuarZ1',
+  version_date: '2017-11-07'
+});
+
+const file = fs.readFileSync('./server/tweets.html');
+
 var client = new Twitter({
   consumer_key: 'a4Gh4PKbKDEQGPlwF4swKwtBl',
   consumer_secret: `${CONSUMER_SECRET}`,
   access_token_key: '953671599273672704-UDDcr6KlemZnIWsLzsvi4L0rNGRRNNo',
   access_token_secret: `${TOKEN_SECRET}`
 });
-// comment
-var params = { screen_name: 'nodejs' };
-//
-//
-//
-// get tweet from user
-app.post('/tweet', (req, res) => {
-  console.log(params);
-  client.get('statuses/user_timeline', req.body, function (error, tweets, response) {
-    if (!error) {
-    res.status(201).send(tweets[0].text);
+
+app.post('/tweet', ({ body }, res) => {
+  let handle = false;
+  let hash = false;
+  if (body.twitter === undefined) {
+    res.send({ response: 'I never submitted my Twitter handle! Off with my head!' });
+  }
+  const params = { screen_name: body.twitter };
+  client.get('statuses/user_timeline', params, (error, tweets, response) => {
+    let html = '<div></div>';
+    if (tweets.length === 0) {
+      res.send({ response: 'I never tweeted! Off with my head!' })
     } else {
-      console.log(error, "in tweet handle")
+      html = [
+        `<title> ${tweets[0].text} </title>`,
+        `<div> ${params.screen_name} </div>`
+      ].join('');
+    }
+    
+    // console.log(tweets[0].text);
+    if (!error) {
+      fs.writeFile('./server/tweets.html', html, 'utf-8', () => {
+        discovery.addDocument(
+          {
+            environment_id: '1c012708-9b11-4f78-b6a5-d2b1d9aea9ee',
+            collection_id: 'b439a6dc-5f36-4ac6-83c9-4e6fe67f8ebd',
+            file
+          },
+          (err, data) => {
+            if (err) {
+              console.error({ err });
+            } else {
+              discovery.query({ environment_id: '1c012708-9b11-4f78-b6a5-d2b1d9aea9ee',
+                collection_id: 'b439a6dc-5f36-4ac6-83c9-4e6fe67f8ebd', query: `text:${params.screen_name}` },
+              (error, data) => {
+                if (data.results.length === 0) {
+                  console.log('no result')
+                } else {
+                  const tweetArray = data.results[0].text.replace(/\n/g, " ").split(" ");
+                  tweetArray.forEach((word) => {
+                    if (`@${word}` == params.screen_name) {
+                      handle = true;
+                    } else if (word == '#truthdareordie') {
+                      hash = true;
+                    }
+                  });
+                  let response;
+                  if (hash === true && handle === true) {
+                    response = 'My tweet has been confirmed!'
+                  } else {
+                    response = 'No Tweet! Off with my head!'
+                  }
+                  res.status(201).send({hash, handle, response});
+                }
+              });
+            }
+          }
+        );
+      });
+    } else {
+      console.log({ error });
     }
   });
 });
@@ -87,11 +144,11 @@ app.post('/users', (req, res) => {
       console.log(err);
     }
     dataSave.save(data, hash, (response) => {
-      console.log(data, "data");
+      console.log(data, 'data');
       if (typeof response === 'string') {
         res.send(response);
       } else {
-        console.log(response, "response");
+        console.log(response, 'response');
         const info = {
           username: response.username,
           twitter: response.twitter,
@@ -264,8 +321,7 @@ io.on('connection', (socket) => {
     const userVote = req.body.vote;
     userVotes.count += 1;
     userVotes[userVote] += 1;
-    console.log(userVotes, "user votes in /votes handler");
-    console.log(truthOrDare);
+    console.log(userVotes, 'user votes in /votes handler');
     setTimeout(() => {
       if (userVotes.pass >= userVotes.fail) {
         res.status(200).send(`${truthOrDare.username} lives on for another round!`);

@@ -50,7 +50,7 @@ class App extends React.Component {
     axios.get('/users', {
       params: {
         username,
-        password
+        password,
       }
     }).then(({ data }) => {
       this.setState({ isLoggedIn: !this.state.isLoggedIn, userInfo: data }, () => {

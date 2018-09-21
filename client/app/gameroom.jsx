@@ -127,7 +127,8 @@ class GameRoom extends React.Component {
       currentUsersTurn: false,
       hasVoted: false,
       afterTurnMessage: '',
-      backToHome: false,
+      tweeted: '',
+      hasTweeted: false,
     };
     // bind function to send messages and truth answer to component
     this.userSendMessage = this.userSendMessage.bind(this);
@@ -144,7 +145,7 @@ class GameRoom extends React.Component {
         currentUsersTurnDisplay: message,
         currentUsersTurn: true
       }, () => {
-        console.log(this.state);
+        console.log(this.props, "this.props");
       });
     });
     this.props.socket.on('user-turn', (message) => {
@@ -173,9 +174,12 @@ class GameRoom extends React.Component {
 
   // make a function for a user to send message
   userSendMessage(event) {
-    // make a message variable that takes the user's username and their typed message
-    const message = `${this.props.userInfo.username}: ${event.target.sendMessage.value}`;
-    // if the message history array's length is > or = 15
+    let message;
+    if (typeof event === 'string') {
+      message = `${this.props.userInfo.username}: ${event}`;
+    } else {
+      message = `${this.props.userInfo.username}: ${event.target.sendMessage.value}`;
+    }
     if (this.state.messageHistory.length >= 15) {
       const messages = this.state.messageHistory;
       // delete the first message in the messages array
@@ -228,14 +232,18 @@ class GameRoom extends React.Component {
     e.preventDefault();
   }
 
-  getTweets() {
-    // console.log(this.props.userInfo, " twitter handle")
+  getTweets(e) {
     axios.post('/tweet', { twitter: this.props.userInfo.twitter})
     .then((result) => {
+      this.setState({ tweeted: result.data.response });
+      this.setState({ hasTweeted: true });
+      this.userSendMessage(result.data.response);
+      // this.props.socket.emit('tweeted');
+      // e.preventDefault();
       console.log(result, " resolve in get tweets")
     }).catch((err)=>{
       console.log(err, "in get tweets req")
-    })
+    });
   }
 
   userSelectFail(e) {
@@ -265,6 +273,7 @@ class GameRoom extends React.Component {
     })
   }
   render() {
+    console.log(this.props, "this props")
     const { username } = this.props.userInfo;
     const messageList = this.state.messageHistory.map(message => <li key={message}>{message}</li>);
     const truthOrDare = (
@@ -334,16 +343,17 @@ class GameRoom extends React.Component {
             {this.state.currentUsersTurn ? (truthOrDare) : (passOrFail)}
             {this.state.truth ? this.state.truth : this.state.dare}
           </div>
+          
           <div>
             <Button 
               type="submit"
             
               onClick={(e) => {
-                // console.log(e, " is e in tweet");
-                this.getTweets();
+                
+                this.getTweets(e);
                 e.preventDefault();
               }}
-            >I TWEETED
+            >VERIFY TWEET
               </Button>
           </div>
           <iframe title="webChat" src="https://tokbox.com/embed/embed/ot-embed.js?embedId=91f9a6c8-1c02-486f-bb04-c24e6d922ebb&room=killroom1&iframe=true" width="800" height="640" allow="microphone; camera" />
