@@ -30,7 +30,7 @@ class App extends React.Component {
       password, 
       twitter
     }).then((result) => {
-      this.setState({ isLoggedIn: !this.state.isLoggedIn, signUp: !this.state.signUp }, () => {
+      this.setState({ isLoggedIn: !this.state.isLoggedIn, signUp: !this.state.signUp, userInfo: result.data }, () => {
         console.log('login successful', result);
       });
     }).catch((error) => {
@@ -51,7 +51,7 @@ class App extends React.Component {
     axios.get('/users', {
       params: {
         username,
-        password
+        password,
       }
     }).then(({ data }) => {
       this.setState({ isLoggedIn: !this.state.isLoggedIn, userInfo: data }, () => {

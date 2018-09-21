@@ -140,7 +140,7 @@ class GameRoom extends React.Component {
         currentUsersTurnDisplay: message,
         currentUsersTurn: true
       }, () => {
-        console.log(this.state);
+        console.log(this.props, "this.props");
       });
     });
     this.props.socket.on('user-turn', (message) => {
@@ -168,6 +168,7 @@ class GameRoom extends React.Component {
   }
   userSendMessage(event) {
     const message = `${this.props.userInfo.username}: ${event.target.sendMessage.value}`;
+    console.log("meessssage", this.props)
     if (this.state.messageHistory.length >= 15) {
       const messages = this.state.messageHistory;
       messages.splice(0, 1);
@@ -213,13 +214,13 @@ class GameRoom extends React.Component {
     e.preventDefault();
   }
   getTweets() {
-    // console.log(this.props.userInfo, " twitter handle")
+    console.log(this.props.userInfo, " twitter handle")
     axios.post('/tweet', { twitter: this.props.userInfo.twitter})
     .then((result) => {
       console.log(result, " resolve in get tweets")
     }).catch((err)=>{
       console.log(err, "in get tweets req")
-    })
+    });
   }
   userSelectFail(e) {
     this.setState({ hasVoted: true }, () => {
@@ -241,6 +242,7 @@ class GameRoom extends React.Component {
     e.preventDefault();
   }
   render() {
+    console.log(this.props, "this props")
     const { username } = this.props.userInfo;
     const messageList = this.state.messageHistory.map(message => <li key={message}>{message}</li>);
     const truthOrDare = (

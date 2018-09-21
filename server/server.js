@@ -64,25 +64,53 @@ var client = new Twitter({
   access_token_secret: `${TOKEN_SECRET}`
 });
 
-var html = [
-  '<div> A line</div>',
-  '<div> Add more lines</div>',
-  '<div> To the array as you need.</div>'
-].join('');
 
-// get tweet from user
+
 app.post('/tweet', (req, res) => {
-  client.get('statuses/user_timeline', req.body, function (error, tweets, response) {
+  console.log(req.body, "req.body")
+  var params = { screen_name: req.body.twitter };
+  client.get('statuses/user_timeline', params, function (error, tweets, response) {
+    // console.log(tweets[0].text, "tweets")
+    var html = [
+      `<div>${params.screen_name}</div>`,
+      `<div>${tweets[0].text}</div>`
+    ].join('');
+    console.log(tweets[0].text)
     if (!error) {
       fs.writeFile('./server/tweets.html', html, 'utf-8', () => {
+        // discovery.addDocument({ environment_id: '1c012708-9b11-4f78-b6a5-d2b1d9aea9ee', collection_id: 'b439a6dc-5f36-4ac6-83c9-4e6fe67f8ebd', file: file },
+          // function (error, data) {
+            // console.log(JSON.stringify(data, null, 2), " status of doc load");
+          // }
+        // );
         res.status(201).send("file has been written woot");
       })
-    
+
     } else {
       console.log(error, "in tweet handle")
     }
   });
 });
+
+// var html = [
+//   '<div> A line</div>',
+//   '<div> Add more lines</div>',
+//   '<div> To the array as you need.</div>'
+// ].join('');
+
+// // get tweet from user
+// app.post('/tweet', (req, res) => {
+//   client.get('statuses/user_timeline', req.body, function (error, tweets, response) {
+//     if (!error) {
+//       fs.writeFile('./server/tweets.html', html, 'utf-8', () => {
+//         res.status(201).send("file has been written woot");
+//       })
+    
+//     } else {
+//       console.log(error, "in tweet handle")
+//     }
+//   });
+// });
 
 // get request for login
 app.get('/users', (req, res) => {
