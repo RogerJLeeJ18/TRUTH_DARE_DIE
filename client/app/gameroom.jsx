@@ -124,7 +124,9 @@ class GameRoom extends React.Component {
       currentUsersTurnDisplay: '',
       currentUsersTurn: false,
       hasVoted: false,
-      afterTurnMessage: ''
+      afterTurnMessage: '',
+      tweeted: '',
+      hasTweeted: false,
     };
     // bind function to send messages and truth answer to component
     this.userSendMessage = this.userSendMessage.bind(this);
@@ -167,7 +169,13 @@ class GameRoom extends React.Component {
     });
   }
   userSendMessage(event) {
-    const message = `${this.props.userInfo.username}: ${event.target.sendMessage.value}`;
+    let message;
+    if (typeof event === 'string') {
+      message = `${this.props.userInfo.username}: ${event}`;
+    } else {
+      message = `${this.props.userInfo.username}: ${event.target.sendMessage.value}`;
+    }
+     
     console.log("meessssage", this.props)
     if (this.state.messageHistory.length >= 15) {
       const messages = this.state.messageHistory;
@@ -213,10 +221,15 @@ class GameRoom extends React.Component {
     });
     e.preventDefault();
   }
-  getTweets() {
+  getTweets(e) {
     console.log(this.props.userInfo, " twitter handle")
     axios.post('/tweet', { twitter: this.props.userInfo.twitter})
     .then((result) => {
+      this.setState({ tweeted: result.data.response });
+      this.setState({ hasTweeted: true });
+      this.userSendMessage(result.data.response);
+      // this.props.socket.emit('tweeted');
+      // e.preventDefault();
       console.log(result, " resolve in get tweets")
     }).catch((err)=>{
       console.log(err, "in get tweets req")
@@ -299,16 +312,17 @@ class GameRoom extends React.Component {
             {this.state.currentUsersTurn ? (truthOrDare) : (passOrFail)}
             {this.state.truth ? this.state.truth : this.state.dare}
           </div>
+          
           <div>
             <Button 
               type="submit"
             
               onClick={(e) => {
-                // console.log(e, " is e in tweet");
-                this.getTweets();
+                
+                this.getTweets(e);
                 e.preventDefault();
               }}
-            >I TWEETED
+            >VERIFY TWEET
               </Button>
           </div>
           <iframe title="webChat" src="https://tokbox.com/embed/embed/ot-embed.js?embedId=91f9a6c8-1c02-486f-bb04-c24e6d922ebb&room=killroom1&iframe=true" width="800" height="640" allow="microphone; camera" />

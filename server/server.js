@@ -79,25 +79,25 @@ app.post('/tweet', ({ body }, res) => {
             if (err) {
               console.error({ err });
             } else {
-              
               discovery.query({ environment_id: '1c012708-9b11-4f78-b6a5-d2b1d9aea9ee',
-              collection_id: 'b439a6dc-5f36-4ac6-83c9-4e6fe67f8ebd', query: `text:${params.screen_name}` },
-                function (error, data) {
-                  // console.log("query response start ", data, "query response end");
-                  const tweetArray = data.results[0].text.replace(/\n/g, " ").split(" ");
-                  tweetArray.forEach((word)=>{
-                    console.log({ word }, params.screen_name)
-                    if (word == params.screen_name){
-                      console.log("hello")
-                      handle = true;
-                      console.log({handle})
-                    } else if (word == '#truthdareordie'){
-                      hash = true;
-                    }
-                  })
-                  // console.log(JSON.stringify(data, null, 2), ' data from add doc response');
-                  res.status(201).send({hash, handle, response: 'file has been written woot'});
+                collection_id: 'b439a6dc-5f36-4ac6-83c9-4e6fe67f8ebd', query: `text:${params.screen_name}` },
+              (error, data) => {
+                const tweetArray = data.results[0].text.replace(/\n/g, " ").split(" ");
+                tweetArray.forEach((word)=>{
+                  if (`@${word}` == params.screen_name) {
+                    handle = true;
+                  } else if (word == '#truthdareordie') {
+                    hash = true;
+                  }
                 });
+                let response;
+                if (hash === true && handle === true){
+                  response = "My tweet confirmed!"
+                } else {
+                  response = "No Tweet! Off with my head!"
+                }
+                res.status(201).send({hash, handle, response});
+              });
             }
           }
         );
