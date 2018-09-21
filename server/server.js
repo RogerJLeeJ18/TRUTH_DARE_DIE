@@ -46,10 +46,7 @@ var discovery = new DiscoveryV1({
 // console.log(discovery)
 const file = fs.readFileSync('./server/tweets.html');
 
-// discovery.query({ environment_id: '1c012708-9b11-4f78-b6a5-d2b1d9aea9ee', collection_id: 'b439a6dc-5f36-4ac6-83c9-4e6fe67f8ebd', query: 'text:fear' }, 
-// function (error, data) {
-//   console.log("query response start ", JSON.stringify(data, null, 2), "query response end");
-// });
+
 
 var client = new Twitter({
   consumer_key: 'a4Gh4PKbKDEQGPlwF4swKwtBl',
@@ -59,13 +56,15 @@ var client = new Twitter({
 });
 
 app.post('/tweet', ({ body }, res) => {
+  let handle = false;
+  let hash = false;
   console.log({ body });
   const params = { screen_name: body.twitter };
   client.get('statuses/user_timeline', params, (error, tweets, response) => {
     // console.log(tweets[0].text, "tweets")
     const html = [
-      `<div>${params.screen_name}</div>`,
-      `<div>${tweets[0].text}</div>`
+      `<title> ${tweets[0].text} </title>`,
+      `<div> ${params.screen_name} </div>`
     ].join('');
     console.log(tweets[0].text);
     if (!error) {
@@ -80,8 +79,25 @@ app.post('/tweet', ({ body }, res) => {
             if (err) {
               console.error({ err });
             } else {
-              console.log(JSON.stringify(data, null, 2), ' data from add doc response');
-              res.status(201).send('file has been written woot');
+              
+              discovery.query({ environment_id: '1c012708-9b11-4f78-b6a5-d2b1d9aea9ee',
+              collection_id: 'b439a6dc-5f36-4ac6-83c9-4e6fe67f8ebd', query: `text:${params.screen_name}` },
+                function (error, data) {
+                  // console.log("query response start ", data, "query response end");
+                  const tweetArray = data.results[0].text.replace(/\n/g, " ").split(" ");
+                  tweetArray.forEach((word)=>{
+                    console.log({ word }, params.screen_name)
+                    if (word == params.screen_name){
+                      console.log("hello")
+                      handle = true;
+                      console.log({handle})
+                    } else if (word == '#truthdareordie'){
+                      hash = true;
+                    }
+                  })
+                  // console.log(JSON.stringify(data, null, 2), ' data from add doc response');
+                  res.status(201).send({hash, handle, response: 'file has been written woot'});
+                });
             }
           }
         );
