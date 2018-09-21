@@ -44,17 +44,18 @@ var discovery = new DiscoveryV1({
   version_date: '2017-11-07'
 });
 
-const file = fs.readFileSync('./server/tweets.doc');
-
-fs.writeFile('./server/tweets.doc', "roger", 'utf-8', ()=>{
-  "file has been written woot"
-})
+const file = fs.readFileSync('./server/tweets.html');
 
 discovery.addDocument({ environment_id: '1c012708-9b11-4f78-b6a5-d2b1d9aea9ee', collection_id: 'b439a6dc-5f36-4ac6-83c9-4e6fe67f8ebd', file: file },
   function (error, data) {
-    console.log(JSON.stringify(data, null, 2));
+    console.log(JSON.stringify(data, null, 2), " data from add doc response");
   }
 );
+
+discovery.query({ environment_id: '1c012708-9b11-4f78-b6a5-d2b1d9aea9ee', collection_id: 'b439a6dc-5f36-4ac6-83c9-4e6fe67f8ebd', query: 'text:Christmas Eve' }, 
+function (error, data) {
+  console.log("query response start ", JSON.stringify(data, null, 2), "query response end");
+});
 
 var client = new Twitter({
   consumer_key: 'a4Gh4PKbKDEQGPlwF4swKwtBl',
@@ -62,18 +63,12 @@ var client = new Twitter({
   access_token_key: '953671599273672704-UDDcr6KlemZnIWsLzsvi4L0rNGRRNNo',
   access_token_secret: `${TOKEN_SECRET}`
 });
-// comment
-var params = { screen_name: 'nodejs' };
-//
-
-
 
 // get tweet from user
 app.post('/tweet', (req, res) => {
-  console.log(params);
   client.get('statuses/user_timeline', req.body, function (error, tweets, response) {
     if (!error) {
-      fs.writeFile('./server/tweets.doc', tweets[0].text, 'utf-8', () => {
+      fs.writeFile('./server/tweets.doc', { "tweet": "santa claus down the chimney on christmas" }, 'utf-8', () => {
         res.status(201).send("file has been written woot");
       })
     
