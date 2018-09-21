@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
-mongoose.connect('mongodb://admin:admin1@ds243728.mlab.com:43728/truthdaredie');
+// mongoose.connect('mongodb://admin:admin1@ds243728.mlab.com:43728/truthdaredie');
+mongoose.connect('mongodb://osd-user:0sdpassw0rd@ds251622.mlab.com:51622/osd');
 //
 const db = mongoose.connection;
 db.once('open', () => {
@@ -55,6 +56,39 @@ const DareSchema = new Schema({
 
 const Dare = mongoose.model('Dare', DareSchema);
 
+const addTruth = (category, truth, truth_id) => {
+  const newTruth = new Truth({
+   category: category,
+   truth: truth,
+   truth_id: truth_id,
+  });
+  newTruth.save((error, truthInfo) => {
+    if (error) {
+      console.error(error);
+    } else {
+      console.log('user saved');
+      
+    }
+  });
+}
+
+const addDare = (category, dare, dare_id) => {
+  const newDare = new Dare({
+    category: category,
+    dare: dare,
+    dare_id: dare_id,
+  });
+  newDare.save((error, dareInfo) => {
+    if (error) {
+      console.error(error);
+    } else {
+      console.log('dare saved');
+
+    }
+  });
+}
+
+// addDare('mild', 'Scream pickles as loud as you can', 1);
 
 // function for sign up
 // check if user already exists by email
@@ -133,11 +167,13 @@ const randomID = () => Math.floor((Math.random() * 5) + 1);
 
 // function to get the truths randomly
 const getTruth = (id, callback) => {
+  console.log(id, " id in get truth")
   Truth.findOne({ truth_id: id }, (err, truth) => {
     if (err) {
       console.error(err);
       callback(err);
     } else {
+      console.log(truth, "  in truth")
       callback(truth);
     }
   });
