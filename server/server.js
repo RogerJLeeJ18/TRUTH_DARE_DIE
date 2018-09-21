@@ -68,6 +68,7 @@ app.get('/users', (req, res) => {
   // console.log(request, 'we have a live connection');
   // console.log('made get request to /users');
   dataSave.getUser(request, (response) => {
+    
     if (typeof response !== 'object') {
       res.status(404).send(response);
     } else {
@@ -107,9 +108,9 @@ app.post('/users', (req, res) => {
 // post request to add a room to db
 app.post('/start', (req, res) => {
   const request = req.body;
-  // console.log(request);
+  console.log(request, 'from 111');
   dataSave.createRoom(request, (response) => {
-    if (!response) {
+    if (response === 'Room already Exists!') {
       // console.log(response);
       res.status(404).send('Invalid');
     } else {
@@ -122,13 +123,23 @@ app.post('/start', (req, res) => {
 app.get('/rooms/:id', (req, res) => {
   // console.log(req.params.id);
   const response = req.params.id;
-  dataSave.findRooms(response, (err, room) => {
+  dataSave.findRoom(response, (err, room) => {
     if (err || room === null) {
       res.status(404).send('Room not available');
     } else {
       res.status(200).send(room);
     }
   });
+});
+
+// get all the available rooms from the database
+app.get('/rooms', (req, res) => {
+  console.log('sent get to rooms');
+  dataSave.getAllRooms()
+    .then((rooms) => {
+      console.log(rooms);
+      res.send(JSON.stringify(rooms));
+    });
 });
 
 // get request to get truth from db
@@ -150,7 +161,7 @@ app.get('/dares', (req, res) => {
 });
 
 app.get('/ready', (req, res) => {
-  console.log('made get request to /ready')
+  console.log('made get request to /ready');
   const roomName = req.headers;
   dataSave.updateRoom(roomName, (err, response) => {
     if (err) {
@@ -189,7 +200,7 @@ app.get('/end', (req, res) => {
 const players = [];
 let userVotes = { pass: 0, fail: 0, count: 0 };
 io.on('connection', (socket) => {
-  console.log(socket);
+  // console.log(socket);
   // console.log('a user connected');
   socket.on('create', (room) => {
     // console.log('Joined');

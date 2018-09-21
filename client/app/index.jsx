@@ -1,11 +1,10 @@
 import React from 'react';
 import { render } from 'react-dom';
 import axios from 'axios';
+import io from 'socket.io-client';
 import { Login } from './login.jsx';
 import { HomePage } from './homepage.jsx';
 import { SignUp } from './signup.jsx';
-import io from 'socket.io-client';
-
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -30,7 +29,7 @@ class App extends React.Component {
       password, 
       twitter
     }).then((result) => {
-      this.setState({ isLoggedIn: !this.state.isLoggedIn, signUp: !this.state.signUp }, () => {
+      this.setState({ isLoggedIn: !this.state.isLoggedIn, signUp: !this.state.signUp, userInfo: result.data }, () => {
         console.log('login successful', result);
       });
     }).catch((error) => {

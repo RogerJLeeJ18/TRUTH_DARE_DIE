@@ -1,8 +1,10 @@
 import React from 'react';
 import axios from 'axios';
+import Select from 'react-select';
 import PropTypes from 'prop-types';
-import { GameRoom } from './gameroom.jsx';
 import styled from 'styled-components';
+import { GameRoom } from './gameroom.jsx';
+const RoomList = require('./roomList.jsx');
 
 const Title = styled.h1`
   font-family: Nosifer;
@@ -130,36 +132,74 @@ const TopBar = styled.ul`
   width: 100%;
 `;
 
+const options = [
+  { value: 'Everyone', label: 'E' },
+  { value: 'Teen', label: 'T' },
+  { value: 'Mature', label: 'M' },
+  { value: 'Raunchy', label: 'R' },
+  { value: 'XXX', label: 'XXX' }
+];
+
 class HomePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      roomName: '',
+      roomName: null,
       roomCreated: false,
-      admin: false
+      admin: false,
+      selectValue: 'E',
+      roomList: []
     };
     this.socketHandle = this.makeRoom.bind(this);
     this.joinRoom = this.joinRoom.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
+
+  componentDidMount() {
+    this.getRooms();
+  }
+
+  getRooms() {
+    axios.get('/rooms')
+      .then((roomList) => {
+        // console.log(roomList);
+        roomList = roomList.data
+        this.setState({ roomList });
+        console.log(this.state.roomList, 'hey');
+      });
+  }
+
+  handleChange(selectValue) {
+    this.setState({ selectValue }, () => {
+      console.log(this.state.selectValue);
+    });
+  }
+
   makeRoom(event) {
     const roomName = event.target.socket.value;
-    axios.post('/start', {
-      room: roomName,
-      username: this.props.userInfo.username
-    }).then((result) => {
-      this.setState(
-        { roomName, roomCreated: !this.state.roomCreated, admin: !this.state.admin },
-        () => {
-          console.log(`${this.state.roomName} has been created`, result);
-        }
-      );
-    }).catch((error) => {
-      console.log(error);
-    });
+    if (roomName) {
+      axios.post('/start', {
+        room: roomName,
+        username: this.props.userInfo.username,
+        rating: this.state.selectValue.label
+      })
+        .then((result) => {
+          this.setState(
+            { roomName, roomCreated: !this.state.roomCreated, admin: !this.state.admin },
+            () => {
+              console.log(`${this.state.roomName} has been created`, result);
+            }
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
     event.preventDefault();
     this.props.socket.emit('create', roomName);
     console.log(roomName, 'this worked');
   }
+
   joinRoom(event) {
     const roomName = event.target.join.value;
     axios.get(`/rooms/${roomName}`).then(({ data }) => {
@@ -184,7 +224,35 @@ class HomePage extends React.Component {
     this.props.socket.emit('join', roomName);
     this.props.socket.emit('send-username', this.props.userInfo.username);
   }
+
+  clickRoom(roomName) {
+    axios.get(`/rooms/${roomName}`)
+      .then(({ data }) => {
+        if (data.admin === this.props.userInfo.username) {
+          this.setState({
+            roomName,
+            roomCreated: !this.state.roomCreated,
+            admin: !this.state.admin
+          }, () => {
+            console.log(this.state.admin);
+            console.log(`you have joined ${this.state.roomName}`, data);
+          });
+        } else {
+          this.setState({ roomName, roomCreated: !this.state.roomCreated }, () => {
+            console.log(`you have joined ${this.state.roomName}`, data);
+          });
+        }
+      })
+      .catch((error) => {
+        console.log(error, 'unable to join');
+      });
+    this.props.socket.emit('join', roomName);
+    this.props.socket.emit('send-username', this.props.userInfo.username);
+  }
+
   render() {
+    const { roomName } = this.state;
+    const { selectValue } = this.state;
     const element = (
       <div className="container">
         <TopBar className="userInfo">
@@ -209,6 +277,22 @@ class HomePage extends React.Component {
               <Button>Create</Button>
             </Div>
           </Div>
+          {/* <select
+            value={this.state.selectValue}
+            onChange={this.handleChange}
+          >
+            <option value="Select Rating">Select A Rating</option>
+            <option value="E">E</option>
+            <option value="T">T</option>
+            <option value="M">M</option>
+            <option value="R">R</option>
+          </select> */}
+          <Select
+            value={selectValue}
+            onChange={this.handleChange}
+            options={options}
+          />
+
         </CreateForm>
         <Div>
           <Form onSubmit={(e) => {
@@ -228,6 +312,9 @@ class HomePage extends React.Component {
             </Div>
           </Form>
         </Div>
+        <div>
+          <RoomList rooms={this.state.roomList} clickRoom={this.clickRoom} />
+        </div>
       </div>
     );
     const gameRoom = (
@@ -236,12 +323,26 @@ class HomePage extends React.Component {
         socket={this.props.socket}
         admin={this.state.admin}
         userInfo={this.props.userInfo}
-      />);
+      />
+    );
+
     const { roomCreated } = this.state;
+    // if there is no roomName (which can only trigger when a user submits a roomname)
+    if (!roomName) {
+      // return the same elemnts on the page / rerender the same page
+      return (
+        <div>
+          { element }
+        </div>
+      );
+    }
+    /** otherwise render the gameRoomPage if the user has submitted a roomName in
+        the join or make room categories */
     return (
       <div>
         {roomCreated ? (gameRoom) : (element)}
-      </div>);
+      </div>
+    );
   }
 }
 
